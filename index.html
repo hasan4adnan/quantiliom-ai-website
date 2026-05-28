@@ -387,7 +387,7 @@
     ──────────────────────────────────────────────── */
     .problem-grid {
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: start;
+      gap: 80px; align-items: stretch; min-height: 740px;
     }
     .problem-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
     .problem-item {
@@ -1043,6 +1043,110 @@
     .footer-links a { position: relative; display: inline-block; transition: color .2s, transform .2s var(--spring); }
     .footer-links a:hover { color: var(--black); transform: translateX(4px); }
 
+    /* ── PROBLEM SECTION — Architecture Output Visual ── */
+    .pv-card {
+      background: var(--black);
+      border: 1px solid #1e1e1e;
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    .pv-header {
+      padding: 13px 20px;
+      border-bottom: 1px solid #141414;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pv-header-left { display: flex; align-items: center; gap: 8px; }
+    .pv-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .pv-status {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--orange); letter-spacing: .08em; text-transform: uppercase;
+    }
+    .pv-project-tag {
+      font-family: var(--mono); font-size: 10px;
+      color: #2e2e2e; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .pv-body { padding: 24px 20px 22px; }
+    .pv-layer { margin-bottom: 4px; }
+    .pv-layer-lbl {
+      font-family: var(--mono); font-size: 9px;
+      color: #2a2a2a; letter-spacing: .14em;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .pv-nodes { display: flex; gap: 5px; flex-wrap: wrap; }
+    .pv-node {
+      border: 1px solid #181818; border-radius: 3px;
+      padding: 4px 10px; font-family: var(--mono); font-size: 11px;
+      color: #4a4a4a; background: #080808; white-space: nowrap;
+    }
+    .pv-node.hi {
+      border-color: rgba(239,111,46,.35);
+      color: var(--orange); background: rgba(239,111,46,.05);
+    }
+    .pv-conn {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 4px 0 4px 10px; margin-bottom: 4px;
+    }
+    .pv-conn-line { width: 1px; height: 18px; background: #181818; flex-shrink: 0; }
+    .pv-conn-txt {
+      font-family: var(--mono); font-size: 9px;
+      color: #252525; letter-spacing: .05em; padding-top: 1px;
+    }
+    .pv-divider { height: 1px; background: #111; margin: 18px 0; }
+    .pv-cost-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .pv-cost-lbl {
+      font-family: var(--mono); font-size: 9px;
+      color: #2a2a2a; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .pv-cost-val { font-family: var(--mono); font-size: 14px; color: #7a7a7a; }
+    .pv-cost-val em { font-style: normal; font-size: 10px; color: var(--orange); margin-left: 2px; }
+    .pv-alts { display: flex; gap: 5px; margin-bottom: 0; }
+    .pv-alt {
+      flex: 1; padding: 7px 0; text-align: center;
+      border: 1px solid #181818; border-radius: 3px;
+      font-family: var(--mono); font-size: 9px; letter-spacing: .04em;
+      text-transform: uppercase; color: #2e2e2e; background: transparent;
+    }
+    .pv-alt.active {
+      border-color: rgba(239,111,46,.35);
+      color: var(--orange); background: rgba(239,111,46,.05);
+    }
+    .pv-confidence {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid #111;
+    }
+    .pv-conf-lbl {
+      font-family: var(--mono); font-size: 9px;
+      color: #252525; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .pv-conf-bar { display: flex; gap: 3px; align-items: center; }
+    .pv-conf-seg { width: 18px; height: 3px; border-radius: 1px; background: #1a1a1a; }
+    .pv-conf-seg.on { background: var(--orange); }
+
+    /* ── Architecture diagram — edge flow animation ── */
+    @keyframes archFlow { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
+    .adg-flow {
+      stroke: #ef6f2e; stroke-width: 2; stroke-dasharray: 4 12;
+      fill: none; opacity: 0.8;
+      animation: archFlow 1.6s linear infinite;
+    }
+    .adg-f1  { animation-delay:  0s;     }
+    .adg-f2  { animation-delay: -0.53s;  }
+    .adg-f3  { animation-delay: -1.07s;  }
+    .adg-f4  { animation-delay: -0.27s;  }
+    .adg-f5  { animation-delay: -0.8s;   }
+    .adg-f6  { animation-delay: -0.4s;   }
+    .adg-f7  { animation-delay: -1.2s;   }
+    .adg-f8  { animation-delay: -0.65s;  }
+    .adg-f9  { animation-delay: -0.2s;   }
+    .adg-f10 { animation-delay: -0.95s;  }
+
   </style>
 </head>
 <body>
@@ -1291,77 +1395,254 @@
   <div class="wrap">
     <div class="problem-grid">
 
+      <!-- Left — problem framing -->
       <div>
         <span class="label" style="margin-bottom:14px;">The Problem</span>
-        <h2 class="heading-lg">Software projects fail<br>before they start.</h2>
-        <p class="body-md" style="margin-top:20px;">
-          Most teams reach for a general-purpose chatbot when they need architectural guidance. But generic prompts produce generic answers — incomplete, surface-level, and disconnected from the real constraints of your project.
-        </p>
-        <p class="body-md" style="margin-top:14px;">
-          By the time you realize the architecture was wrong, you've already built on a broken foundation.
+        <h2 class="heading-lg">Every bad project started with the wrong architecture.</h2>
+        <p class="body-md" style="margin-top:20px; max-width:460px;">
+          Most teams pick a stack before they understand their real constraints. Scale, cost, real-time behaviour — these aren't implementation details. They're the decisions that determine whether your project survives contact with reality.
         </p>
 
         <ul class="problem-list">
           <li class="problem-item">
             <svg class="problem-icon" viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.4"/>
-              <line x1="9" y1="5.5" x2="9" y2="10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              <circle cx="9" cy="13" r=".7" fill="currentColor"/>
+              <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
             </svg>
             <div>
-              <div class="problem-title">Wrong questions asked upfront</div>
-              <div class="problem-desc">Users don't know what they don't know. Critical architectural constraints get missed entirely, leading to wrong foundations.</div>
+              <div class="problem-title">Wrong stack, wrong foundation</div>
+              <div class="problem-desc">Tech choices made on familiarity, not fit. The wrong database or infra pattern compounds quietly — until the cost to fix it exceeds the cost to rebuild.</div>
             </div>
           </li>
           <li class="problem-item">
             <svg class="problem-icon" viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.4"/>
-              <line x1="9" y1="5.5" x2="9" y2="10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              <circle cx="9" cy="13" r=".7" fill="currentColor"/>
+              <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M9 5.5V9l2.5 1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <div class="problem-title">No trade-off visibility</div>
-              <div class="problem-desc">Tech stack decisions are made without understanding cost, complexity, or scalability implications. No one explains what you're giving up.</div>
+              <div class="problem-title">Constraints surface too late</div>
+              <div class="problem-desc">Payment architecture, tenant isolation, real-time requirements — discovered mid-build. Each late constraint rewrites assumptions that were already coded in.</div>
             </div>
           </li>
           <li class="problem-item">
             <svg class="problem-icon" viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.4"/>
-              <line x1="9" y1="5.5" x2="9" y2="10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-              <circle cx="9" cy="13" r=".7" fill="currentColor"/>
+              <path d="M9 2.5L16 14H2L9 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M9 7.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="9" cy="12.2" r=".7" fill="currentColor"/>
             </svg>
             <div>
-              <div class="problem-title">Static, one-shot outputs</div>
-              <div class="problem-desc">Architecture documents get created once and rot. There's no workspace for iteration as requirements, budgets, and scope evolve.</div>
+              <div class="problem-title">Architecture that can't evolve</div>
+              <div class="problem-desc">Static diagrams written at kickoff are obsolete by sprint three. Requirements shift. Budgets change. The architecture stays frozen on a whiteboard nobody trusts.</div>
             </div>
           </li>
         </ul>
       </div>
 
-      <!-- Before / After -->
-      <div class="compare-stack">
-        <div class="compare-card before">
-          <div class="compare-lbl">Without Quantiliom</div>
-          <div class="bubbles">
-            <div class="bubble user">How do I build a marketplace app?</div>
-            <div class="bubble bot-bad">You can use React for the frontend and Node.js for the backend. For the database, MySQL or PostgreSQL both work well. Consider AWS for hosting and Stripe for payments...</div>
-            <div class="bubble user">What about mobile?</div>
-            <div class="bubble bot-bad">React Native is a good choice for mobile. It shares code with your React web app and has good community support...</div>
-          </div>
-        </div>
+      <!-- Right — architecture graph diagram (redesigned) -->
+      <div style="height:100%;">
+        <svg viewBox="0 0 680 720" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;min-height:640px;" preserveAspectRatio="xMidYMid meet" aria-label="Marketplace architecture diagram generated by Quantiliom AI">
+          <defs>
+            <marker id="adg-arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#d0d0d0"/>
+            </marker>
+            <pattern id="adg-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="10" cy="10" r="0.7" fill="#e8e8e8"/>
+            </pattern>
+            <linearGradient id="adg-gc" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#dceeff"/>
+              <stop offset="100%" stop-color="#b8d4f8"/>
+            </linearGradient>
+            <linearGradient id="adg-ga" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffe5cc"/>
+              <stop offset="100%" stop-color="#ffd0a8"/>
+            </linearGradient>
+            <linearGradient id="adg-gd" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e8d8ff"/>
+              <stop offset="100%" stop-color="#d0b8f8"/>
+            </linearGradient>
+            <linearGradient id="adg-gs" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#c8f5e0"/>
+              <stop offset="100%" stop-color="#a4e8c8"/>
+            </linearGradient>
+            <filter id="adg-sh1" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#00000018"/>
+            </filter>
+            <filter id="adg-sh2" x="-35%" y="-35%" width="170%" height="170%">
+              <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#00000022"/>
+            </filter>
+          </defs>
 
-        <div class="compare-card after">
-          <div class="compare-lbl">With Quantiliom AI</div>
-          <div class="bubbles">
-            <div class="bubble bot-good">
-              Before I design your architecture, I need to understand 4 things:<br><br>
-              <span class="o">1.</span> Expected concurrent users at launch vs. 6-month target?<br>
-              <span class="o">2.</span> Does your marketplace need escrow or direct payment flows?<br>
-              <span class="o">3.</span> Seller-managed inventory or listing-only model?<br>
-              <span class="o">4.</span> Do you need real-time messaging between users?
-            </div>
-          </div>
-        </div>
+          <!-- Background -->
+          <rect width="680" height="720" rx="10" fill="#ffffff" stroke="#e0e0e0" stroke-width="1.5"/>
+          <rect width="680" height="720" rx="10" fill="url(#adg-dots)"/>
+
+          <!-- Window title bar (macOS style) -->
+          <rect x="0" y="0" width="680" height="38" rx="10" fill="#0f1520"/>
+          <rect x="0" y="28" width="680" height="10" fill="#0f1520"/>
+          <circle cx="20" cy="19" r="5" fill="#ff5f57"/>
+          <circle cx="34" cy="19" r="5" fill="#febc2e"/>
+          <circle cx="48" cy="19" r="5" fill="#28c840"/>
+          <text x="340" y="23" font-family="JetBrains Mono,monospace" font-size="11" letter-spacing="1.5" text-anchor="middle" fill="#ffffff">ARCHITECTURE OUTPUT — MARKETPLACE PLATFORM</text>
+
+          <!-- ════ STATIC EDGES ════ -->
+          <!-- Left box → Circles (curved bezier) -->
+          <path d="M 123,375 Q 157,375 191,120" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 123,375 Q 157,375 191,290" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 123,375 Q 157,375 191,458" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 123,375 Q 157,375 191,630" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <!-- Circles → Right cards -->
+          <path d="M 279,115 L 445,90"  stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 279,126 L 445,148" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 279,290 L 445,290" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 279,450 L 445,428" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 279,466 L 445,488" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+          <path d="M 279,630 L 445,630" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="7,5" fill="none" marker-end="url(#adg-arr)"/>
+
+          <!-- ════ ANIMATED FLOW ════ -->
+          <path class="adg-flow adg-f1"  d="M 123,375 Q 157,375 191,120"/>
+          <path class="adg-flow adg-f2"  d="M 123,375 Q 157,375 191,290"/>
+          <path class="adg-flow adg-f3"  d="M 123,375 Q 157,375 191,458"/>
+          <path class="adg-flow adg-f4"  d="M 123,375 Q 157,375 191,630"/>
+          <path class="adg-flow adg-f5"  d="M 279,115 L 445,90"/>
+          <path class="adg-flow adg-f6"  d="M 279,126 L 445,148"/>
+          <path class="adg-flow adg-f7"  d="M 279,290 L 445,290"/>
+          <path class="adg-flow adg-f8"  d="M 279,450 L 445,428"/>
+          <path class="adg-flow adg-f9"  d="M 279,466 L 445,488"/>
+          <path class="adg-flow adg-f10" d="M 279,630 L 445,630"/>
+
+          <!-- ════ EDGE LABELS ════ -->
+          <rect x="342" y="82" width="40" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="362" y="93" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">Web</text>
+          <rect x="336" y="128" width="52" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="362" y="139" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">Mobile</text>
+          <rect x="330" y="281" width="60" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="360" y="292" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">Routing</text>
+          <rect x="334" y="430" width="56" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="362" y="441" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">Primary</text>
+          <rect x="338" y="468" width="44" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="360" y="479" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">Cache</text>
+          <rect x="322" y="621" width="76" height="16" rx="3" fill="rgba(255,255,255,0.92)" stroke="#eeeeee" stroke-width="0.8"/>
+          <text x="360" y="632" font-family="JetBrains Mono,monospace" font-size="11" font-style="italic" text-anchor="middle" fill="#bbb">JWT + RBAC</text>
+
+          <!-- ════ LEFT BOX ════ -->
+          <rect x="8" y="338" width="115" height="74" rx="8" fill="#1a2240" stroke="#283060" stroke-width="1.5" filter="url(#adg-sh1)"/>
+          <circle cx="123" cy="375" r="5" fill="#ef6f2e" opacity="0.9">
+            <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.6s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="5;3.5;5" dur="1.6s" repeatCount="indefinite"/>
+          </circle>
+          <text x="65.5" y="367" font-family="Inter,sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#e0e8ff">AI Architect</text>
+          <text x="65.5" y="386" font-family="Inter,sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#ef6f2e">Output</text>
+
+          <!-- ════ MIDDLE NODES ════ -->
+
+          <!-- Client (cx=235, cy=120) -->
+          <text x="235" y="68" font-family="Inter,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#111">Client</text>
+          <circle cx="235" cy="120" r="44" fill="url(#adg-gc)" stroke="#a8ccf5" stroke-width="1.8" filter="url(#adg-sh2)"/>
+          <circle cx="235" cy="120" r="37" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+          <g transform="translate(235,120)" stroke="#3a70d0" fill="none">
+            <circle r="19" stroke-width="1.8"/>
+            <ellipse rx="8.5" ry="19" stroke-width="1.4"/>
+            <line x1="-19" y1="0" x2="19" y2="0" stroke-width="1.3"/>
+            <line x1="-17" y1="-7" x2="17" y2="-7" stroke-width="1"/>
+            <line x1="-17" y1="7" x2="17" y2="7" stroke-width="1"/>
+          </g>
+
+          <!-- API Layer (cx=235, cy=290) -->
+          <text x="235" y="238" font-family="Inter,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#111">API Layer</text>
+          <circle cx="235" cy="290" r="44" fill="url(#adg-ga)" stroke="#f5b888" stroke-width="1.8" filter="url(#adg-sh2)"/>
+          <circle cx="235" cy="290" r="37" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+          <g transform="translate(235,290)" stroke="#c84c10" fill="none">
+            <rect x="-16" y="-13" width="32" height="8" rx="2" stroke-width="1.8"/>
+            <rect x="-16" y="-2"  width="32" height="8" rx="2" stroke-width="1.8"/>
+            <rect x="-16" y="9"   width="32" height="8" rx="2" stroke-width="1.8"/>
+            <circle cx="11" cy="-9" r="2.2" fill="#c84c10" stroke="none"/>
+            <circle cx="11" cy="2"  r="2.2" fill="#c84c10" stroke="none"/>
+            <circle cx="11" cy="13" r="2.2" fill="#c84c10" stroke="none"/>
+          </g>
+
+          <!-- Data (cx=235, cy=458) -->
+          <text x="235" y="406" font-family="Inter,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#111">Data</text>
+          <circle cx="235" cy="458" r="44" fill="url(#adg-gd)" stroke="#c8a0f0" stroke-width="1.8" filter="url(#adg-sh2)"/>
+          <circle cx="235" cy="458" r="37" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+          <g transform="translate(235,458)" stroke="#7040c0" fill="none">
+            <ellipse rx="15" ry="5" cy="-11" stroke-width="1.8"/>
+            <ellipse rx="15" ry="5" cy="11"  stroke-width="1.8"/>
+            <line x1="-15" y1="-11" x2="-15" y2="11" stroke-width="1.8"/>
+            <line x1="15"  y1="-11" x2="15"  y2="11" stroke-width="1.8"/>
+            <line x1="-11" y1="-2" x2="11" y2="-2" stroke-width="1.1" opacity="0.5"/>
+            <line x1="-11" y1="4"  x2="11" y2="4"  stroke-width="1.1" opacity="0.5"/>
+          </g>
+
+          <!-- Security (cx=235, cy=630) -->
+          <text x="235" y="578" font-family="Inter,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#111">Security</text>
+          <circle cx="235" cy="630" r="44" fill="url(#adg-gs)" stroke="#88d8b0" stroke-width="1.8" filter="url(#adg-sh2)"/>
+          <circle cx="235" cy="630" r="37" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+          <g transform="translate(235,630)">
+            <path d="M0,-17 L17,-10 L17,4 Q17,15 0,20 Q-17,15 -17,4 L-17,-10 Z" fill="none" stroke="#1e8850" stroke-width="2"/>
+            <path d="M-7,2 L-2,8 L8,-5" stroke="#1e8850" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- ════ RIGHT CARDS ════ -->
+
+          <!-- R1: Next.js (y=64, cy=90) -->
+          <rect x="445" y="64" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="64" width="5" height="52" rx="3" fill="#111111"/>
+          <rect x="456" y="72" width="36" height="36" rx="6" fill="#111111"/>
+          <image href="https://cdn.simpleicons.org/nextdotjs/ffffff" x="461" y="77" width="26" height="26"/>
+          <text x="502" y="84" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">Next.js</text>
+          <text x="502" y="101" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Web frontend</text>
+
+          <!-- R2: Flutter (y=122, cy=148) -->
+          <rect x="445" y="122" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="122" width="5" height="52" rx="3" fill="#54c5f8"/>
+          <rect x="456" y="130" width="36" height="36" rx="6" fill="#0468d7"/>
+          <image href="https://cdn.simpleicons.org/flutter/ffffff" x="461" y="135" width="26" height="26"/>
+          <text x="502" y="142" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">Flutter</text>
+          <text x="502" y="159" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Mobile app</text>
+
+          <!-- R3: API Gateway (y=264, cy=290) -->
+          <rect x="445" y="264" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="264" width="5" height="52" rx="3" fill="#FF9900"/>
+          <rect x="456" y="272" width="36" height="36" rx="6" fill="#FF9900"/>
+          <g transform="translate(474,290)" stroke="white" stroke-linecap="round" fill="none" stroke-width="1.8">
+            <line x1="-12" y1="-8" x2="-3" y2="0"/>
+            <line x1="-13" y1="0"  x2="-3" y2="0"/>
+            <line x1="-12" y1="8"  x2="-3" y2="0"/>
+            <rect x="-3" y="-5" width="6" height="10" rx="1.5" fill="white" stroke="none"/>
+            <line x1="3" y1="-4" x2="12" y2="-8"/>
+            <line x1="3" y1="4"  x2="12" y2="8"/>
+          </g>
+          <text x="502" y="284" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">API Gateway</text>
+          <text x="502" y="301" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Request routing</text>
+
+          <!-- R4: PostgreSQL (y=402, cy=428) -->
+          <rect x="445" y="402" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="402" width="5" height="52" rx="3" fill="#336791"/>
+          <rect x="456" y="410" width="36" height="36" rx="6" fill="#336791"/>
+          <image href="https://cdn.simpleicons.org/postgresql/ffffff" x="461" y="415" width="26" height="26"/>
+          <text x="502" y="422" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">PostgreSQL</text>
+          <text x="502" y="439" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Primary store</text>
+
+          <!-- R5: Redis (y=462, cy=488) -->
+          <rect x="445" y="462" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="462" width="5" height="52" rx="3" fill="#DC382D"/>
+          <rect x="456" y="470" width="36" height="36" rx="6" fill="#DC382D"/>
+          <image href="https://cdn.simpleicons.org/redis/ffffff" x="461" y="475" width="26" height="26"/>
+          <text x="502" y="482" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">Redis</text>
+          <text x="502" y="499" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Caching layer</text>
+
+          <!-- R6: Auth / JWT (y=604, cy=630) -->
+          <rect x="445" y="604" width="220" height="52" rx="7" fill="#ffffff" stroke="#eaeaea" stroke-width="1.2" filter="url(#adg-sh1)"/>
+          <rect x="445" y="604" width="5" height="52" rx="3" fill="#7B3FE4"/>
+          <rect x="456" y="612" width="36" height="36" rx="6" fill="#7B3FE4"/>
+          <g transform="translate(474,630)">
+            <rect x="-8" y="-2" width="16" height="13" rx="2" fill="white"/>
+            <path d="M-5,-2 L-5,-7 Q-5,-13 0,-13 Q5,-13 5,-7 L5,-2" fill="none" stroke="white" stroke-width="2.2"/>
+            <circle cx="0" cy="4.5" r="2.5" fill="#7B3FE4"/>
+          </g>
+          <text x="502" y="624" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#111">Auth / JWT</text>
+          <text x="502" y="641" font-family="JetBrains Mono,monospace" font-size="11" fill="#aaa">Role-based access</text>
+
+        </svg>
       </div>
 
     </div>
