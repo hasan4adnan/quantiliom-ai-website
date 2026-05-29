@@ -1147,6 +1147,157 @@
     .adg-f9  { animation-delay: -0.2s;   }
     .adg-f10 { animation-delay: -0.95s;  }
 
+    /* ── ROADMAP ─────────────────────────────────────── */
+    .rm-root {
+      display: grid;
+      grid-template-columns: 248px 1fr;
+      gap: 56px;
+      margin-top: 28px;
+      align-items: start;
+    }
+    .rm-nav { position: relative; padding: 8px 0; }
+
+    /* Road-style spine */
+    .rm-spine-track {
+      position: absolute; left: 2.5px; top: 24px; bottom: 24px;
+      width: 16px; background: #ededed; border-radius: 4px;
+    }
+    .rm-spine-track::before {
+      content: ''; position: absolute;
+      left: .5px; top: 0; bottom: 0; width: .8px; background: #e0e0e0; border-radius: 1px;
+    }
+    .rm-spine-track::after {
+      content: ''; position: absolute;
+      left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%);
+      background: repeating-linear-gradient(
+        to bottom, transparent 0, transparent 7px,
+        rgba(255,255,255,.9) 7px, rgba(255,255,255,.9) 12px
+      );
+    }
+    .rm-spine-fill {
+      position: absolute; top: 0; left: 0; width: 100%;
+      background: var(--orange); height: 0%; border-radius: 4px;
+      transition: height .55s cubic-bezier(.4,0,.2,1); opacity: .9;
+    }
+
+    /* Milestone dots — map-pin style */
+    .rm-phase-btn {
+      display: flex; align-items: flex-start; gap: 18px;
+      padding: 10px 0; background: none; border: none;
+      cursor: pointer; text-align: left; width: 100%;
+      position: relative; z-index: 2;
+    }
+    .rm-dot {
+      width: 21px; height: 21px; border-radius: 50%;
+      border: 2px solid #d4d4d4; background: #fff;
+      flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+    }
+    .rm-phase-btn.rm-active .rm-dot {
+      background: var(--orange); border-color: var(--orange);
+      box-shadow: 0 0 0 5px rgba(239,111,46,.14);
+    }
+    .rm-phase-btn.rm-active .rm-dot::after {
+      content: ''; width: 6px; height: 6px;
+      border-radius: 50%; background: rgba(255,255,255,.85);
+    }
+    .rm-phase-btn.rm-done .rm-dot {
+      background: var(--black); border-color: var(--black);
+    }
+    .rm-phase-btn.rm-done .rm-dot::after {
+      content: ''; width: 3px; height: 5px;
+      border-right: 1.5px solid rgba(255,255,255,.8);
+      border-bottom: 1.5px solid rgba(255,255,255,.8);
+      transform: rotate(40deg) translate(-1px,-1px);
+    }
+
+    .rm-phase-meta { display: flex; flex-direction: column; gap: 2px; }
+    .rm-phase-num  { font-family: var(--mono); font-size: 10px; letter-spacing: .09em; color: var(--orange); }
+    .rm-phase-name { font-size: 13.5px; font-weight: 500; color: var(--black); line-height: 1.3; transition: color .2s; }
+    .rm-phase-btn:not(.rm-active):hover .rm-phase-name { color: var(--orange); }
+    .rm-phase-btn.rm-done .rm-phase-name { color: #aaa; }
+    .rm-phase-dur  { font-family: var(--mono); font-size: 9.5px; color: #c0c0c0; }
+
+    /* Content panel */
+    .rm-content-wrap {
+      border: 1px solid var(--black); border-radius: 8px;
+      overflow: hidden; background: #fff; position: relative;
+    }
+    .rm-phase-counter {
+      position: absolute; top: 22px; right: 30px;
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: .08em; color: #d0d0d0; z-index: 2;
+    }
+    .rm-panel { padding: 28px 40px 22px; display: none; position: relative; }
+    .rm-panel.rm-panel-active {
+      display: block;
+      animation: rmIn .35s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes rmIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .rm-bg-num {
+      position: absolute; top: 4px; right: 24px;
+      font-family: var(--mono); font-size: 108px; font-weight: 700;
+      color: #f3f3f3; line-height: 1; user-select: none;
+      pointer-events: none; letter-spacing: -6px;
+    }
+    .rm-panel-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 7px; display: block;
+    }
+    .rm-panel-title {
+      font-size: 24px; font-weight: 400; line-height: 1.15;
+      letter-spacing: -.5px; color: var(--black); margin-bottom: 8px;
+    }
+    .rm-panel-desc {
+      font-size: 13.5px; line-height: 1.6; color: #666;
+      max-width: 540px; margin-bottom: 14px;
+    }
+    .rm-badge-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .rm-badge { font-family: var(--mono); font-size: 10px; padding: 3px 10px; border-radius: 20px; letter-spacing: .05em; }
+    .rm-badge-dur { background: #f5f5f5; color: #555; border: 1px solid #e8e8e8; }
+    .rm-badge-out { background: rgba(239,111,46,.08); color: var(--orange); border: 1px solid rgba(239,111,46,.2); }
+
+    .rm-tasks {
+      list-style: none; display: grid;
+      grid-template-columns: 1fr 1fr; gap: 8px 28px; margin-bottom: 20px;
+    }
+    .rm-task {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13px; color: #111; line-height: 1.4;
+      opacity: 0; transform: translateX(-8px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .rm-panel.rm-panel-active .rm-task:nth-child(1){opacity:1;transform:none;transition-delay:.06s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(2){opacity:1;transform:none;transition-delay:.11s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(3){opacity:1;transform:none;transition-delay:.16s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(4){opacity:1;transform:none;transition-delay:.21s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(5){opacity:1;transform:none;transition-delay:.26s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(6){opacity:1;transform:none;transition-delay:.31s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(7){opacity:1;transform:none;transition-delay:.36s}
+    .rm-panel.rm-panel-active .rm-task:nth-child(8){opacity:1;transform:none;transition-delay:.41s}
+    .rm-task-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--orange); flex-shrink: 0; margin-top: 4.5px;
+    }
+
+    /* Mini Gantt */
+    .rm-gantt { border-top: 1px solid #f2f2f2; padding-top: 16px; }
+    .rm-gantt-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: .09em;
+      color: #d0d0d0; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .rm-gantt-bars { display: flex; gap: 3px; height: 5px; border-radius: 3px; overflow: hidden; }
+    .rm-gantt-bar  { height: 100%; border-radius: 2px; background: #efefef; transition: background .3s; }
+    .rm-gantt-bar.rm-done { background: #111; }
+    .rm-gantt-bar.rm-cur  { background: var(--orange); }
+    .rm-gantt-weeks { display: flex; justify-content: space-between; margin-top: 6px; }
+    .rm-gantt-wk { font-family: var(--mono); font-size: 9px; color: #c8c8c8; }
+
   </style>
 </head>
 <body>
@@ -1651,66 +1802,267 @@
 
 
 <!-- ════════════════════════════════════════════════
-     HOW IT WORKS
+     ROADMAP
 ════════════════════════════════════════════════ -->
-<section class="section">
+<section class="section" id="roadmap">
   <div class="wrap">
-    <div class="how-header">
-      <span class="label" style="text-align:center; margin-bottom:14px;">Process</span>
-      <h2 class="heading-lg" style="text-align:center;">From idea to architecture<br>in four steps.</h2>
+
+    <div style="max-width:640px;">
+      <span class="label" style="margin-bottom:14px;">Roadmap</span>
+      <h2 class="heading-lg">From concept to launch,<br>every phase defined.</h2>
+      <p class="body-md" style="margin-top:20px; max-width:500px;">
+        Quantiliom doesn't just design architecture — it maps the full path to production. Every project breaks into clear phases with defined deliverables, tech decisions, and realistic timelines.
+      </p>
     </div>
 
-    <div class="panel-grid steps-grid" style="grid-template-columns: repeat(4,1fr);">
+    <div class="rm-root">
 
-      <div class="panel-cell step-cell">
-        <span class="step-num">01</span>
-        <div class="step-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M3 9h12M3 5h12M3 13h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
+      <!-- Left: phase navigator -->
+      <div class="rm-nav">
+        <div class="rm-spine-track">
+          <div class="rm-spine-fill" id="rmSpineFill"></div>
         </div>
-        <div class="step-title">Describe your project</div>
-        <div class="step-desc">Tell us what you're building in plain language. No technical jargon required — a sentence or a paragraph both work.</div>
+
+        <button class="rm-phase-btn rm-active" onclick="rmSelect(0)">
+          <div class="rm-dot"></div>
+          <div class="rm-phase-meta">
+            <span class="rm-phase-num">PHASE 01</span>
+            <span class="rm-phase-name">Discovery &amp; Architecture</span>
+            <span class="rm-phase-dur">Weeks 1–2</span>
+          </div>
+        </button>
+
+        <button class="rm-phase-btn" onclick="rmSelect(1)">
+          <div class="rm-dot"></div>
+          <div class="rm-phase-meta">
+            <span class="rm-phase-num">PHASE 02</span>
+            <span class="rm-phase-name">Foundation Setup</span>
+            <span class="rm-phase-dur">Weeks 3–5</span>
+          </div>
+        </button>
+
+        <button class="rm-phase-btn" onclick="rmSelect(2)">
+          <div class="rm-dot"></div>
+          <div class="rm-phase-meta">
+            <span class="rm-phase-num">PHASE 03</span>
+            <span class="rm-phase-name">Core Development</span>
+            <span class="rm-phase-dur">Weeks 6–14</span>
+          </div>
+        </button>
+
+        <button class="rm-phase-btn" onclick="rmSelect(3)">
+          <div class="rm-dot"></div>
+          <div class="rm-phase-meta">
+            <span class="rm-phase-num">PHASE 04</span>
+            <span class="rm-phase-name">Integration &amp; QA</span>
+            <span class="rm-phase-dur">Weeks 15–18</span>
+          </div>
+        </button>
+
+        <button class="rm-phase-btn" onclick="rmSelect(4)">
+          <div class="rm-dot"></div>
+          <div class="rm-phase-meta">
+            <span class="rm-phase-num">PHASE 05</span>
+            <span class="rm-phase-name">Launch &amp; Scale</span>
+            <span class="rm-phase-dur">Weeks 19–22</span>
+          </div>
+        </button>
       </div>
 
-      <div class="panel-cell step-cell">
-        <span class="step-num">02</span>
-        <div class="step-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
-            <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="step-title">Answer smart questions</div>
-        <div class="step-desc">Our engine surfaces the critical unknowns — scale, budget, real-time needs, security, mobile — questions you didn't know to ask.</div>
-      </div>
+      <!-- Right: content panel -->
+      <div class="rm-content-wrap">
+        <span class="rm-phase-counter" id="rmCounter">01 / 05</span>
 
-      <div class="panel-cell step-cell">
-        <span class="step-num">03</span>
-        <div class="step-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
-            <rect x="10" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
-            <rect x="2" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/>
-            <rect x="10" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 2"/>
-          </svg>
+        <!-- Panel 0: Discovery -->
+        <div class="rm-panel rm-panel-active" id="rmPanel0">
+          <span class="rm-bg-num">01</span>
+          <span class="rm-panel-label">Phase 01 · 2 weeks</span>
+          <h3 class="rm-panel-title">Discovery &amp; Architecture</h3>
+          <p class="rm-panel-desc">Define what you're building and how. This phase surfaces every constraint, maps the system boundaries, and produces the core architecture document that guides every decision that follows.</p>
+          <div class="rm-badge-row">
+            <span class="rm-badge rm-badge-dur">2 weeks</span>
+            <span class="rm-badge rm-badge-out">Output: Architecture Document</span>
+          </div>
+          <ul class="rm-tasks">
+            <li class="rm-task"><div class="rm-task-dot"></div>Requirements &amp; constraint gathering</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>System boundary mapping</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Tech stack selection &amp; rationale</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Architecture alternatives (2–3)</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Infrastructure cost model</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Scalability &amp; risk analysis</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Data model design</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>System design diagram</li>
+          </ul>
+          <div class="rm-gantt">
+            <div class="rm-gantt-label">Project timeline overview</div>
+            <div class="rm-gantt-bars">
+              <div class="rm-gantt-bar rm-cur"  style="flex:2"></div>
+              <div class="rm-gantt-bar"         style="flex:3"></div>
+              <div class="rm-gantt-bar"         style="flex:9"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+            </div>
+            <div class="rm-gantt-weeks">
+              <span class="rm-gantt-wk">Wk 1</span>
+              <span class="rm-gantt-wk">Wk 3</span>
+              <span class="rm-gantt-wk">Wk 6</span>
+              <span class="rm-gantt-wk">Wk 15</span>
+              <span class="rm-gantt-wk">Wk 19</span>
+              <span class="rm-gantt-wk">Wk 22</span>
+            </div>
+          </div>
         </div>
-        <div class="step-title">Get architecture options</div>
-        <div class="step-desc">Receive 2–3 architecture alternatives with full trade-off analysis, tech stack choices, diagrams, and cost estimates.</div>
-      </div>
 
-      <div class="panel-cell step-cell">
-        <span class="step-num">04</span>
-        <div class="step-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M4 14L14 4M14 4H8M14 4v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <!-- Panel 1: Foundation -->
+        <div class="rm-panel" id="rmPanel1">
+          <span class="rm-bg-num">02</span>
+          <span class="rm-panel-label">Phase 02 · 3 weeks</span>
+          <h3 class="rm-panel-title">Foundation Setup</h3>
+          <p class="rm-panel-desc">Build the scaffolding everything else depends on. Environments, pipelines, auth, and base infrastructure — set up once, set up correctly, so the team can ship without friction from day one.</p>
+          <div class="rm-badge-row">
+            <span class="rm-badge rm-badge-dur">3 weeks</span>
+            <span class="rm-badge rm-badge-out">Output: Deployable Skeleton</span>
+          </div>
+          <ul class="rm-tasks">
+            <li class="rm-task"><div class="rm-task-dot"></div>Repository structure &amp; standards</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>CI/CD pipeline configuration</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Dev / staging / prod environments</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Authentication &amp; authorization</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Database schema &amp; migrations</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Base API structure &amp; routing</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Monitoring &amp; logging setup</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Error handling conventions</li>
+          </ul>
+          <div class="rm-gantt">
+            <div class="rm-gantt-label">Project timeline overview</div>
+            <div class="rm-gantt-bars">
+              <div class="rm-gantt-bar rm-done" style="flex:2"></div>
+              <div class="rm-gantt-bar rm-cur"  style="flex:3"></div>
+              <div class="rm-gantt-bar"         style="flex:9"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+            </div>
+            <div class="rm-gantt-weeks">
+              <span class="rm-gantt-wk">Wk 1</span><span class="rm-gantt-wk">Wk 3</span>
+              <span class="rm-gantt-wk">Wk 6</span><span class="rm-gantt-wk">Wk 15</span>
+              <span class="rm-gantt-wk">Wk 19</span><span class="rm-gantt-wk">Wk 22</span>
+            </div>
+          </div>
         </div>
-        <div class="step-title">Iterate and export</div>
-        <div class="step-desc">Revise through natural language conversation. Export a complete documentation pack when you're ready to start building.</div>
-      </div>
 
-    </div>
+        <!-- Panel 2: Core Development -->
+        <div class="rm-panel" id="rmPanel2">
+          <span class="rm-bg-num">03</span>
+          <span class="rm-panel-label">Phase 03 · 9 weeks</span>
+          <h3 class="rm-panel-title">Core Development</h3>
+          <p class="rm-panel-desc">Implement the product. Feature modules are built in priority order — business logic first, integrations after. Every module ships tested. Weekly milestones keep the team aligned and accountable.</p>
+          <div class="rm-badge-row">
+            <span class="rm-badge rm-badge-dur">9 weeks</span>
+            <span class="rm-badge rm-badge-out">Output: Working Product</span>
+          </div>
+          <ul class="rm-tasks">
+            <li class="rm-task"><div class="rm-task-dot"></div>Core feature modules (priority-ordered)</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>API endpoints &amp; business logic</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Frontend screens &amp; components</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>State management layer</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Data access layer</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>File storage &amp; media handling</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Unit &amp; integration tests</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Weekly milestone reviews</li>
+          </ul>
+          <div class="rm-gantt">
+            <div class="rm-gantt-label">Project timeline overview</div>
+            <div class="rm-gantt-bars">
+              <div class="rm-gantt-bar rm-done" style="flex:2"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:3"></div>
+              <div class="rm-gantt-bar rm-cur"  style="flex:9"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+            </div>
+            <div class="rm-gantt-weeks">
+              <span class="rm-gantt-wk">Wk 1</span><span class="rm-gantt-wk">Wk 3</span>
+              <span class="rm-gantt-wk">Wk 6</span><span class="rm-gantt-wk">Wk 15</span>
+              <span class="rm-gantt-wk">Wk 19</span><span class="rm-gantt-wk">Wk 22</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Integration & QA -->
+        <div class="rm-panel" id="rmPanel3">
+          <span class="rm-bg-num">04</span>
+          <span class="rm-panel-label">Phase 04 · 4 weeks</span>
+          <h3 class="rm-panel-title">Integration &amp; QA</h3>
+          <p class="rm-panel-desc">Connect all the pieces and verify the system holds under real conditions. Third-party integrations, end-to-end tests, and a full security review — before any user sees it.</p>
+          <div class="rm-badge-row">
+            <span class="rm-badge rm-badge-dur">4 weeks</span>
+            <span class="rm-badge rm-badge-out">Output: Staging-Ready Build</span>
+          </div>
+          <ul class="rm-tasks">
+            <li class="rm-task"><div class="rm-task-dot"></div>Third-party API integrations</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Payment &amp; billing systems</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>End-to-end test suite</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Performance profiling</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Security audit &amp; hardening</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Load testing &amp; benchmarks</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Staging environment validation</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Bug triage &amp; resolution</li>
+          </ul>
+          <div class="rm-gantt">
+            <div class="rm-gantt-label">Project timeline overview</div>
+            <div class="rm-gantt-bars">
+              <div class="rm-gantt-bar rm-done" style="flex:2"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:3"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:9"></div>
+              <div class="rm-gantt-bar rm-cur"  style="flex:4"></div>
+              <div class="rm-gantt-bar"         style="flex:4"></div>
+            </div>
+            <div class="rm-gantt-weeks">
+              <span class="rm-gantt-wk">Wk 1</span><span class="rm-gantt-wk">Wk 3</span>
+              <span class="rm-gantt-wk">Wk 6</span><span class="rm-gantt-wk">Wk 15</span>
+              <span class="rm-gantt-wk">Wk 19</span><span class="rm-gantt-wk">Wk 22</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 4: Launch & Scale -->
+        <div class="rm-panel" id="rmPanel4">
+          <span class="rm-bg-num">05</span>
+          <span class="rm-panel-label">Phase 05 · 4 weeks</span>
+          <h3 class="rm-panel-title">Launch &amp; Scale</h3>
+          <p class="rm-panel-desc">Ship to production and prepare for growth. Infrastructure is tuned, runbooks are written, and the system is ready to scale from day one — not retrofitted after users arrive.</p>
+          <div class="rm-badge-row">
+            <span class="rm-badge rm-badge-dur">4 weeks</span>
+            <span class="rm-badge rm-badge-out">Output: Production Launch</span>
+          </div>
+          <ul class="rm-tasks">
+            <li class="rm-task"><div class="rm-task-dot"></div>Production environment provisioning</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>CDN &amp; edge configuration</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Auto-scaling policies</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Alerting &amp; on-call runbook</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Backup &amp; disaster recovery</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Launch-day checklist execution</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Post-launch monitoring sprint</li>
+            <li class="rm-task"><div class="rm-task-dot"></div>Growth &amp; scaling strategy doc</li>
+          </ul>
+          <div class="rm-gantt">
+            <div class="rm-gantt-label">Project timeline overview</div>
+            <div class="rm-gantt-bars">
+              <div class="rm-gantt-bar rm-done" style="flex:2"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:3"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:9"></div>
+              <div class="rm-gantt-bar rm-done" style="flex:4"></div>
+              <div class="rm-gantt-bar rm-cur"  style="flex:4"></div>
+            </div>
+            <div class="rm-gantt-weeks">
+              <span class="rm-gantt-wk">Wk 1</span><span class="rm-gantt-wk">Wk 3</span>
+              <span class="rm-gantt-wk">Wk 6</span><span class="rm-gantt-wk">Wk 15</span>
+              <span class="rm-gantt-wk">Wk 19</span><span class="rm-gantt-wk">Wk 22</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /rm-content-wrap -->
+    </div><!-- /rm-root -->
   </div>
 </section>
 
@@ -3486,6 +3838,51 @@ hssRenderArch('marketplace');
       }, 1200);
     });
   });
+
+  /* ── Roadmap ── */
+  function rmSelect(idx) {
+    const phases = document.querySelectorAll('.rm-phase-btn');
+    const panels = document.querySelectorAll('.rm-panel');
+    const fill   = document.getElementById('rmSpineFill');
+    const counter = document.getElementById('rmCounter');
+
+    phases.forEach((ph, i) => {
+      ph.classList.remove('rm-active', 'rm-done');
+      if (i < idx)  ph.classList.add('rm-done');
+      if (i === idx) ph.classList.add('rm-active');
+    });
+
+    panels.forEach(p => p.classList.remove('rm-panel-active'));
+    panels[idx].classList.add('rm-panel-active');
+
+    const pct = phases.length > 1 ? (idx / (phases.length - 1)) * 100 : 0;
+    fill.style.height = pct + '%';
+
+    if (counter) counter.textContent = String(idx + 1).padStart(2,'0') + ' / 0' + phases.length;
+  }
+
+  /* Keyboard navigation */
+  document.addEventListener('keydown', (e) => {
+    const phases = [...document.querySelectorAll('.rm-phase-btn')];
+    const cur = phases.findIndex(p => p.classList.contains('rm-active'));
+    if (cur === -1) return;
+    if (e.key === 'ArrowDown' && cur < phases.length - 1) { e.preventDefault(); rmSelect(cur + 1); }
+    if (e.key === 'ArrowUp'   && cur > 0)                  { e.preventDefault(); rmSelect(cur - 1); }
+  });
+
+  /* Scroll-triggered entrance — start at phase 0 when section scrolls in */
+  (() => {
+    const root = document.querySelector('.rm-root');
+    if (!root) return;
+    rmSelect(0);
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        rmSelect(0);
+        obs.disconnect();
+      }
+    }, { threshold: 0.25 });
+    obs.observe(root);
+  })();
 </script>
 
 </body>
