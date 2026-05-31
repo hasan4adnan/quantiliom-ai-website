@@ -3855,8 +3855,16 @@ hssRenderArch('marketplace');
     panels.forEach(p => p.classList.remove('rm-panel-active'));
     panels[idx].classList.add('rm-panel-active');
 
-    const pct = phases.length > 1 ? (idx / (phases.length - 1)) * 100 : 0;
-    fill.style.height = pct + '%';
+    /* Align fill to the center of the active dot in pixel space */
+    const track = document.querySelector('.rm-spine-track');
+    const activeDot = phases[idx].querySelector('.rm-dot');
+    if (track && activeDot) {
+      const trackRect = track.getBoundingClientRect();
+      const dotRect   = activeDot.getBoundingClientRect();
+      const dotCenter = dotRect.top + dotRect.height / 2;
+      const px = Math.max(0, dotCenter - trackRect.top);
+      fill.style.height = px + 'px';
+    }
 
     if (counter) counter.textContent = String(idx + 1).padStart(2,'0') + ' / 0' + phases.length;
   }
