@@ -484,59 +484,122 @@
     /* ────────────────────────────────────────────────
        ARCHITECTURE INTELLIGENCE SECTION
     ──────────────────────────────────────────────── */
-    .ai-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: center;
+    .aii-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 48px; margin-bottom: 52px; flex-wrap: wrap;
     }
-    .ai-rows { display: flex; flex-direction: column; gap: 2px; margin-top: 28px; }
-    .ai-row {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 12px 14px; border-radius: var(--r-sm);
-      border: 1px solid transparent; transition: all .15s;
+    .aii-header-left { flex: 1; min-width: 280px; }
+    .aii-stats-row {
+      display: flex; align-items: stretch; flex-shrink: 0;
+      border: 1px solid var(--cool-gray); border-radius: var(--r-sm);
+      overflow: hidden; align-self: flex-end;
     }
-    .ai-row:hover { background: var(--silver); border-color: var(--cool-gray); }
-    .ai-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--orange); flex-shrink: 0; margin-top: 5px;
+    .aii-stat { padding: 20px 28px; text-align: center; }
+    .aii-stat-num {
+      font-size: 34px; font-weight: 800; letter-spacing: -1.5px;
+      color: var(--black); line-height: 1;
     }
-    .ai-row-text { font-size: 14px; color: var(--graphite); line-height: 1.6; }
-    .ai-row-text strong { color: var(--black); font-weight: 400; }
+    .aii-stat-lbl {
+      font-family: var(--mono); font-size: 10px; color: var(--ash);
+      text-transform: uppercase; letter-spacing: .07em;
+      line-height: 1.4; margin-top: 5px;
+    }
+    .aii-stat-div { width: 1px; background: var(--cool-gray); align-self: stretch; }
 
-    /* Arch diagram card */
-    .arch-card {
-      background: var(--silver);
-      border: 1px solid var(--cool-gray);
-      border-radius: var(--r-card); padding: 28px;
+    .aii-main {
+      display: grid; grid-template-columns: 1fr 1.15fr;
+      gap: 56px; align-items: start;
     }
-    .arch-card-lbl {
-      font-family: var(--mono); font-size: 10px;
-      color: var(--ash); letter-spacing: .06em;
-      text-transform: uppercase; margin-bottom: 22px;
+
+    /* Feature accordion */
+    .aii-features { display: flex; flex-direction: column; }
+    .aii-feat {
+      display: flex; align-items: flex-start; gap: 18px;
+      padding: 16px 0; border-bottom: 1px solid #f0f0f0;
+      cursor: pointer; transition: background .15s;
     }
-    .arch-group { margin-bottom: 14px; }
-    .arch-group-lbl {
-      font-family: var(--mono); font-size: 10px;
-      color: var(--cool-gray); letter-spacing: .1em;
-      text-transform: uppercase; margin-bottom: 8px;
+    .aii-feat:first-child { border-top: 1px solid #f0f0f0; }
+    .aii-feat-num {
+      font-family: var(--mono); font-size: 11px; color: #c8c8c8;
+      font-weight: 700; flex-shrink: 0; padding-top: 2px;
+      min-width: 22px; transition: color .2s;
     }
-    .arch-nodes { display: flex; gap: 6px; flex-wrap: wrap; }
-    .arch-node {
-      border: 1px solid var(--cool-gray); border-radius: 3px;
-      padding: 5px 10px; font-family: var(--mono); font-size: 11px;
-      color: var(--graphite); background: var(--light-gray);
-      white-space: nowrap;
+    .aii-feat-title {
+      font-size: 14px; font-weight: 600; color: var(--black);
+      line-height: 1.35; transition: color .2s;
     }
-    .arch-node.hi { border-color: var(--orange); color: var(--orange); background: rgba(239,111,46,.05); }
-    .arch-connector { display: flex; align-items: center; gap: 10px; margin: 6px 0 6px 12px; }
-    .arch-conn-line { width: 1px; height: 20px; background: var(--cool-gray); }
-    .arch-conn-lbl { font-family: var(--mono); font-size: 10px; color: var(--cool-gray); }
-    .arch-footer {
-      margin-top: 20px; padding-top: 16px;
-      border-top: 1px solid var(--cool-gray);
-      display: flex; justify-content: space-between; align-items: center;
+    .aii-feat-desc {
+      font-size: 13px; color: var(--graphite); line-height: 1.6;
+      margin-top: 5px; max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, opacity .3s ease;
+      opacity: 0;
     }
-    .arch-footer-lbl { font-family: var(--mono); font-size: 11px; color: var(--ash); }
-    .arch-footer-val { font-family: var(--mono); font-size: 13px; color: var(--black); }
+    .aii-feat.aii-active .aii-feat-num { color: var(--orange); }
+    .aii-feat.aii-active .aii-feat-desc { max-height: 80px; opacity: 1; }
+    .aii-feat:hover .aii-feat-num { color: var(--orange); }
+    .aii-feat:hover .aii-feat-title { color: var(--orange); }
+
+    /* Terminal */
+    .aii-terminal {
+      background: #0d1117; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 32px 80px rgba(0,0,0,.3);
+    }
+    .aii-term-bar {
+      background: #161b22; padding: 13px 18px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .aii-term-dots { display: flex; gap: 7px; flex-shrink: 0; }
+    .aii-td { width: 12px; height: 12px; border-radius: 50%; }
+    .aii-td-r { background: #ff5f57; }
+    .aii-td-y { background: #febc2e; }
+    .aii-td-g { background: #28c840; }
+    .aii-term-title {
+      font-family: var(--mono); font-size: 11px; color: #6e7681;
+      flex: 1; text-align: center; letter-spacing: .02em;
+    }
+    .aii-term-badge {
+      font-family: var(--mono); font-size: 10px; color: #3fb950;
+      letter-spacing: .05em; display: flex; align-items: center;
+      gap: 5px; flex-shrink: 0;
+    }
+    @keyframes aiiBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .aii-term-badge-dot { animation: aiiBlink 1.4s ease-in-out infinite; }
+    .aii-term-body {
+      padding: 22px 26px 26px;
+      font-family: var(--mono); font-size: 12.5px;
+      line-height: 1.75; color: #e6edf3;
+    }
+    .aii-k  { color: #ef6f2e; }
+    .aii-s  { color: #a5d6ff; }
+    .aii-n  { color: #79c0ff; }
+    .aii-cm { color: #6e7681; font-style: italic; }
+    .aii-p  { color: #e6edf3; }
+    .aii-hi { color: #3fb950; }
+    .aii-cursor {
+      display: inline-block; width: 7px; height: 14px;
+      background: #ef6f2e; border-radius: 1px;
+      vertical-align: text-bottom; margin-left: 2px;
+      animation: aiiCursor .9s step-end infinite;
+    }
+    @keyframes aiiCursor { 0%,100%{opacity:1} 50%{opacity:0} }
+    .aii-line {
+      display: block; opacity: 0; transform: translateX(-6px);
+      transition: opacity .22s ease, transform .22s ease;
+      white-space: pre;
+    }
+    .aii-line.aii-shown { opacity: 1; transform: translateX(0); }
+    .aii-term-footer {
+      padding: 12px 26px; border-top: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .aii-term-footer-left {
+      font-family: var(--mono); font-size: 10px; color: #6e7681;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .aii-term-footer-cost {
+      font-family: var(--mono); font-size: 11px; color: #3fb950;
+    }
 
     /* ────────────────────────────────────────────────
        USE CASES
@@ -958,17 +1021,9 @@
     .feat-title { transition: color .2s; }
     .feat-cell:hover .feat-title { color: var(--black); }
 
-    /* ── AI rows ── */
-    .ai-row { transition: background .2s, border-color .2s, padding-left .2s var(--spring); }
-    .ai-row:hover { background: var(--silver); border-color: var(--cool-gray); padding-left: 22px; }
-    .ai-dot { transition: transform .2s var(--spring), box-shadow .2s; }
-    .ai-row:hover .ai-dot { transform: scale(1.6); box-shadow: 0 0 0 4px rgba(239,111,46,.18); }
-
-    /* ── Arch nodes ── */
-    .arch-node { transition: border-color .2s, color .2s, transform .2s var(--spring); cursor: default; }
-    .arch-node:hover { border-color: var(--graphite); color: var(--black); transform: translateY(-2px); }
-    .arch-node.hi { transition: border-color .2s, box-shadow .2s, transform .2s var(--spring); }
-    .arch-node.hi:hover { box-shadow: 0 0 0 3px rgba(239,111,46,.22); transform: translateY(-2px); }
+    /* ── AII feature hover ── */
+    .aii-feat { transition: opacity .15s; }
+    .aii-feat:not(.aii-active):hover { opacity: .85; }
 
     /* ── UC tabs ── */
     .uc-tab { transition: background .2s, color .2s; position: relative; overflow: hidden; }
@@ -2163,102 +2218,109 @@
 ════════════════════════════════════════════════ -->
 <section class="section">
   <div class="wrap">
-    <div class="ai-grid">
 
-      <div>
+    <!-- Top header: heading left, stats right -->
+    <div class="aii-header">
+      <div class="aii-header-left">
         <span class="label" style="margin-bottom:14px;">Architecture Intelligence</span>
         <h2 class="heading-lg">The brain behind<br>every decision.</h2>
-        <p class="body-md" style="margin-top:16px;">
-          Our Architecture Intelligence Engine is not an LLM wrapper. It's a multi-layer orchestration system built on structured reasoning, a curated pattern library, and constraint-based decision logic — designed to produce reliable, explainable output every time.
+        <p class="body-md" style="margin-top:16px; max-width:440px;">
+          Not an LLM wrapper — a multi-layer orchestration system built on structured reasoning, a curated pattern library, and constraint-based decision logic.
         </p>
-
-        <div class="ai-rows">
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Requirement Analysis Engine</strong> — Understands your domain, identifies missing information, and classifies project type before any architecture work begins.</span>
-          </div>
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Dynamic Question Generator</strong> — Produces 10–15 targeted, domain-specific questions. A SaaS app gets different questions than a real-time chat system.</span>
-          </div>
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Structured Requirement Builder</strong> — Normalizes your answers into machine-readable constraint data that feeds the decision engine consistently.</span>
-          </div>
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Pattern Library</strong> — SaaS, Marketplace, AI Chatbot, E-commerce, Real-time — proven architectural blueprints ground every recommendation in what actually works.</span>
-          </div>
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Pricing &amp; Alternatives Agent</strong> — Computes cost across compute, database, storage, and LLM usage. Always shows two or three options so you understand the trade you're making.</span>
-          </div>
-          <div class="ai-row">
-            <div class="ai-dot"></div>
-            <span class="ai-row-text"><strong>Conversational Revision Agent</strong> — Accepts natural language changes and propagates them consistently through the entire architecture output.</span>
-          </div>
+      </div>
+      <div class="aii-stats-row">
+        <div class="aii-stat">
+          <div class="aii-stat-num">6</div>
+          <div class="aii-stat-lbl">Reasoning<br>Layers</div>
+        </div>
+        <div class="aii-stat-div"></div>
+        <div class="aii-stat">
+          <div class="aii-stat-num">15+</div>
+          <div class="aii-stat-lbl">Targeted<br>Questions</div>
+        </div>
+        <div class="aii-stat-div"></div>
+        <div class="aii-stat">
+          <div class="aii-stat-num">&lt;2m</div>
+          <div class="aii-stat-lbl">Full Architecture<br>Output</div>
         </div>
       </div>
+    </div>
 
-      <!-- Diagram card -->
-      <div class="arch-card">
-        <div class="arch-card-lbl">Output · Balanced Architecture · Marketplace</div>
+    <!-- Main: features accordion + terminal -->
+    <div class="aii-main">
 
-        <div class="arch-group">
-          <div class="arch-group-lbl">Client Layer</div>
-          <div class="arch-nodes">
-            <span class="arch-node">Web App (Next.js)</span>
-            <span class="arch-node">Mobile (Flutter)</span>
+      <!-- Left: numbered feature accordion -->
+      <div class="aii-features" id="aiiFeatures">
+
+        <div class="aii-feat aii-active">
+          <span class="aii-feat-num">01</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Requirement Analysis Engine</div>
+            <div class="aii-feat-desc">Understands your domain, identifies missing information, and classifies project type before any architecture work begins.</div>
           </div>
         </div>
 
-        <div class="arch-connector">
-          <div class="arch-conn-line"></div>
-          <span class="arch-conn-lbl">HTTPS / REST</span>
-        </div>
-
-        <div class="arch-group">
-          <div class="arch-group-lbl">API Layer</div>
-          <div class="arch-nodes">
-            <span class="arch-node hi">API Gateway</span>
-            <span class="arch-node">Auth Service</span>
-            <span class="arch-node">Backend (NestJS)</span>
+        <div class="aii-feat">
+          <span class="aii-feat-num">02</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Dynamic Question Generator</div>
+            <div class="aii-feat-desc">Produces 10–15 targeted, domain-specific questions. A SaaS app gets different questions than a real-time chat system.</div>
           </div>
         </div>
 
-        <div class="arch-connector">
-          <div class="arch-conn-line"></div>
-          <span class="arch-conn-lbl">Internal</span>
-        </div>
-
-        <div class="arch-group">
-          <div class="arch-group-lbl">Data Layer</div>
-          <div class="arch-nodes">
-            <span class="arch-node hi">PostgreSQL</span>
-            <span class="arch-node">Redis</span>
-            <span class="arch-node">S3 Storage</span>
-            <span class="arch-node">BullMQ</span>
+        <div class="aii-feat">
+          <span class="aii-feat-num">03</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Structured Requirement Builder</div>
+            <div class="aii-feat-desc">Normalizes your answers into machine-readable constraint data that feeds the decision engine consistently.</div>
           </div>
         </div>
 
-        <div class="arch-connector">
-          <div class="arch-conn-line"></div>
-          <span class="arch-conn-lbl">Third-party</span>
-        </div>
-
-        <div class="arch-group">
-          <div class="arch-group-lbl">Integrations</div>
-          <div class="arch-nodes">
-            <span class="arch-node">Stripe</span>
-            <span class="arch-node">SendGrid</span>
-            <span class="arch-node">Analytics</span>
-            <span class="arch-node">Monitoring</span>
+        <div class="aii-feat">
+          <span class="aii-feat-num">04</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Pattern Library</div>
+            <div class="aii-feat-desc">SaaS, Marketplace, AI Chatbot, E-commerce, Real-time — proven architectural blueprints ground every recommendation in what actually works.</div>
           </div>
         </div>
 
-        <div class="arch-footer">
-          <span class="arch-footer-lbl">Estimated monthly cost</span>
-          <span class="arch-footer-val">$180 – $350 / mo</span>
+        <div class="aii-feat">
+          <span class="aii-feat-num">05</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Pricing &amp; Alternatives Agent</div>
+            <div class="aii-feat-desc">Computes cost across compute, database, storage, and LLM usage. Always shows two or three options so you understand the trade you're making.</div>
+          </div>
+        </div>
+
+        <div class="aii-feat">
+          <span class="aii-feat-num">06</span>
+          <div class="aii-feat-body">
+            <div class="aii-feat-title">Conversational Revision Agent</div>
+            <div class="aii-feat-desc">Accepts natural language changes and propagates them consistently through the entire architecture output.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: dark terminal -->
+      <div class="aii-terminal">
+        <div class="aii-term-bar">
+          <div class="aii-term-dots">
+            <span class="aii-td aii-td-r"></span>
+            <span class="aii-td aii-td-y"></span>
+            <span class="aii-td aii-td-g"></span>
+          </div>
+          <span class="aii-term-title">quantiliom — architecture_output.json</span>
+          <span class="aii-term-badge"><span class="aii-term-badge-dot">●</span>&nbsp;LIVE</span>
+        </div>
+        <div class="aii-term-body" id="aiiTermBody"></div>
+        <div class="aii-term-footer">
+          <span class="aii-term-footer-left">
+            <span>JSON · UTF-8</span>
+            <span>31 lines</span>
+            <span>engine v2.4.1</span>
+          </span>
+          <span class="aii-term-footer-cost">est. $180 – $350 / mo</span>
         </div>
       </div>
 
@@ -3540,7 +3602,7 @@ hssRenderArch('marketplace');
     '.panel-cell',
     '.problem-item',
     '.compare-card',
-    '.ai-row',
+    '.aii-feat',
     '.rev-item',
     '.uc-tabs',
     '.uc-body',
@@ -3838,6 +3900,79 @@ hssRenderArch('marketplace');
       }, 1200);
     });
   });
+
+  /* ── Architecture Intelligence Terminal ── */
+  (function () {
+    const lines = [
+      `<span class="aii-cm">// quantiliom · architecture engine v2.4.1</span>`,
+      `<span class="aii-cm">// analyzing: marketplace platform ···</span>`,
+      ``,
+      `<span class="aii-p">{</span>`,
+      `  <span class="aii-k">"project_type"</span><span class="aii-p">:</span> <span class="aii-s">"marketplace"</span><span class="aii-p">,</span>`,
+      `  <span class="aii-k">"confidence"</span><span class="aii-p">:</span>    <span class="aii-n">0.97</span><span class="aii-p">,</span>`,
+      ``,
+      `  <span class="aii-k">"constraints_detected"</span><span class="aii-p">: [</span>`,
+      `    <span class="aii-s">"multi-tenant isolation"</span><span class="aii-p">,</span>`,
+      `    <span class="aii-s">"real-time listings"</span><span class="aii-p">,</span>`,
+      `    <span class="aii-s">"payment processing"</span>`,
+      `  <span class="aii-p">],</span>`,
+      ``,
+      `  <span class="aii-k">"stack"</span><span class="aii-p">: {</span>`,
+      `    <span class="aii-k">"client"</span><span class="aii-p">:</span> <span class="aii-p">[</span><span class="aii-s">"Next.js 14"</span><span class="aii-p">,</span> <span class="aii-s">"Flutter"</span><span class="aii-p">],</span>`,
+      `    <span class="aii-k">"api"</span><span class="aii-p">:</span>    <span class="aii-p">[</span><span class="aii-s">"NestJS"</span><span class="aii-p">,</span> <span class="aii-s">"API Gateway"</span><span class="aii-p">],</span>`,
+      `    <span class="aii-k">"data"</span><span class="aii-p">:</span>   <span class="aii-p">[</span><span class="aii-s">"PostgreSQL"</span><span class="aii-p">,</span> <span class="aii-s">"Redis"</span><span class="aii-p">,</span> <span class="aii-s">"S3"</span><span class="aii-p">]</span>`,
+      `  <span class="aii-p">},</span>`,
+      ``,
+      `  <span class="aii-k">"reasoning"</span><span class="aii-p">: [</span>`,
+      `    <span class="aii-s">"Multi-tenant → row-level security on PG"</span><span class="aii-p">,</span>`,
+      `    <span class="aii-s">"Real-time listings → WebSocket gateway"</span><span class="aii-p">,</span>`,
+      `    <span class="aii-s">"Mobile-first → Flutter over React Native"</span><span class="aii-p">,</span>`,
+      `    <span class="aii-s">"Payment flow → Stripe + idempotency keys"</span>`,
+      `  <span class="aii-p">],</span>`,
+      ``,
+      `  <span class="aii-k">"cost_estimate"</span><span class="aii-p">: {</span>`,
+      `    <span class="aii-k">"monthly_low"</span><span class="aii-p">:</span>  <span class="aii-n">180</span><span class="aii-p">,</span>`,
+      `    <span class="aii-k">"monthly_high"</span><span class="aii-p">:</span> <span class="aii-n">350</span><span class="aii-p">,</span>`,
+      `    <span class="aii-k">"currency"</span><span class="aii-p">:</span>    <span class="aii-s">"USD"</span>`,
+      `  <span class="aii-p">}</span>`,
+      `<span class="aii-p">}</span>`,
+    ];
+
+    const body = document.getElementById('aiiTermBody');
+    if (!body) return;
+
+    lines.forEach(html => {
+      const el = document.createElement('span');
+      el.className = 'aii-line';
+      el.innerHTML = html || ' ';
+      body.appendChild(el);
+    });
+
+    const cursor = document.createElement('span');
+    cursor.className = 'aii-cursor';
+    body.lastElementChild.appendChild(cursor);
+
+    let done = false;
+    function reveal() {
+      if (done) return;
+      done = true;
+      body.querySelectorAll('.aii-line').forEach((el, i) => {
+        setTimeout(() => el.classList.add('aii-shown'), i * 48);
+      });
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { reveal(); obs.disconnect(); }
+    }, { threshold: 0.25 });
+    obs.observe(body);
+
+    document.getElementById('aiiFeatures')?.querySelectorAll('.aii-feat').forEach(f => {
+      f.addEventListener('click', () => {
+        document.querySelectorAll('.aii-feat').forEach(x => x.classList.remove('aii-active'));
+        f.classList.add('aii-active');
+      });
+    });
+  })();
 
   /* ── Roadmap ── */
   function rmSelect(idx) {
