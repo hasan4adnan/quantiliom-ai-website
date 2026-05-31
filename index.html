@@ -484,68 +484,57 @@
     /* ────────────────────────────────────────────────
        ARCHITECTURE INTELLIGENCE SECTION
     ──────────────────────────────────────────────── */
-    .aii-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      gap: 48px; margin-bottom: 52px; flex-wrap: wrap;
+    .aii-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: stretch;
     }
-    .aii-header-left { flex: 1; min-width: 280px; }
-    .aii-stats-row {
-      display: flex; align-items: stretch; flex-shrink: 0;
-      border: 1px solid var(--cool-gray); border-radius: var(--r-sm);
-      overflow: hidden; align-self: flex-end;
-    }
-    .aii-stat { padding: 20px 28px; text-align: center; }
-    .aii-stat-num {
-      font-size: 34px; font-weight: 800; letter-spacing: -1.5px;
-      color: var(--black); line-height: 1;
-    }
-    .aii-stat-lbl {
-      font-family: var(--mono); font-size: 10px; color: var(--ash);
-      text-transform: uppercase; letter-spacing: .07em;
-      line-height: 1.4; margin-top: 5px;
-    }
-    .aii-stat-div { width: 1px; background: var(--cool-gray); align-self: stretch; }
+    .aii-left { display: flex; flex-direction: column; }
 
-    .aii-main {
-      display: grid; grid-template-columns: 1fr 1.15fr;
-      gap: 56px; align-items: start;
+    /* Inline stats strip */
+    .aii-inline-stats {
+      display: flex; align-items: center;
+      margin: 14px 0 18px; font-size: 13px; color: var(--graphite);
+    }
+    .aii-inline-stats strong { font-weight: 700; color: var(--black); }
+    .aii-istat-sep { width: 1px; height: 16px; background: #d8d8d8; margin: 0 14px; flex-shrink:0; }
+
+    /* 2×3 feature card grid */
+    .aii-cards {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; flex: 1;
+    }
+    .aii-card {
+      display: flex; flex-direction: column;
+      border: 1px solid #ebebeb; border-radius: 10px; background: #fff;
+      position: relative; overflow: hidden;
+      transition: box-shadow .22s, transform .22s var(--spring), border-color .22s;
+    }
+    .aii-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #ddd; }
+    .aii-card-body { flex: 1; padding: 16px 14px 12px; }
+    .aii-card-num {
+      font-family: var(--mono); font-size: 10px; color: #dadada;
+      font-weight: 700; letter-spacing: .06em;
+      position: absolute; top: 14px; right: 14px;
+    }
+    .aii-card-title { font-size: 13px; font-weight: 650; color: var(--black); line-height: 1.3; margin-bottom: 5px; }
+    .aii-card-desc { font-size: 11.5px; color: var(--graphite); line-height: 1.55; }
+    .aii-card-tags {
+      border-top: 1px solid #f0f0f0; padding: 10px 14px 12px;
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .aii-card-tag {
+      font-family: var(--mono); font-size: 9.5px; color: #aaa;
+      background: #f7f7f7; border-radius: 3px; padding: 2px 7px;
     }
 
-    /* Feature accordion */
-    .aii-features { display: flex; flex-direction: column; }
-    .aii-feat {
-      display: flex; align-items: flex-start; gap: 18px;
-      padding: 16px 0; border-bottom: 1px solid #f0f0f0;
-      cursor: pointer; transition: background .15s;
-    }
-    .aii-feat:first-child { border-top: 1px solid #f0f0f0; }
-    .aii-feat-num {
-      font-family: var(--mono); font-size: 11px; color: #c8c8c8;
-      font-weight: 700; flex-shrink: 0; padding-top: 2px;
-      min-width: 22px; transition: color .2s;
-    }
-    .aii-feat-title {
-      font-size: 14px; font-weight: 600; color: var(--black);
-      line-height: 1.35; transition: color .2s;
-    }
-    .aii-feat-desc {
-      font-size: 13px; color: var(--graphite); line-height: 1.6;
-      margin-top: 5px; max-height: 0; overflow: hidden;
-      transition: max-height .35s ease, opacity .3s ease;
-      opacity: 0;
-    }
-    .aii-feat.aii-active .aii-feat-num { color: var(--orange); }
-    .aii-feat.aii-active .aii-feat-desc { max-height: 80px; opacity: 1; }
-    .aii-feat:hover .aii-feat-num { color: var(--orange); }
-    .aii-feat:hover .aii-feat-title { color: var(--orange); }
-
-    /* Terminal */
+    /* Terminal — fills full column height via stretch */
     .aii-terminal {
+      display: flex; flex-direction: column;
       background: #0d1117; border-radius: 14px; overflow: hidden;
       box-shadow: 0 0 0 1px rgba(255,255,255,.07), 0 32px 80px rgba(0,0,0,.3);
     }
     .aii-term-bar {
-      background: #161b22; padding: 13px 18px;
+      background: #161b22; padding: 13px 18px; flex-shrink: 0;
       display: flex; align-items: center; gap: 12px;
       border-bottom: 1px solid rgba(255,255,255,.07);
     }
@@ -566,7 +555,7 @@
     @keyframes aiiBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
     .aii-term-badge-dot { animation: aiiBlink 1.4s ease-in-out infinite; }
     .aii-term-body {
-      padding: 22px 26px 26px;
+      flex: 1; padding: 22px 26px; overflow-y: auto;
       font-family: var(--mono); font-size: 12.5px;
       line-height: 1.75; color: #e6edf3;
     }
@@ -575,7 +564,6 @@
     .aii-n  { color: #79c0ff; }
     .aii-cm { color: #6e7681; font-style: italic; }
     .aii-p  { color: #e6edf3; }
-    .aii-hi { color: #3fb950; }
     .aii-cursor {
       display: inline-block; width: 7px; height: 14px;
       background: #ef6f2e; border-radius: 1px;
@@ -590,16 +578,14 @@
     }
     .aii-line.aii-shown { opacity: 1; transform: translateX(0); }
     .aii-term-footer {
-      padding: 12px 26px; border-top: 1px solid rgba(255,255,255,.06);
+      padding: 11px 26px; border-top: 1px solid rgba(255,255,255,.06); flex-shrink: 0;
       display: flex; align-items: center; justify-content: space-between;
     }
     .aii-term-footer-left {
       font-family: var(--mono); font-size: 10px; color: #6e7681;
       display: flex; align-items: center; gap: 16px;
     }
-    .aii-term-footer-cost {
-      font-family: var(--mono); font-size: 11px; color: #3fb950;
-    }
+    .aii-term-footer-cost { font-family: var(--mono); font-size: 11px; color: #3fb950; }
 
     /* ────────────────────────────────────────────────
        USE CASES
@@ -1021,9 +1007,7 @@
     .feat-title { transition: color .2s; }
     .feat-cell:hover .feat-title { color: var(--black); }
 
-    /* ── AII feature hover ── */
-    .aii-feat { transition: opacity .15s; }
-    .aii-feat:not(.aii-active):hover { opacity: .85; }
+    /* ── AII card hover (handled inline) ── */
 
     /* ── UC tabs ── */
     .uc-tab { transition: background .2s, color .2s; position: relative; overflow: hidden; }
@@ -2216,93 +2200,112 @@
 <!-- ════════════════════════════════════════════════
      ARCHITECTURE INTELLIGENCE DEEP DIVE
 ════════════════════════════════════════════════ -->
-<section class="section">
+<section class="section" style="padding:44px 0; background-color:#fafafa; background-image:radial-gradient(circle,#e2e2e2 1px,transparent 1px); background-size:22px 22px;">
   <div class="wrap">
+    <div class="aii-grid">
 
-    <!-- Top header: heading left, stats right -->
-    <div class="aii-header">
-      <div class="aii-header-left">
-        <span class="label" style="margin-bottom:14px;">Architecture Intelligence</span>
-        <h2 class="heading-lg">The brain behind<br>every decision.</h2>
-        <p class="body-md" style="margin-top:16px; max-width:440px;">
-          Not an LLM wrapper — a multi-layer orchestration system built on structured reasoning, a curated pattern library, and constraint-based decision logic.
+      <!-- Left: heading + stats + 2×3 feature cards -->
+      <div class="aii-left">
+        <span class="label" style="margin-bottom:12px;">Architecture Intelligence</span>
+        <h2 style="font-size:38px; font-weight:400; line-height:1.1; letter-spacing:-1.5px; color:var(--black);">The brain behind<br>every decision.</h2>
+        <p style="margin-top:10px; max-width:420px; font-size:14px; color:var(--graphite); line-height:1.6;">
+          Not an LLM wrapper — a multi-layer orchestration system built on structured reasoning and constraint-based decision logic.
         </p>
+
+        <!-- Inline stats -->
+        <div class="aii-inline-stats">
+          <span><strong>6</strong> reasoning layers</span>
+          <span class="aii-istat-sep"></span>
+          <span><strong>15+</strong> targeted questions</span>
+          <span class="aii-istat-sep"></span>
+          <span><strong>&lt;2m</strong> full output</span>
+        </div>
+
+        <!-- 2×3 feature cards -->
+        <div class="aii-cards">
+
+          <div class="aii-card">
+            <span class="aii-card-num">01</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Requirement Analysis</div>
+              <div class="aii-card-desc">Identifies missing information and classifies project type before any architecture work begins.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">NLP</span>
+              <span class="aii-card-tag">Classification</span>
+              <span class="aii-card-tag">Constraints</span>
+            </div>
+          </div>
+
+          <div class="aii-card">
+            <span class="aii-card-num">02</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Dynamic Question Generator</div>
+              <div class="aii-card-desc">Produces 10–15 domain-specific questions tailored to your exact project type.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">Adaptive</span>
+              <span class="aii-card-tag">Domain-aware</span>
+              <span class="aii-card-tag">10–15 Q</span>
+            </div>
+          </div>
+
+          <div class="aii-card">
+            <span class="aii-card-num">03</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Requirement Builder</div>
+              <div class="aii-card-desc">Normalizes answers into machine-readable constraint data for the decision engine.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">Structured</span>
+              <span class="aii-card-tag">JSON output</span>
+              <span class="aii-card-tag">Versioned</span>
+            </div>
+          </div>
+
+          <div class="aii-card">
+            <span class="aii-card-num">04</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Pattern Library</div>
+              <div class="aii-card-desc">SaaS, Marketplace, Chatbot, E-commerce — proven blueprints ground every recommendation.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">SaaS</span>
+              <span class="aii-card-tag">Marketplace</span>
+              <span class="aii-card-tag">Real-time</span>
+            </div>
+          </div>
+
+          <div class="aii-card">
+            <span class="aii-card-num">05</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Pricing &amp; Alternatives</div>
+              <div class="aii-card-desc">Computes cost across compute, DB, storage, and LLM with 2–3 trade-off options.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">AWS · GCP</span>
+              <span class="aii-card-tag">LLM cost</span>
+              <span class="aii-card-tag">Trade-offs</span>
+            </div>
+          </div>
+
+          <div class="aii-card">
+            <span class="aii-card-num">06</span>
+            <div class="aii-card-body">
+              <div class="aii-card-title">Revision Agent</div>
+              <div class="aii-card-desc">Accepts natural language changes and propagates them consistently through the entire output.</div>
+            </div>
+            <div class="aii-card-tags">
+              <span class="aii-card-tag">Conversational</span>
+              <span class="aii-card-tag">Diff-aware</span>
+              <span class="aii-card-tag">Live</span>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="aii-stats-row">
-        <div class="aii-stat">
-          <div class="aii-stat-num">6</div>
-          <div class="aii-stat-lbl">Reasoning<br>Layers</div>
-        </div>
-        <div class="aii-stat-div"></div>
-        <div class="aii-stat">
-          <div class="aii-stat-num">15+</div>
-          <div class="aii-stat-lbl">Targeted<br>Questions</div>
-        </div>
-        <div class="aii-stat-div"></div>
-        <div class="aii-stat">
-          <div class="aii-stat-num">&lt;2m</div>
-          <div class="aii-stat-lbl">Full Architecture<br>Output</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Main: features accordion + terminal -->
-    <div class="aii-main">
-
-      <!-- Left: numbered feature accordion -->
-      <div class="aii-features" id="aiiFeatures">
-
-        <div class="aii-feat aii-active">
-          <span class="aii-feat-num">01</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Requirement Analysis Engine</div>
-            <div class="aii-feat-desc">Understands your domain, identifies missing information, and classifies project type before any architecture work begins.</div>
-          </div>
-        </div>
-
-        <div class="aii-feat">
-          <span class="aii-feat-num">02</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Dynamic Question Generator</div>
-            <div class="aii-feat-desc">Produces 10–15 targeted, domain-specific questions. A SaaS app gets different questions than a real-time chat system.</div>
-          </div>
-        </div>
-
-        <div class="aii-feat">
-          <span class="aii-feat-num">03</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Structured Requirement Builder</div>
-            <div class="aii-feat-desc">Normalizes your answers into machine-readable constraint data that feeds the decision engine consistently.</div>
-          </div>
-        </div>
-
-        <div class="aii-feat">
-          <span class="aii-feat-num">04</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Pattern Library</div>
-            <div class="aii-feat-desc">SaaS, Marketplace, AI Chatbot, E-commerce, Real-time — proven architectural blueprints ground every recommendation in what actually works.</div>
-          </div>
-        </div>
-
-        <div class="aii-feat">
-          <span class="aii-feat-num">05</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Pricing &amp; Alternatives Agent</div>
-            <div class="aii-feat-desc">Computes cost across compute, database, storage, and LLM usage. Always shows two or three options so you understand the trade you're making.</div>
-          </div>
-        </div>
-
-        <div class="aii-feat">
-          <span class="aii-feat-num">06</span>
-          <div class="aii-feat-body">
-            <div class="aii-feat-title">Conversational Revision Agent</div>
-            <div class="aii-feat-desc">Accepts natural language changes and propagates them consistently through the entire architecture output.</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Right: dark terminal -->
+      <!-- Right: dark terminal (stretches to match left column height) -->
       <div class="aii-terminal">
         <div class="aii-term-bar">
           <div class="aii-term-dots">
@@ -3602,7 +3605,7 @@ hssRenderArch('marketplace');
     '.panel-cell',
     '.problem-item',
     '.compare-card',
-    '.aii-feat',
+    '.aii-card',
     '.rev-item',
     '.uc-tabs',
     '.uc-body',
@@ -3966,12 +3969,6 @@ hssRenderArch('marketplace');
     }, { threshold: 0.25 });
     obs.observe(body);
 
-    document.getElementById('aiiFeatures')?.querySelectorAll('.aii-feat').forEach(f => {
-      f.addEventListener('click', () => {
-        document.querySelectorAll('.aii-feat').forEach(x => x.classList.remove('aii-active'));
-        f.classList.add('aii-active');
-      });
-    });
   })();
 
   /* ── Roadmap ── */
