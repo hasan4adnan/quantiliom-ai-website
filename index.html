@@ -590,45 +590,156 @@
     /* ────────────────────────────────────────────────
        USE CASES
     ──────────────────────────────────────────────── */
-    .uc-tabs {
-      display: flex; gap: 1px;
-      background: var(--cool-gray);
-      border: 1px solid var(--cool-gray);
-      border-radius: var(--r-sm) var(--r-sm) 0 0;
-      overflow: hidden;
+    /* ════════════════════════════════════════════════
+       SYSTEM PATTERNS CONSOLE
+    ════════════════════════════════════════════════ */
+    .sp-console {
+      border-radius: 16px; overflow: hidden;
+      background: #0d1117;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 48px 120px rgba(0,0,0,.18);
     }
-    .uc-tab {
-      padding: 11px 20px;
-      font-family: var(--mono); font-size: 12px;
-      color: var(--ash); background: var(--silver);
-      border: none; outline: none; transition: all .15s;
-      white-space: nowrap;
+    .sp-bar {
+      background: #161b22; padding: 14px 22px;
+      display: flex; align-items: center; gap: 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
     }
-    .uc-tab.active { background: var(--light-gray); color: var(--black); }
-    .uc-tab:hover:not(.active) { color: var(--graphite); }
-
-    .uc-body {
-      border: 1px solid var(--cool-gray); border-top: none;
-      border-radius: 0 0 var(--r-card) var(--r-card);
-      background: var(--silver);
-      display: grid; grid-template-columns: 1fr 1fr;
-      overflow: hidden;
+    .sp-bar-dots { display: flex; gap: 7px; flex-shrink: 0; }
+    .sp-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .sp-dot-r { background: #ff5f57; }
+    .sp-dot-y { background: #febc2e; }
+    .sp-dot-g { background: #28c840; }
+    .sp-tabs { display: flex; gap: 3px; flex: 1; flex-wrap: wrap; }
+    .sp-tab {
+      padding: 6px 13px; border-radius: 6px;
+      font-family: var(--mono); font-size: 11px; color: #6e7681;
+      background: transparent; border: 1px solid transparent;
+      cursor: pointer; white-space: nowrap; transition: all .18s ease;
     }
-    .uc-info { padding: 40px; border-right: 1px solid var(--cool-gray); }
-    .uc-title { font-size: 24px; color: var(--black); letter-spacing: -.5px; margin-bottom: 14px; line-height: 1.2; }
-    .uc-desc  { font-size: 15px; color: var(--graphite); line-height: 1.7; margin-bottom: 28px; }
-    .uc-rows  { display: flex; flex-direction: column; gap: 8px; }
-    .uc-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 8px 12px;
-      border: 1px solid var(--cool-gray); border-radius: var(--r-sm);
-      background: var(--light-gray);
+    .sp-tab:hover:not(.active) { color: #cdd9e5; background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); }
+    .sp-tab.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .sp-bar-status {
+      font-family: var(--mono); font-size: 10px; color: #3fb950;
+      display: flex; align-items: center; gap: 5px; flex-shrink: 0; letter-spacing: .05em;
     }
-    .uc-row-key   { font-family: var(--mono); font-size: 11px; color: var(--graphite); }
-    .uc-row-value { font-family: var(--mono); font-size: 11px; color: var(--orange); }
-
-    .uc-diagram { padding: 40px; background: var(--light-gray); display: flex; flex-direction: column; gap: 12px; }
-    .uc-diagram-lbl { font-family: var(--mono); font-size: 10px; color: var(--ash); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+    .sp-status-dot { animation: aiiBlink 1.4s ease-in-out infinite; }
+    .sp-body {
+      display: grid; grid-template-columns: 1fr 1fr; min-height: 500px;
+      transition: opacity .2s ease;
+    }
+    .sp-body.sp-fade { opacity: 0; }
+    /* left: blueprint */
+    .sp-blueprint {
+      padding: 32px; border-right: 1px solid rgba(255,255,255,.06);
+      background: #0d1117;
+      background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 24px 24px; position: relative; overflow: hidden;
+    }
+    @keyframes spScan {
+      0%   { top: 0;    opacity: 0; }
+      5%   { opacity: 1; }
+      90%  { opacity: .6; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .sp-blueprint::before {
+      content: ''; position: absolute; left: 0; right: 0; height: 1px; top: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(239,111,46,.55) 50%, transparent 100%);
+      animation: spScan 6s ease-in-out infinite; pointer-events: none;
+    }
+    .sp-bp-header { margin-bottom: 24px; }
+    .sp-bp-tag {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 6px;
+    }
+    .sp-bp-title { font-size: 17px; color: #e6edf3; letter-spacing: -.3px; font-weight: 400; line-height: 1.3; }
+    /* layer stack */
+    .sp-layers { display: flex; flex-direction: column; gap: 0; }
+    .sp-lr { display: flex; align-items: center; gap: 14px; }
+    .sp-lr-label {
+      font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+      letter-spacing: .1em; width: 58px; flex-shrink: 0; text-align: right; padding-top: 2px;
+    }
+    .sp-lr-label--blue   { color: #58a6ff; }
+    .sp-lr-label--orange { color: var(--orange); }
+    .sp-lr-label--green  { color: #3fb950; }
+    .sp-lr-label--purple { color: #bc8cff; }
+    .sp-lr-nodes { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; }
+    .sp-node {
+      padding: 5px 10px; border-radius: 6px;
+      font-family: var(--mono); font-size: 11px; border: 1px solid;
+      animation: spNodeIn .35s ease both;
+    }
+    @keyframes spNodeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .sp-node--blue   { color: #58a6ff; background: rgba(88,166,255,.08); border-color: rgba(88,166,255,.22); }
+    .sp-node--orange { color: #ef7f40; background: rgba(239,111,46,.08); border-color: rgba(239,111,46,.28); }
+    .sp-node--green  { color: #3fb950; background: rgba(63,185,80,.08);  border-color: rgba(63,185,80,.22); }
+    .sp-node--purple { color: #bc8cff; background: rgba(188,140,255,.08); border-color: rgba(188,140,255,.22); }
+    .sp-lr-conn { display: flex; align-items: flex-start; gap: 14px; padding: 3px 0; }
+    .sp-lr-conn-spacer { width: 58px; flex-shrink: 0; }
+    .sp-lr-conn-line {
+      width: 1px; height: 20px; margin-left: 4px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.15), rgba(255,255,255,.03));
+    }
+    /* right: analysis */
+    .sp-analysis {
+      padding: 32px; background: #0d1117;
+      display: flex; flex-direction: column; gap: 16px; overflow: hidden;
+    }
+    .sp-an-label {
+      font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+      letter-spacing: .1em; color: #484f58; margin-bottom: 6px;
+    }
+    .sp-conf-row { display: flex; align-items: center; gap: 10px; }
+    .sp-conf-track {
+      flex: 1; height: 6px; background: rgba(255,255,255,.07);
+      border-radius: 3px; overflow: hidden;
+    }
+    .sp-conf-fill {
+      height: 100%; border-radius: 3px; width: 0;
+      background: linear-gradient(90deg, #ef6f2e, #f5a96a);
+      box-shadow: 0 0 10px rgba(239,111,46,.35);
+      transition: width .65s cubic-bezier(.4,0,.2,1) .15s;
+    }
+    .sp-conf-pct { font-family: var(--mono); font-size: 13px; color: var(--orange); min-width: 34px; text-align: right; }
+    .sp-decisions { display: flex; flex-direction: column; gap: 8px; }
+    .sp-dec {
+      display: grid; grid-template-columns: 68px 1fr 68px 32px;
+      align-items: center; gap: 10px;
+    }
+    .sp-dec-key { font-family: var(--mono); font-size: 10px; color: #6e7681; }
+    .sp-dec-val { font-family: var(--mono); font-size: 11px; color: #cdd9e5; }
+    .sp-dec-track { height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; overflow: hidden; }
+    .sp-dec-fill {
+      height: 100%; border-radius: 2px; width: 0;
+      background: rgba(255,255,255,.2);
+      transition: width .5s cubic-bezier(.4,0,.2,1);
+    }
+    .sp-dec-fill--hi { background: linear-gradient(90deg, #3fb950, #56d66f); box-shadow: 0 0 6px rgba(63,185,80,.3); }
+    .sp-dec-pct { font-family: var(--mono); font-size: 10px; color: #484f58; text-align: right; }
+    .sp-constraints { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sp-constraint {
+      font-family: var(--mono); font-size: 10px; color: #8b949e;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      padding: 4px 9px; border-radius: 4px;
+    }
+    .sp-reasoning { display: flex; flex-direction: column; gap: 6px; }
+    .sp-reason {
+      display: flex; align-items: baseline; gap: 8px;
+      font-family: var(--mono); font-size: 11px; color: #6e7681; line-height: 1.5;
+    }
+    .sp-reason-arrow { color: var(--orange); flex-shrink: 0; font-size: 10px; }
+    .sp-reason-text em { color: #a5d6ff; font-style: normal; }
+    .sp-cost-row { display: flex; align-items: center; gap: 14px; }
+    .sp-cost-num { font-family: var(--mono); text-align: center; }
+    .sp-cost-num-val { font-size: 22px; letter-spacing: -1px; color: #e6edf3; line-height: 1; }
+    .sp-cost-num-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: #484f58; margin-top: 3px; }
+    .sp-cost-mid { flex: 1; display: flex; flex-direction: column; gap: 5px; align-items: center; }
+    .sp-cost-track { width: 100%; height: 4px; background: rgba(255,255,255,.07); border-radius: 2px; overflow: hidden; }
+    .sp-cost-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #3fb950 0%, #f0d832 55%, #ef6f2e 100%); }
+    .sp-cost-range-lbl { font-family: var(--mono); font-size: 9px; color: #484f58; }
+    .sp-an-divider { height: 1px; background: rgba(255,255,255,.06); flex-shrink: 0; }
 
     /* ────────────────────────────────────────────────
        WHO IT'S FOR
@@ -1010,24 +1121,10 @@
     /* ── AII card hover (handled inline) ── */
 
     /* ── UC tabs ── */
-    .uc-tab { transition: background .2s, color .2s; position: relative; overflow: hidden; }
-    .uc-tab::after {
-      content: ''; position: absolute; bottom: 0; left: 0;
-      width: 0; height: 2px; background: var(--orange);
-      transition: width .3s var(--spring);
-    }
-    .uc-tab.active::after { width: 100%; }
-    .uc-tab:hover:not(.active) { background: rgba(250,250,250,.85); }
-
-    /* UC body transition */
-    .uc-body { transition: opacity .25s; }
-    .uc-body.fading { opacity: 0; }
-
-    /* ── UC rows ── */
-    .uc-row { transition: border-color .2s, background .2s; cursor: default; }
-    .uc-row:hover { border-color: var(--graphite); background: var(--silver); }
-    .uc-row-value { transition: color .2s; }
-    .uc-row:hover .uc-row-value { color: var(--black); }
+    /* sp-tab hover glow */
+    .sp-tab { transition: all .18s ease; }
+    .sp-node { transition: filter .15s ease; cursor: default; }
+    .sp-node:hover { filter: brightness(1.3); }
 
     /* ── Persona cells ── */
     .persona-cell {
@@ -2342,57 +2439,28 @@
       <h2 class="heading-lg">Built for every type<br>of software project.</h2>
     </div>
 
-    <div class="uc-tabs" id="ucTabs">
-      <button class="uc-tab active" data-uc="saas">SaaS Platform</button>
-      <button class="uc-tab" data-uc="marketplace">Marketplace</button>
-      <button class="uc-tab" data-uc="ai">AI Chatbot</button>
-      <button class="uc-tab" data-uc="ecommerce">E-commerce</button>
-      <button class="uc-tab" data-uc="realtime">Real-time App</button>
+    <!-- Architecture Intelligence Console -->
+    <div class="sp-console">
+      <div class="sp-bar">
+        <div class="sp-bar-dots">
+          <span class="sp-dot sp-dot-r"></span>
+          <span class="sp-dot sp-dot-y"></span>
+          <span class="sp-dot sp-dot-g"></span>
+        </div>
+        <div class="sp-tabs" id="spTabs">
+          <button class="sp-tab active" data-sp="saas">SaaS Platform</button>
+          <button class="sp-tab" data-sp="marketplace">Marketplace</button>
+          <button class="sp-tab" data-sp="ai">AI Chatbot</button>
+          <button class="sp-tab" data-sp="ecommerce">E-commerce</button>
+          <button class="sp-tab" data-sp="realtime">Real-time App</button>
+        </div>
+        <div class="sp-bar-status">
+          <span class="sp-status-dot">●</span>&nbsp;LIVE
+        </div>
+      </div>
+      <div class="sp-body" id="spBody"></div>
     </div>
 
-    <!-- SaaS -->
-    <div class="uc-body" id="uc-saas">
-      <div class="uc-info">
-        <div class="uc-title">Multi-tenant SaaS Application</div>
-        <div class="uc-desc">We design tenant isolation models, subscription billing, RBAC, admin panels, and audit logging — with explicit trade-offs between schema-per-tenant and row-level security approaches.</div>
-        <div class="uc-rows">
-          <div class="uc-row"><span class="uc-row-key">Tenant Isolation</span><span class="uc-row-value">Schema-per-tenant</span></div>
-          <div class="uc-row"><span class="uc-row-key">Auth Strategy</span><span class="uc-row-value">JWT + RBAC</span></div>
-          <div class="uc-row"><span class="uc-row-key">Billing</span><span class="uc-row-value">Stripe Subscriptions</span></div>
-          <div class="uc-row"><span class="uc-row-key">Admin Panel</span><span class="uc-row-value">Separate Service</span></div>
-          <div class="uc-row"><span class="uc-row-key">Audit Logging</span><span class="uc-row-value">PostgreSQL + Events</span></div>
-        </div>
-      </div>
-      <div class="uc-diagram">
-        <div class="uc-diagram-lbl">Tenant Model Comparison</div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Schema-per-tenant</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Strong isolation · Easy compliance · Higher DB overhead</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Row-Level Security</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Simpler setup · Lower cost · Complex query overhead</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;gap:0;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$120</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$280</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Other UC panels hidden via JS -->
   </div>
 </section>
 
@@ -3607,8 +3675,7 @@ hssRenderArch('marketplace');
     '.compare-card',
     '.aii-card',
     '.rev-item',
-    '.uc-tabs',
-    '.uc-body',
+    '.sp-console',
     '.trust',
   ];
   const revealEls = document.querySelectorAll(revealTargets.join(','));
@@ -3658,223 +3725,246 @@ hssRenderArch('marketplace');
   }, { threshold: 0.5 });
   metricEls.forEach(el => counterObserver.observe(el));
 
-  /* ── Use-case tab switching with fade ── */
-  const ucData = {
-    saas: {
-      title: 'Multi-tenant SaaS Application',
-      desc: 'We design tenant isolation models, subscription billing, RBAC, admin panels, and audit logging — with explicit trade-offs between schema-per-tenant and row-level security approaches.',
-      rows: [
-        ['Tenant Isolation','Schema-per-tenant'],['Auth Strategy','JWT + RBAC'],
-        ['Billing','Stripe Subscriptions'],['Admin Panel','Separate Service'],
-        ['Audit Logging','PostgreSQL + Events']
-      ],
-      diagramLabel: 'Tenant Model Comparison',
-      diagramContent: `
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Schema-per-tenant</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
+  /* ── System Patterns Console ── */
+  (function () {
+    const spData = {
+      saas: {
+        title: 'Multi-tenant SaaS Application',
+        pattern: 'SaaS · Multi-tenant Pattern',
+        confidence: 97,
+        layers: [
+          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'React Query', 'Tailwind CSS'] },
+          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'API Gateway', 'WebSockets'] },
+          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Redis', 'S3'] },
+          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'RDS Multi-AZ', 'CloudFront'] },
+        ],
+        decisions: [
+          { key: 'Isolation',  val: 'Schema-per-tenant',  pct: 97, hi: true  },
+          { key: 'Auth',       val: 'JWT + RBAC',          pct: 92, hi: true  },
+          { key: 'Billing',    val: 'Stripe Subs',          pct: 88, hi: false },
+          { key: 'Admin',      val: 'Separate Service',     pct: 82, hi: false },
+          { key: 'Audit Log',  val: 'PG + Events',          pct: 90, hi: false },
+        ],
+        constraints: ['multi-tenant', 'schema isolation', 'RBAC', 'audit logging', 'subscription billing'],
+        reasoning: [
+          { text: '<em>Multi-tenant</em> → schema-per-tenant on PostgreSQL' },
+          { text: '<em>RBAC</em> → JWT with role claims, not session-based' },
+          { text: '<em>Billing</em> → Stripe Subscriptions + webhook events' },
+        ],
+        costMin: '$120', costMax: '$280',
+      },
+      marketplace: {
+        title: 'Two-sided Marketplace',
+        pattern: 'Marketplace · Escrow Model',
+        confidence: 94,
+        layers: [
+          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'React Native', 'CDN Edge'] },
+          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'Stripe Connect', 'WebSockets'] },
+          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Elasticsearch', 'Redis'] },
+          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'S3 + CDN', 'SQS Queues'] },
+        ],
+        decisions: [
+          { key: 'Payments',  val: 'Stripe Connect',    pct: 96, hi: true  },
+          { key: 'Search',    val: 'Elasticsearch',     pct: 88, hi: true  },
+          { key: 'Real-time', val: 'WebSocket + Redis', pct: 91, hi: false },
+          { key: 'Storage',   val: 'S3 + CloudFront',   pct: 85, hi: false },
+          { key: 'Mobile',    val: 'React Native',      pct: 80, hi: false },
+        ],
+        constraints: ['escrow payments', 'buyer protection', 'real-time listings', 'mobile-first', 'review system'],
+        reasoning: [
+          { text: '<em>Escrow</em> → Stripe Connect with managed payouts' },
+          { text: '<em>Real-time listings</em> → WebSocket gateway + Redis pub/sub' },
+          { text: '<em>Mobile-first</em> → React Native over Flutter for marketplace UX' },
+        ],
+        costMin: '$180', costMax: '$450',
+      },
+      ai: {
+        title: 'AI Chatbot + RAG Pipeline',
+        pattern: 'AI App · RAG Pipeline',
+        confidence: 93,
+        layers: [
+          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'SSE Streaming', 'Markdown UI'] },
+          { label: 'API',    color: 'orange',  nodes: ['FastAPI', 'LLM Gateway', 'Token Limiter'] },
+          { label: 'DATA',   color: 'green',   nodes: ['pgvector', 'Redis Context', 'PostgreSQL'] },
+          { label: 'INFRA',  color: 'purple',  nodes: ['Anthropic API', 'OpenAI API', 'Modal.com'] },
+        ],
+        decisions: [
+          { key: 'LLM',       val: 'Anthropic Claude',  pct: 91, hi: true  },
+          { key: 'Vector DB', val: 'pgvector',           pct: 88, hi: true  },
+          { key: 'Context',   val: 'Redis Sliding Win',  pct: 86, hi: false },
+          { key: 'Streaming', val: 'SSE / WebSocket',    pct: 93, hi: false },
+          { key: 'Rate Limit',val: 'Token-bucket',       pct: 84, hi: false },
+        ],
+        constraints: ['RAG pipeline', 'context window', 'prompt caching', 'streaming responses', 'rate limiting'],
+        reasoning: [
+          { text: '<em>RAG</em> → pgvector over Pinecone for &lt;10M vectors' },
+          { text: '<em>Context</em> → Redis sliding window with 24h TTL' },
+          { text: '<em>Streaming</em> → SSE for simplicity, WS for bidirectional' },
+        ],
+        costMin: '$90', costMax: '$600',
+      },
+      ecommerce: {
+        title: 'E-commerce Platform',
+        pattern: 'E-commerce · Stateless Checkout',
+        confidence: 95,
+        layers: [
+          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'Vercel Edge', 'CloudFront'] },
+          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'Stripe + 3DS', 'Order Queue'] },
+          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Redis Cart', 'Elasticsearch'] },
+          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'RDS', 'SQS + Lambda'] },
+        ],
+        decisions: [
+          { key: 'Checkout',  val: 'Stateless + Stripe', pct: 95, hi: true  },
+          { key: 'Cart',      val: 'Redis TTL Store',    pct: 90, hi: true  },
+          { key: 'Search',    val: 'Elasticsearch',      pct: 87, hi: false },
+          { key: 'Inventory', val: 'Event-sourced DB',   pct: 82, hi: false },
+          { key: 'CDN',       val: 'CloudFront + Edge',  pct: 93, hi: false },
+        ],
+        constraints: ['high-availability', 'peak traffic', 'PCI compliance', 'idempotent orders', 'inventory sync'],
+        reasoning: [
+          { text: '<em>Stateless checkout</em> → scales horizontally, idempotent orders' },
+          { text: '<em>Redis cart</em> → TTL-based, no DB writes until payment' },
+          { text: '<em>Event-sourced inventory</em> → prevents overselling on spikes' },
+        ],
+        costMin: '$140', costMax: '$520',
+      },
+      realtime: {
+        title: 'Real-time Collaborative App',
+        pattern: 'Real-time · CRDT / OT Sync',
+        confidence: 91,
+        layers: [
+          { label: 'CLIENT', color: 'blue',   nodes: ['React + Yjs', 'CRDT State', 'WS Client'] },
+          { label: 'API',    color: 'orange',  nodes: ['NestJS WS', 'Presence API', 'Sync Engine'] },
+          { label: 'DATA',   color: 'green',   nodes: ['Redis Streams', 'PostgreSQL', 'Redis Presence'] },
+          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'Sticky LB', 'ElastiCache'] },
+        ],
+        decisions: [
+          { key: 'Transport', val: 'WebSocket + Fallback', pct: 94, hi: true  },
+          { key: 'Sync',      val: 'CRDT / Yjs',           pct: 87, hi: true  },
+          { key: 'Pub/Sub',   val: 'Redis Streams',        pct: 91, hi: false },
+          { key: 'Presence',  val: 'Redis + Heartbeat',    pct: 85, hi: false },
+          { key: 'SLA',       val: '< 100ms p99',          pct: 89, hi: false },
+        ],
+        constraints: ['sub-100ms latency', 'conflict resolution', 'presence system', 'reconnection', 'offline support'],
+        reasoning: [
+          { text: '<em>CRDT</em> → Yjs over OT for merge-conflict-free collaboration' },
+          { text: '<em>Sticky LB</em> → required for WebSocket connection persistence' },
+          { text: '<em>Redis Streams</em> → fan-out to all connected clients per room' },
+        ],
+        costMin: '$80', costMax: '$380',
+      },
+    };
+
+    function buildBlueprint(d) {
+      const layerRows = d.layers.map((layer, i) => `
+        ${i > 0 ? `<div class="sp-lr-conn"><div class="sp-lr-conn-spacer"></div><div class="sp-lr-conn-line"></div></div>` : ''}
+        <div class="sp-lr">
+          <div class="sp-lr-label sp-lr-label--${layer.color}">${layer.label}</div>
+          <div class="sp-lr-nodes">
+            ${layer.nodes.map((n, ni) => `<div class="sp-node sp-node--${layer.color}" style="animation-delay:${(i * .1 + ni * .05).toFixed(2)}s">${n}</div>`).join('')}
           </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Strong isolation · Easy compliance · Higher DB overhead</span>
         </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Row-Level Security</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Simpler setup · Lower cost · Complex query overhead</span>
+      `).join('');
+      return `
+        <div class="sp-bp-header">
+          <div class="sp-bp-tag">${d.pattern}</div>
+          <div class="sp-bp-title">${d.title}</div>
         </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$120</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$280</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>`
-    },
-    marketplace: {
-      title: 'Two-sided Marketplace',
-      desc: 'Design seller/buyer workflows, escrow payment models, inventory systems, real-time messaging, and review systems — with cost-optimized infrastructure for variable traffic spikes.',
-      rows: [
-        ['Payment Model','Escrow + Stripe Connect'],['Search','Elasticsearch'],
-        ['Real-time','WebSockets + Redis'],['Storage','S3 + CDN'],
-        ['Mobile','React Native']
-      ],
-      diagramLabel: 'Payment Flow Comparison',
-      diagramContent: `
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Escrow Model</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Buyer trust · Dispute handling · 2–3% platform fee</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Direct Payment</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Simpler flow · Lower trust score · Higher chargeback risk</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$180</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$450</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>`
-    },
-    ai: {
-      title: 'AI Chatbot Application',
-      desc: 'Architect LLM integration layers, context window management, prompt caching, vector databases for RAG pipelines, and streaming response infrastructure.',
-      rows: [
-        ['LLM Layer','OpenAI / Anthropic API'],['Vector DB','Pinecone / pgvector'],
-        ['Context Mgmt','Redis + Sliding Window'],['Streaming','SSE / WebSockets'],
-        ['Rate Limiting','Token-bucket + Redis']
-      ],
-      diagramLabel: 'RAG Pipeline Architecture',
-      diagramContent: `
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">RAG with pgvector</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Lower cost · SQL-compatible · Great for &lt;10M vectors</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Pinecone Managed</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Managed scaling · Higher cost · Best at 10M+ vectors</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$90</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$600</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>`
-    },
-    ecommerce: {
-      title: 'E-commerce Platform',
-      desc: 'Design product catalog systems, cart and checkout flows, inventory management, order processing pipelines, and high-availability infrastructure for peak traffic events.',
-      rows: [
-        ['Catalog Search','Elasticsearch + Filters'],['Cart Session','Redis TTL Store'],
-        ['Payments','Stripe + 3DS'],['Inventory','Event-sourced DB'],
-        ['CDN','CloudFront + Edge Cache']
-      ],
-      diagramLabel: 'Checkout Flow Options',
-      diagramContent: `
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Stateless Checkout</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Scales horizontally · Idempotent orders · Simpler ops</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Session-based Cart</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Easier to implement · Sticky sessions needed · Less scalable</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$140</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$520</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>`
-    },
-    realtime: {
-      title: 'Real-time Application',
-      desc: 'Architect WebSocket infrastructure, pub/sub messaging, presence systems, conflict-free replicated data types for collaborative features, and low-latency delivery pipelines.',
-      rows: [
-        ['Transport','WebSockets + Fallback'],['Pub/Sub','Redis Streams'],
-        ['Presence','Redis + Heartbeat'],['State Sync','CRDT / OT'],
-        ['Delivery SLA','< 100ms p99']
-      ],
-      diagramLabel: 'Message Delivery Options',
-      diagramContent: `
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">WebSocket + Redis</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--orange);">Recommended ✓</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Low latency · Self-hosted · Full control over protocol</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-family:var(--mono);font-size:12px;color:var(--black);">Pusher / Ably Managed</span>
-            <span style="font-family:var(--mono);font-size:10px;color:var(--ash);">Alternative</span>
-          </div>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--graphite);">Faster setup · Vendor lock-in · Cost scales with connections</span>
-        </div>
-        <div style="border:1px solid var(--cool-gray);border-radius:4px;padding:14px 16px;background:var(--silver);display:flex;">
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$80</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">min / mo</div>
-          </div>
-          <div style="width:1px;background:var(--cool-gray);"></div>
-          <div style="flex:1;text-align:center;padding:4px 0;">
-            <div style="font-family:var(--mono);font-size:20px;color:var(--black);letter-spacing:-1px;">$380</div>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;margin-top:4px;">max / mo</div>
-          </div>
-        </div>`
+        <div class="sp-layers">${layerRows}</div>
+      `;
     }
-  };
 
-  function renderUcBody(key) {
-    const d = ucData[key];
-    if (!d) return;
-    const body = document.querySelector('.uc-body');
-    body.classList.add('fading');
-    setTimeout(() => {
-      body.innerHTML = `
-        <div class="uc-info">
-          <div class="uc-title">${d.title}</div>
-          <div class="uc-desc">${d.desc}</div>
-          <div class="uc-rows">
-            ${d.rows.map(([k,v]) => `
-              <div class="uc-row">
-                <span class="uc-row-key">${k}</span>
-                <span class="uc-row-value">${v}</span>
-              </div>`).join('')}
+    function buildAnalysis(d) {
+      const decs = d.decisions.map((dec, i) => `
+        <div class="sp-dec" style="animation-delay:${(i * .06).toFixed(2)}s">
+          <span class="sp-dec-key">${dec.key}</span>
+          <span class="sp-dec-val">${dec.val}</span>
+          <div class="sp-dec-track"><div class="sp-dec-fill${dec.hi ? ' sp-dec-fill--hi' : ''}" data-pct="${dec.pct}"></div></div>
+          <span class="sp-dec-pct">${dec.pct}%</span>
+        </div>
+      `).join('');
+      const chips = d.constraints.map(c => `<span class="sp-constraint">${c}</span>`).join('');
+      const reasons = d.reasoning.map(r => `
+        <div class="sp-reason"><span class="sp-reason-arrow">→</span><span class="sp-reason-text">${r.text}</span></div>
+      `).join('');
+      return `
+        <div>
+          <div class="sp-an-label">Confidence Score</div>
+          <div class="sp-conf-row">
+            <div class="sp-conf-track"><div class="sp-conf-fill" data-pct="${d.confidence}"></div></div>
+            <span class="sp-conf-pct">${d.confidence}%</span>
           </div>
         </div>
-        <div class="uc-diagram">
-          <div class="uc-diagram-lbl">${d.diagramLabel}</div>
-          ${d.diagramContent}
-        </div>`;
-      body.classList.remove('fading');
-    }, 200);
-  }
+        <div class="sp-an-divider"></div>
+        <div>
+          <div class="sp-an-label">Stack Decisions</div>
+          <div class="sp-decisions">${decs}</div>
+        </div>
+        <div class="sp-an-divider"></div>
+        <div>
+          <div class="sp-an-label">Constraints Detected</div>
+          <div class="sp-constraints">${chips}</div>
+        </div>
+        <div class="sp-an-divider"></div>
+        <div>
+          <div class="sp-an-label">AI Reasoning</div>
+          <div class="sp-reasoning">${reasons}</div>
+        </div>
+        <div class="sp-an-divider"></div>
+        <div>
+          <div class="sp-an-label">Cost Estimate</div>
+          <div class="sp-cost-row">
+            <div class="sp-cost-num">
+              <div class="sp-cost-num-val">${d.costMin}</div>
+              <div class="sp-cost-num-lbl">min / mo</div>
+            </div>
+            <div class="sp-cost-mid">
+              <div class="sp-cost-track"><div class="sp-cost-fill"></div></div>
+              <div class="sp-cost-range-lbl">estimated range</div>
+            </div>
+            <div class="sp-cost-num">
+              <div class="sp-cost-num-val">${d.costMax}</div>
+              <div class="sp-cost-num-lbl">max / mo</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
-  document.querySelectorAll('.uc-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.uc-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      renderUcBody(tab.dataset.uc);
+    function renderSp(key) {
+      const d = spData[key];
+      if (!d) return;
+      const body = document.getElementById('spBody');
+      if (!body) return;
+      body.classList.add('sp-fade');
+      setTimeout(() => {
+        body.innerHTML = `
+          <div class="sp-blueprint">${buildBlueprint(d)}</div>
+          <div class="sp-analysis">${buildAnalysis(d)}</div>
+        `;
+        body.classList.remove('sp-fade');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const conf = body.querySelector('.sp-conf-fill');
+            if (conf) conf.style.width = conf.dataset.pct + '%';
+            body.querySelectorAll('.sp-dec-fill').forEach((el, i) => {
+              setTimeout(() => { el.style.width = el.dataset.pct + '%'; }, i * 40);
+            });
+          });
+        });
+      }, 200);
+    }
+
+    document.querySelectorAll('.sp-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.sp-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderSp(tab.dataset.sp);
+      });
     });
-  });
+
+    renderSp('saas');
+  })();
 
   /* ── Code copy button ── */
   document.querySelectorAll('.code-copy').forEach(btn => {
