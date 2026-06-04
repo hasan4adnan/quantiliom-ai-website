@@ -627,61 +627,38 @@
       transition: opacity .2s ease;
     }
     .sp-body.sp-fade { opacity: 0; }
-    /* left: blueprint */
+    /* left: blueprint — SVG diagram */
     .sp-blueprint {
-      padding: 32px; border-right: 1px solid rgba(255,255,255,.06);
-      background: #0d1117;
-      background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px);
-      background-size: 24px 24px; position: relative; overflow: hidden;
-    }
-    @keyframes spScan {
-      0%   { top: 0;    opacity: 0; }
-      5%   { opacity: 1; }
-      90%  { opacity: .6; }
-      100% { top: 100%; opacity: 0; }
-    }
-    .sp-blueprint::before {
-      content: ''; position: absolute; left: 0; right: 0; height: 1px; top: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(239,111,46,.55) 50%, transparent 100%);
-      animation: spScan 6s ease-in-out infinite; pointer-events: none;
-    }
-    .sp-bp-header { margin-bottom: 24px; }
-    .sp-bp-tag {
-      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--orange); margin-bottom: 6px;
-    }
-    .sp-bp-title { font-size: 17px; color: #e6edf3; letter-spacing: -.3px; font-weight: 400; line-height: 1.3; }
-    /* layer stack */
-    .sp-layers { display: flex; flex-direction: column; gap: 0; }
-    .sp-lr { display: flex; align-items: center; gap: 14px; }
-    .sp-lr-label {
-      font-family: var(--mono); font-size: 9px; text-transform: uppercase;
-      letter-spacing: .1em; width: 58px; flex-shrink: 0; text-align: right; padding-top: 2px;
-    }
-    .sp-lr-label--blue   { color: #58a6ff; }
-    .sp-lr-label--orange { color: var(--orange); }
-    .sp-lr-label--green  { color: #3fb950; }
-    .sp-lr-label--purple { color: #bc8cff; }
-    .sp-lr-nodes { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; }
-    .sp-node {
-      padding: 5px 10px; border-radius: 6px;
-      font-family: var(--mono); font-size: 11px; border: 1px solid;
-      animation: spNodeIn .35s ease both;
+      border-right: 1px solid rgba(255,255,255,.06);
+      background: #0d1117; overflow: hidden;
+      display: flex; flex-direction: column; position: relative;
     }
     @keyframes spNodeIn {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .sp-node--blue   { color: #58a6ff; background: rgba(88,166,255,.08); border-color: rgba(88,166,255,.22); }
-    .sp-node--orange { color: #ef7f40; background: rgba(239,111,46,.08); border-color: rgba(239,111,46,.28); }
-    .sp-node--green  { color: #3fb950; background: rgba(63,185,80,.08);  border-color: rgba(63,185,80,.22); }
-    .sp-node--purple { color: #bc8cff; background: rgba(188,140,255,.08); border-color: rgba(188,140,255,.22); }
-    .sp-lr-conn { display: flex; align-items: flex-start; gap: 14px; padding: 3px 0; }
-    .sp-lr-conn-spacer { width: 58px; flex-shrink: 0; }
-    .sp-lr-conn-line {
-      width: 1px; height: 20px; margin-left: 4px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.15), rgba(255,255,255,.03));
+    @keyframes spFlowDash { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+    .sp-diag-wrap {
+      position: relative; flex: 1; min-height: 430px; overflow: hidden; cursor: grab;
+      background-color: #0d1117;
+      background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 22px 22px;
     }
+    .sp-diag-wrap:active { cursor: grabbing; }
+    .sp-diag-svg { width: 100%; height: 100%; display: block; }
+    .sp-zoom-bar {
+      position: absolute; bottom: 14px; right: 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 3px; z-index: 2;
+    }
+    .sp-zoom-btn {
+      width: 26px; height: 26px; border-radius: 5px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+      color: #6e7681; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1; font-family: var(--mono); transition: all .15s; user-select: none;
+    }
+    .sp-zoom-btn:hover { background: rgba(255,255,255,.16); color: #e6edf3; }
+    .sp-zoom-pct { font-family: var(--mono); font-size: 9px; color: #484f58; min-width: 26px; text-align: center; }
     /* right: analysis */
     .sp-analysis {
       padding: 32px; background: #0d1117;
@@ -740,6 +717,271 @@
     .sp-cost-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #3fb950 0%, #f0d832 55%, #ef6f2e 100%); }
     .sp-cost-range-lbl { font-family: var(--mono); font-size: 9px; color: #484f58; }
     .sp-an-divider { height: 1px; background: rgba(255,255,255,.06); flex-shrink: 0; }
+
+    /* ════════════════════════════════════════════════
+       BACKLOG INTELLIGENCE
+    ════════════════════════════════════════════════ */
+    .abg-section { background: #080b0f; border-top: 1px solid rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.05); color: #e6edf3; }
+    .abg-section * { box-sizing: border-box; }
+    .abg-section .label { color: var(--orange) !important; }
+    .abg-section .heading-lg { color: #f0f6fc !important; }
+    .abg-section .body-md { color: #8b949e !important; }
+    .abg-header { display: flex; gap: 64px; align-items: flex-end; margin-bottom: 52px; flex-wrap: wrap; }
+    .abg-header-copy { flex: 1; min-width: 260px; }
+    .abg-header-stats { display: flex; gap: 0; flex-shrink: 0; }
+    .abg-stat {
+      padding: 20px 28px; border-left: 1px solid rgba(255,255,255,.07);
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .abg-stat:first-child { border-left: none; }
+    .abg-stat-val { font-family: var(--mono); font-size: 28px; font-weight: 600; color: #e6edf3; line-height: 1; letter-spacing: -0.03em; }
+    .abg-stat-val.o { color: var(--orange); }
+    .abg-stat-val.g { color: #3fb950; }
+    .abg-stat-lbl { font-family: var(--mono); font-size: 10px; color: #484f58; text-transform: uppercase; letter-spacing: .07em; }
+    /* shell window */
+    .abg-shell {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 40px 100px rgba(0,0,0,.5);
+      background: #0d1117;
+    }
+    .abg-shell-bar {
+      background: #161b22; padding: 12px 18px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .abg-shell-dots { display: flex; gap: 6px; }
+    .abg-shell-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .abg-shell-dot.r { background: #ff5f57; }
+    .abg-shell-dot.y { background: #febc2e; }
+    .abg-shell-dot.g { background: #28c840; }
+    .abg-shell-title { font-family: var(--mono); font-size: 11px; color: #484f58; flex: 1; text-align: center; letter-spacing: .04em; }
+    .abg-shell-tabs { display: flex; gap: 0; }
+    .abg-shell-tab {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .04em;
+      padding: 5px 14px; border-radius: 5px;
+      color: #484f58; cursor: pointer; border: 1px solid transparent;
+      transition: all .15s;
+    }
+    .abg-shell-tab.active { background: rgba(239,111,46,.12); color: var(--orange); border-color: rgba(239,111,46,.2); }
+    .abg-shell-body { padding: 0; }
+    /* board toolbar */
+    .abg-toolbar {
+      display: flex; align-items: center; gap: 12px; padding: 10px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.015);
+    }
+    .abg-toolbar-label { font-family: var(--mono); font-size: 10px; color: #6e7681; letter-spacing: .04em; }
+    .abg-toolbar-sep { width: 1px; height: 14px; background: rgba(255,255,255,.07); margin: 0 4px; }
+    .abg-gen-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(239,111,46,.1); border: 1px solid rgba(239,111,46,.2);
+      border-radius: 4px; padding: 3px 9px;
+      font-family: var(--mono); font-size: 9px; color: var(--orange);
+      letter-spacing: .04em; margin-left: auto;
+    }
+    .abg-gen-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); animation: abgPulse 1.2s ease-in-out infinite; }
+    @keyframes abgPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+    /* epic rows */
+    .abg-board { padding: 12px 0; }
+    .abg-epic-block { border-bottom: 1px solid rgba(255,255,255,.04); }
+    .abg-epic-block:last-child { border-bottom: none; }
+    .abg-epic-hd {
+      display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+      cursor: pointer; user-select: none;
+      transition: background .12s;
+    }
+    .abg-epic-hd:hover { background: rgba(255,255,255,.025); }
+    .abg-chevron { font-size: 9px; color: #484f58; transition: transform .18s; width: 12px; text-align: center; }
+    .abg-epic-block.open .abg-chevron { transform: rotate(90deg); }
+    .abg-epic-pill {
+      font-family: var(--mono); font-size: 9px; font-weight: 600;
+      letter-spacing: .06em; padding: 2px 7px; border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .abg-epic-title { font-family: var(--mono); font-size: 11.5px; color: #cdd9e5; letter-spacing: .01em; flex: 1; }
+    .abg-epic-meta { display: flex; align-items: center; gap: 10px; }
+    .abg-count-badge {
+      font-family: var(--mono); font-size: 9px; color: #484f58;
+      background: rgba(255,255,255,.05); border-radius: 3px; padding: 2px 6px;
+      letter-spacing: .03em;
+    }
+    .abg-pts-badge {
+      font-family: var(--mono); font-size: 9px; color: #6e7681;
+      letter-spacing: .02em;
+    }
+    /* stories */
+    .abg-story-list { overflow: hidden; max-height: 0; transition: max-height .32s ease; }
+    .abg-epic-block.open .abg-story-list { max-height: 2000px; }
+    .abg-story {
+      display: flex; align-items: flex-start; flex-direction: column; gap: 0;
+      padding: 0 20px 0 42px;
+      opacity: 0; transform: translateY(4px);
+      transition: opacity .22s ease, transform .22s ease;
+    }
+    .abg-story.visible { opacity: 1; transform: translateY(0); }
+    .abg-story-hd {
+      display: flex; align-items: center; gap: 9px; padding: 8px 0 6px 0;
+      width: 100%; cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,.035);
+    }
+    .abg-story-icon { font-size: 9px; color: #484f58; width: 12px; text-align:center; }
+    .abg-story-id { font-family: var(--mono); font-size: 9px; color: #484f58; letter-spacing: .03em; flex-shrink: 0; }
+    .abg-story-title { font-family: var(--mono); font-size: 10.5px; color: #adbac7; flex: 1; letter-spacing: .01em; }
+    .abg-story-pts { font-family: var(--mono); font-size: 9px; color: #484f58; background: rgba(255,255,255,.05); border-radius: 3px; padding: 2px 5px; }
+    .abg-story-status { font-family: var(--mono); font-size: 8px; letter-spacing: .05em; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; }
+    .abg-story-status.todo { background: rgba(110,118,129,.12); color: #6e7681; }
+    .abg-story-status.inprog { background: rgba(239,111,46,.1); color: var(--orange); }
+    .abg-story-status.done { background: rgba(63,185,80,.1); color: #3fb950; }
+    /* tasks */
+    .abg-task-list { padding: 4px 0 8px 20px; display: flex; flex-direction: column; gap: 0; }
+    .abg-task {
+      display: flex; align-items: center; gap: 8px; padding: 5px 8px 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.025);
+      opacity: 0; transform: translateX(-6px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .abg-task:last-child { border-bottom: none; }
+    .abg-task.visible { opacity: 1; transform: translateX(0); }
+    /* checkbox button */
+    .abg-task-chk {
+      width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+      border: 1.5px solid #484f58; background: transparent; padding: 0;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: transparent; transition: all .15s;
+    }
+    .abg-task-chk:hover { border-color: #8b949e; }
+    .abg-task[data-status="inprog"] .abg-task-chk { border-color: var(--orange); color: var(--orange); }
+    .abg-task[data-status="done"]   .abg-task-chk { border-color: #3fb950; background: rgba(63,185,80,.18); color: #3fb950; }
+    /* task body states */
+    .abg-task[data-status="done"] .abg-task-title { text-decoration: line-through; opacity: .35; }
+    .abg-task[data-status="inprog"] .abg-task-title { color: #cdd9e5; }
+    /* status chip on tasks */
+    .abg-task-st {
+      font-family: var(--mono); font-size: 8px; letter-spacing: .05em;
+      padding: 2px 7px; border-radius: 3px; text-transform: uppercase;
+      cursor: pointer; border: none; white-space: nowrap; transition: filter .12s;
+    }
+    .abg-task-st:hover  { filter: brightness(1.25); }
+    .abg-task-st.todo   { background: rgba(110,118,129,.14); color: #6e7681; }
+    .abg-task-st.inprog { background: rgba(239,111,46,.12); color: var(--orange); }
+    .abg-task-st.done   { background: rgba(63,185,80,.12);  color: #3fb950; }
+    /* story status as button */
+    .abg-story-status { cursor: pointer; border: none; transition: filter .12s; }
+    .abg-story-status:hover { filter: brightness(1.3); }
+    .abg-task-id { font-family: var(--mono); font-size: 8.5px; color: #393f47; letter-spacing: .03em; flex-shrink: 0; min-width: 56px; }
+    .abg-task-title { font-family: var(--mono); font-size: 10px; color: #8b949e; flex: 1; letter-spacing: .01em; transition: opacity .15s, text-decoration .15s; }
+    .abg-pri { font-family: var(--mono); font-size: 8px; padding: 1px 5px; border-radius: 2px; letter-spacing: .04em; flex-shrink: 0; }
+    .abg-pri.p0 { background: rgba(248,81,73,.1); color: #f85149; }
+    .abg-pri.p1 { background: rgba(239,111,46,.1); color: #ef6f2e; }
+    .abg-pri.p2 { background: rgba(227,179,65,.1); color: #e3b341; }
+    .abg-pri.p3 { background: rgba(88,166,255,.1); color: #58a6ff; }
+    .abg-task-pts { font-family: var(--mono); font-size: 8px; color: #393f47; min-width: 20px; text-align: right; }
+    /* assignee avatar — interactive */
+    .abg-task-av {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 700; color: #0d1117; border: none;
+      cursor: pointer; transition: transform .12s, box-shadow .12s; position: relative;
+    }
+    .abg-task-av:hover { transform: scale(1.18); box-shadow: 0 0 0 2px rgba(255,255,255,.18); }
+    /* assignee tooltip */
+    .abg-av-tip {
+      position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+      background: #1c2128; border: 1px solid rgba(255,255,255,.12);
+      border-radius: 4px; padding: 3px 7px; white-space: nowrap;
+      font-family: var(--mono); font-size: 8px; color: #cdd9e5;
+      pointer-events: none; opacity: 0; transition: opacity .12s; z-index: 10;
+    }
+    .abg-task-av:hover .abg-av-tip { opacity: 1; }
+    /* ── view switching ── */
+    .abg-view { display: none; }
+    .abg-view.active { display: block; }
+    /* ── sprints view ── */
+    .abg-sprints-body { padding: 0; }
+    .abg-sprint-block { border-bottom: 1px solid rgba(255,255,255,.05); }
+    .abg-sprint-block:last-child { border-bottom: none; }
+    .abg-sprint-hd {
+      display: flex; align-items: center; gap: 12px; padding: 14px 20px 10px 20px;
+      cursor: pointer; user-select: none;
+    }
+    .abg-sprint-hd:hover { background: rgba(255,255,255,.02); }
+    .abg-sprint-num { font-family: var(--mono); font-size: 9px; color: #484f58; min-width: 22px; letter-spacing: .06em; }
+    .abg-sprint-name { font-family: var(--mono); font-size: 12px; color: #cdd9e5; flex: 1; font-weight: 600; letter-spacing: .01em; }
+    .abg-sprint-dates { font-family: var(--mono); font-size: 9px; color: #484f58; letter-spacing: .02em; }
+    .abg-sprint-badge {
+      font-family: var(--mono); font-size: 8px; padding: 2px 7px; border-radius: 3px;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+    .abg-sprint-badge.active  { background: rgba(63,185,80,.12);  color: #3fb950; }
+    .abg-sprint-badge.next    { background: rgba(88,166,255,.1);   color: #58a6ff; }
+    .abg-sprint-badge.planned { background: rgba(110,118,129,.1);  color: #6e7681; }
+    .abg-sprint-badge.done    { background: rgba(63,185,80,.08);   color: #3fb950; }
+    .abg-sprint-meta { display: flex; align-items: center; gap: 14px; padding: 0 20px 8px 52px; }
+    .abg-sprint-prog-wrap { flex: 1; max-width: 240px; }
+    .abg-sprint-prog-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .abg-sprint-prog-bar { flex: 1; height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; }
+    .abg-sprint-prog-fill { height: 100%; border-radius: 2px; transition: width 1.2s ease; }
+    .abg-sprint-prog-pct { font-family: var(--mono); font-size: 9px; color: #6e7681; min-width: 28px; }
+    .abg-sprint-summary { font-family: var(--mono); font-size: 9px; color: #484f58; letter-spacing: .02em; }
+    .abg-sprint-avs { display: flex; gap: 4px; }
+    .abg-sprint-av { width: 18px; height: 18px; border-radius: 50%; font-family: var(--mono); font-size: 8px; font-weight: 700; color: #0d1117; display: flex; align-items: center; justify-content: center; }
+    .abg-sprint-pts { font-family: var(--mono); font-size: 9px; color: #484f58; }
+    .abg-sprint-tasks { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+    .abg-sprint-block.open .abg-sprint-tasks { max-height: 800px; }
+    .abg-sprint-task {
+      display: flex; align-items: center; gap: 9px; padding: 5px 20px 5px 52px;
+      border-top: 1px solid rgba(255,255,255,.03);
+    }
+    .abg-sprint-task:hover { background: rgba(255,255,255,.02); }
+    .abg-st-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .abg-st-dot.todo   { background: #393f47; }
+    .abg-st-dot.inprog { background: var(--orange); }
+    .abg-st-dot.done   { background: #3fb950; }
+    .abg-st-id   { font-family: var(--mono); font-size: 8.5px; color: #393f47; min-width: 60px; letter-spacing: .03em; }
+    .abg-st-title{ font-family: var(--mono); font-size: 10px; color: #8b949e; flex: 1; letter-spacing: .01em; }
+    .abg-st-dot.done ~ .abg-st-title { text-decoration: line-through; opacity: .4; }
+    /* ── kanban board ── */
+    .abg-kanban { display: grid; grid-template-columns: repeat(3,1fr); min-height: 420px; }
+    .abg-kan-col { border-right: 1px solid rgba(255,255,255,.06); display: flex; flex-direction: column; overflow: hidden; }
+    .abg-kan-col:last-child { border-right: none; }
+    .abg-kan-col-hd {
+      display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06); flex-shrink: 0;
+    }
+    .abg-kan-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .abg-kan-col-name { font-family: var(--mono); font-size: 10px; color: #8b949e; letter-spacing: .05em; text-transform: uppercase; flex: 1; }
+    .abg-kan-col-cnt { font-family: var(--mono); font-size: 9px; color: #484f58; background: rgba(255,255,255,.05); border-radius: 3px; padding: 1px 6px; }
+    .abg-kan-cards { padding: 10px 8px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; }
+    .abg-kan-card {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 6px; padding: 10px 11px; cursor: default;
+      border-left: 3px solid; transition: border-color .15s, background .15s;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .abg-kan-card:hover { background: rgba(255,255,255,.06); }
+    .abg-kan-card-top { display: flex; align-items: center; gap: 6px; }
+    .abg-kan-card-id { font-family: var(--mono); font-size: 8px; color: #484f58; letter-spacing: .03em; }
+    .abg-kan-card-title { font-family: var(--mono); font-size: 10px; color: #cdd9e5; line-height: 1.45; letter-spacing: .01em; flex: 1; }
+    .abg-kan-card-bot { display: flex; align-items: center; gap: 6px; }
+    .abg-kan-card-pts { font-family: var(--mono); font-size: 8px; color: #484f58; background: rgba(255,255,255,.05); border-radius: 3px; padding: 1px 5px; }
+    .abg-kan-card-av { width: 16px; height: 16px; border-radius: 50%; font-family: var(--mono); font-size: 7px; font-weight: 700; color: #0d1117; display: flex; align-items: center; justify-content: center; margin-left: auto; }
+    /* bottom bar */
+    .abg-footer-bar {
+      padding: 11px 20px; border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.015);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .abg-footer-txt { font-family: var(--mono); font-size: 9px; color: #393f47; letter-spacing: .04em; flex: 1; }
+    .abg-progress-bar { flex: 1; max-width: 200px; height: 3px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; }
+    .abg-progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#ef6f2e,#f5a96a); width: 0; transition: width 1.8s ease .6s; }
+    /* features list (below board) */
+    .abg-feats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 1px; background: rgba(255,255,255,.05); }
+    .abg-feat { background: #080b0f; padding: 28px 28px; display: flex; flex-direction: column; gap: 10px; }
+    .abg-feat-icon { font-size: 16px; }
+    .abg-feat-title { font-family: var(--mono); font-size: 12px; color: #cdd9e5; letter-spacing: .02em; font-weight: 600; }
+    .abg-feat-desc { font-family: var(--mono); font-size: 10px; color: #484f58; line-height: 1.65; letter-spacing: .01em; }
+    @keyframes abgSlideIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
 
     /* ────────────────────────────────────────────────
        WHO IT'S FOR
@@ -2466,6 +2708,679 @@
 
 
 <!-- ════════════════════════════════════════════════
+     BACKLOG INTELLIGENCE
+════════════════════════════════════════════════ -->
+<section class="section abg-section" id="backlog-intelligence">
+  <div class="wrap">
+
+    <!-- Header row -->
+    <div class="abg-header">
+      <div class="abg-header-copy">
+        <span class="label" style="margin-bottom:14px;">Backlog Intelligence</span>
+        <h2 class="heading-lg">Your entire project backlog,<br>generated in seconds.</h2>
+        <p class="body-md" style="margin-top:16px;color:var(--ash);max-width:480px;line-height:1.65;">
+          Stop manually entering epics, stories, and tasks one by one. After architecture analysis, Quantiliom AI generates your complete project backlog — structured, prioritized, sprint-ready, and assigned.
+        </p>
+      </div>
+      <div class="abg-header-stats">
+        <div class="abg-stat">
+          <div class="abg-stat-val">0</div>
+          <div class="abg-stat-lbl">Manual entries</div>
+        </div>
+        <div class="abg-stat">
+          <div class="abg-stat-val o" id="abgCountTasks">0</div>
+          <div class="abg-stat-lbl">Tasks generated</div>
+        </div>
+        <div class="abg-stat">
+          <div class="abg-stat-val g" id="abgCountPts">0</div>
+          <div class="abg-stat-lbl">Story points</div>
+        </div>
+        <div class="abg-stat">
+          <div class="abg-stat-val" id="abgCountSprint">0</div>
+          <div class="abg-stat-lbl">Sprints planned</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board shell -->
+    <div class="abg-shell" id="abgShell">
+
+      <!-- Title bar -->
+      <div class="abg-shell-bar">
+        <div class="abg-shell-dots">
+          <span class="abg-shell-dot r"></span>
+          <span class="abg-shell-dot y"></span>
+          <span class="abg-shell-dot g"></span>
+        </div>
+        <div class="abg-shell-title">SaaS Marketplace — Project Backlog</div>
+        <div class="abg-shell-tabs">
+          <div class="abg-shell-tab active" data-tab="backlog">Backlog</div>
+          <div class="abg-shell-tab" data-tab="sprints">Sprints</div>
+          <div class="abg-shell-tab" data-tab="board">Board</div>
+        </div>
+      </div>
+
+      <!-- ═══ BACKLOG VIEW ═══ -->
+      <div class="abg-view active" data-view="backlog">
+      <div class="abg-toolbar">
+        <span class="abg-toolbar-label">3 Epics</span>
+        <div class="abg-toolbar-sep"></div>
+        <span class="abg-toolbar-label">9 Stories</span>
+        <div class="abg-toolbar-sep"></div>
+        <span class="abg-toolbar-label">47 Tasks</span>
+        <div class="abg-toolbar-sep"></div>
+        <span class="abg-toolbar-label">134 pts</span>
+        <div class="abg-gen-badge">
+          <span class="abg-gen-dot"></span>
+          AI Generated
+        </div>
+      </div>
+
+      <!-- Board -->
+      <div class="abg-board" id="abgBoard">
+
+        <!-- EPIC 1: Auth -->
+        <div class="abg-epic-block open" data-epic="1">
+          <div class="abg-epic-hd">
+            <span class="abg-chevron">▶</span>
+            <span class="abg-epic-pill" style="background:rgba(88,166,255,.12);color:#58a6ff;">E-01</span>
+            <span class="abg-epic-title">Authentication &amp; User Management</span>
+            <span class="abg-count-badge abg-epic-count">2 stories · 7 tasks</span>
+            <span class="abg-pts-badge">28 pts</span>
+          </div>
+          <div class="abg-story-list">
+            <!-- Story 1.1 -->
+            <div class="abg-story">
+              <div class="abg-story-hd">
+                <span class="abg-story-icon">◈</span>
+                <span class="abg-story-id">QAI-S01</span>
+                <span class="abg-story-title">User registration &amp; onboarding flow</span>
+                <span class="abg-story-pts">13 pts</span>
+                <button class="abg-story-status todo" data-status="todo">Todo</button>
+              </div>
+              <div class="abg-task-list">
+                <div class="abg-task" data-status="done">
+                  <button class="abg-task-chk">✓</button>
+                  <span class="abg-task-id">QAI-T001</span>
+                  <span class="abg-task-title">Design signup form &amp; validation UI</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st done">Done</button>
+                  <span class="abg-task-pts">3 pts</span>
+                  <button class="abg-task-av" data-avid="0" style="background:#58a6ff;">A<span class="abg-av-tip">Alex · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="inprog">
+                  <button class="abg-task-chk">▸</button>
+                  <span class="abg-task-id">QAI-T002</span>
+                  <span class="abg-task-title">Implement email verification flow</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st inprog">In Progress</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="1" style="background:#bc8cff;">B<span class="abg-av-tip">Blake · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T003</span>
+                  <span class="abg-task-title">OAuth 2.0 — Google &amp; GitHub SSO</span>
+                  <span class="abg-pri p2">P2</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="2" style="background:#3fb950;">C<span class="abg-av-tip">Casey · Click to reassign</span></button>
+                </div>
+              </div>
+            </div>
+            <!-- Story 1.2 -->
+            <div class="abg-story">
+              <div class="abg-story-hd">
+                <span class="abg-story-icon">◈</span>
+                <span class="abg-story-id">QAI-S02</span>
+                <span class="abg-story-title">Session management &amp; JWT token lifecycle</span>
+                <span class="abg-story-pts">15 pts</span>
+                <button class="abg-story-status inprog" data-status="inprog">In Progress</button>
+              </div>
+              <div class="abg-task-list">
+                <div class="abg-task" data-status="done">
+                  <button class="abg-task-chk">✓</button>
+                  <span class="abg-task-id">QAI-T004</span>
+                  <span class="abg-task-title">JWT access + refresh token generation</span>
+                  <span class="abg-pri p0">P0</span>
+                  <button class="abg-task-st done">Done</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="3" style="background:#ef6f2e;">D<span class="abg-av-tip">Dana · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="inprog">
+                  <button class="abg-task-chk">▸</button>
+                  <span class="abg-task-id">QAI-T005</span>
+                  <span class="abg-task-title">Token rotation &amp; revocation logic</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st inprog">In Progress</button>
+                  <span class="abg-task-pts">3 pts</span>
+                  <button class="abg-task-av" data-avid="0" style="background:#58a6ff;">A<span class="abg-av-tip">Alex · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T006</span>
+                  <span class="abg-task-title">Rate limiting on /auth endpoints</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">3 pts</span>
+                  <button class="abg-task-av" data-avid="1" style="background:#bc8cff;">B<span class="abg-av-tip">Blake · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T007</span>
+                  <span class="abg-task-title">RBAC middleware — role enforcement</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">4 pts</span>
+                  <button class="abg-task-av" data-avid="2" style="background:#3fb950;">C<span class="abg-av-tip">Casey · Click to reassign</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EPIC 2: Core API -->
+        <div class="abg-epic-block" data-epic="2">
+          <div class="abg-epic-hd">
+            <span class="abg-chevron">▶</span>
+            <span class="abg-epic-pill" style="background:rgba(239,111,46,.12);color:#ef6f2e;">E-02</span>
+            <span class="abg-epic-title">Core API Layer &amp; Data Architecture</span>
+            <span class="abg-count-badge abg-epic-count">2 stories · 7 tasks</span>
+            <span class="abg-pts-badge">55 pts</span>
+          </div>
+          <div class="abg-story-list">
+            <div class="abg-story">
+              <div class="abg-story-hd">
+                <span class="abg-story-icon">◈</span>
+                <span class="abg-story-id">QAI-S03</span>
+                <span class="abg-story-title">API Gateway &amp; request validation layer</span>
+                <span class="abg-story-pts">10 pts</span>
+                <button class="abg-story-status inprog" data-status="inprog">In Progress</button>
+              </div>
+              <div class="abg-task-list">
+                <div class="abg-task" data-status="done">
+                  <button class="abg-task-chk">✓</button>
+                  <span class="abg-task-id">QAI-T008</span>
+                  <span class="abg-task-title">NestJS project scaffold &amp; module structure</span>
+                  <span class="abg-pri p0">P0</span>
+                  <button class="abg-task-st done">Done</button>
+                  <span class="abg-task-pts">2 pts</span>
+                  <button class="abg-task-av" data-avid="3" style="background:#ef6f2e;">D<span class="abg-av-tip">Dana · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="inprog">
+                  <button class="abg-task-chk">▸</button>
+                  <span class="abg-task-id">QAI-T009</span>
+                  <span class="abg-task-title">Global request validation with class-validator</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st inprog">In Progress</button>
+                  <span class="abg-task-pts">3 pts</span>
+                  <button class="abg-task-av" data-avid="0" style="background:#58a6ff;">A<span class="abg-av-tip">Alex · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T010</span>
+                  <span class="abg-task-title">Global error handler &amp; exception filters</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">2 pts</span>
+                  <button class="abg-task-av" data-avid="1" style="background:#bc8cff;">B<span class="abg-av-tip">Blake · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T011</span>
+                  <span class="abg-task-title">OpenAPI / Swagger documentation setup</span>
+                  <span class="abg-pri p2">P2</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">2 pts</span>
+                  <button class="abg-task-av" data-avid="2" style="background:#3fb950;">C<span class="abg-av-tip">Casey · Click to reassign</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="abg-story">
+              <div class="abg-story-hd">
+                <span class="abg-story-icon">◈</span>
+                <span class="abg-story-id">QAI-S04</span>
+                <span class="abg-story-title">PostgreSQL schema &amp; multi-tenant isolation</span>
+                <span class="abg-story-pts">21 pts</span>
+                <button class="abg-story-status todo" data-status="todo">Todo</button>
+              </div>
+              <div class="abg-task-list">
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T012</span>
+                  <span class="abg-task-title">Entity-relationship diagram &amp; schema design</span>
+                  <span class="abg-pri p0">P0</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="3" style="background:#ef6f2e;">D<span class="abg-av-tip">Dana · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T013</span>
+                  <span class="abg-task-title">Schema-per-tenant isolation with TypeORM</span>
+                  <span class="abg-pri p0">P0</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">8 pts</span>
+                  <button class="abg-task-av" data-avid="0" style="background:#58a6ff;">A<span class="abg-av-tip">Alex · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T014</span>
+                  <span class="abg-task-title">DB migrations pipeline (TypeORM + rollback)</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="1" style="background:#bc8cff;">B<span class="abg-av-tip">Blake · Click to reassign</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EPIC 3: Billing -->
+        <div class="abg-epic-block" data-epic="3">
+          <div class="abg-epic-hd">
+            <span class="abg-chevron">▶</span>
+            <span class="abg-epic-pill" style="background:rgba(63,185,80,.12);color:#3fb950;">E-03</span>
+            <span class="abg-epic-title">Payments, Billing &amp; Subscriptions</span>
+            <span class="abg-count-badge abg-epic-count">1 story · 4 tasks</span>
+            <span class="abg-pts-badge">51 pts</span>
+          </div>
+          <div class="abg-story-list">
+            <div class="abg-story">
+              <div class="abg-story-hd">
+                <span class="abg-story-icon">◈</span>
+                <span class="abg-story-id">QAI-S05</span>
+                <span class="abg-story-title">Stripe subscription &amp; plan management</span>
+                <span class="abg-story-pts">18 pts</span>
+                <button class="abg-story-status todo" data-status="todo">Todo</button>
+              </div>
+              <div class="abg-task-list">
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T015</span>
+                  <span class="abg-task-title">Stripe product &amp; pricing tier setup</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">3 pts</span>
+                  <button class="abg-task-av" data-avid="2" style="background:#3fb950;">C<span class="abg-av-tip">Casey · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T016</span>
+                  <span class="abg-task-title">Checkout session &amp; payment intent flow</span>
+                  <span class="abg-pri p1">P1</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="4" style="background:#e3b341;">E<span class="abg-av-tip">Ellis · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T017</span>
+                  <span class="abg-task-title">Webhook handler — subscription lifecycle events</span>
+                  <span class="abg-pri p0">P0</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="0" style="background:#58a6ff;">A<span class="abg-av-tip">Alex · Click to reassign</span></button>
+                </div>
+                <div class="abg-task" data-status="todo">
+                  <button class="abg-task-chk"></button>
+                  <span class="abg-task-id">QAI-T018</span>
+                  <span class="abg-task-title">Invoice PDF generation &amp; email delivery</span>
+                  <span class="abg-pri p2">P2</span>
+                  <button class="abg-task-st todo">Todo</button>
+                  <span class="abg-task-pts">5 pts</span>
+                  <button class="abg-task-av" data-avid="1" style="background:#bc8cff;">B<span class="abg-av-tip">Blake · Click to reassign</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /abg-board -->
+      <!-- Footer bar -->
+      <div class="abg-footer-bar">
+        <span class="abg-footer-txt" id="abgFooterTxt">Analyzing architecture… generating backlog</span>
+        <div class="abg-progress-bar"><div class="abg-progress-fill" id="abgProgressFill"></div></div>
+        <span class="abg-footer-txt" style="text-align:right;min-width:80px;" id="abgFooterPct">0%</span>
+      </div>
+      </div><!-- /abg-view backlog -->
+
+
+      <!-- ═══ SPRINTS VIEW ═══ -->
+      <div class="abg-view" data-view="sprints">
+        <div class="abg-toolbar">
+          <span class="abg-toolbar-label">4 Sprints</span>
+          <div class="abg-toolbar-sep"></div>
+          <span class="abg-toolbar-label">Sprint 1 active</span>
+          <div class="abg-toolbar-sep"></div>
+          <span class="abg-toolbar-label">65% complete</span>
+          <div class="abg-gen-badge" style="margin-left:auto;">
+            <span class="abg-gen-dot"></span>
+            AI Planned
+          </div>
+        </div>
+        <div class="abg-sprints-body">
+
+          <!-- Sprint 1 — Active -->
+          <div class="abg-sprint-block open">
+            <div class="abg-sprint-hd">
+              <span class="abg-sprint-num">S1</span>
+              <span class="abg-sprint-name">Sprint 1 — Auth Foundation</span>
+              <span class="abg-sprint-dates">Jun 3 – Jun 16, 2025</span>
+              <span class="abg-sprint-badge active">Active</span>
+            </div>
+            <div class="abg-sprint-meta">
+              <div class="abg-sprint-prog-wrap">
+                <div class="abg-sprint-prog-row">
+                  <div class="abg-sprint-prog-bar"><div class="abg-sprint-prog-fill" style="width:0%;background:linear-gradient(90deg,#3fb950,#56d66f);" data-w="65%"></div></div>
+                  <span class="abg-sprint-prog-pct">65%</span>
+                </div>
+                <div class="abg-sprint-summary">4 done · 2 in progress · 2 todo</div>
+              </div>
+              <div class="abg-sprint-avs">
+                <div class="abg-sprint-av" style="background:#58a6ff;">A</div>
+                <div class="abg-sprint-av" style="background:#bc8cff;">B</div>
+                <div class="abg-sprint-av" style="background:#3fb950;">C</div>
+                <div class="abg-sprint-av" style="background:#ef6f2e;">D</div>
+              </div>
+              <span class="abg-sprint-pts">28 pts</span>
+            </div>
+            <div class="abg-sprint-tasks">
+              <div class="abg-sprint-task"><span class="abg-st-dot done"></span><span class="abg-st-id">QAI-T001</span><span class="abg-st-title">Design signup form &amp; validation UI</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">3 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot done"></span><span class="abg-st-id">QAI-T004</span><span class="abg-st-title">JWT access + refresh token generation</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#ef6f2e;margin-left:6px;">D</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot done"></span><span class="abg-st-id">QAI-T008</span><span class="abg-st-title">NestJS project scaffold &amp; module structure</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">2 pts</span><div class="abg-sprint-av" style="background:#ef6f2e;margin-left:6px;">D</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot done"></span><span class="abg-st-id">QAI-T009</span><span class="abg-st-title">Global request validation with class-validator</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">3 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot inprog"></span><span class="abg-st-id">QAI-T002</span><span class="abg-st-title">Implement email verification flow</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot inprog"></span><span class="abg-st-id">QAI-T005</span><span class="abg-st-title">Token rotation &amp; revocation logic</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">3 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T003</span><span class="abg-st-title">OAuth 2.0 — Google &amp; GitHub SSO</span><span class="abg-pri p2" style="font-size:7.5px;padding:1px 4px;">P2</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#3fb950;margin-left:6px;">C</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T007</span><span class="abg-st-title">RBAC middleware — role enforcement</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">4 pts</span><div class="abg-sprint-av" style="background:#3fb950;margin-left:6px;">C</div></div>
+            </div>
+          </div>
+
+          <!-- Sprint 2 -->
+          <div class="abg-sprint-block">
+            <div class="abg-sprint-hd">
+              <span class="abg-sprint-num">S2</span>
+              <span class="abg-sprint-name">Sprint 2 — API &amp; Data Layer</span>
+              <span class="abg-sprint-dates">Jun 17 – Jun 30, 2025</span>
+              <span class="abg-sprint-badge next">Up Next</span>
+            </div>
+            <div class="abg-sprint-meta">
+              <div class="abg-sprint-prog-wrap">
+                <div class="abg-sprint-prog-row">
+                  <div class="abg-sprint-prog-bar"><div class="abg-sprint-prog-fill" style="width:0%;background:linear-gradient(90deg,#58a6ff,#79b8ff);" data-w="20%"></div></div>
+                  <span class="abg-sprint-prog-pct">20%</span>
+                </div>
+                <div class="abg-sprint-summary">1 done · 1 in progress · 5 todo</div>
+              </div>
+              <div class="abg-sprint-avs">
+                <div class="abg-sprint-av" style="background:#58a6ff;">A</div>
+                <div class="abg-sprint-av" style="background:#bc8cff;">B</div>
+                <div class="abg-sprint-av" style="background:#ef6f2e;">D</div>
+              </div>
+              <span class="abg-sprint-pts">32 pts</span>
+            </div>
+            <div class="abg-sprint-tasks">
+              <div class="abg-sprint-task"><span class="abg-st-dot done"></span><span class="abg-st-id">QAI-T010</span><span class="abg-st-title">Global error handler &amp; exception filters</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">2 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot inprog"></span><span class="abg-st-id">QAI-T006</span><span class="abg-st-title">Rate limiting on /auth endpoints</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">3 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T011</span><span class="abg-st-title">OpenAPI / Swagger documentation setup</span><span class="abg-pri p2" style="font-size:7.5px;padding:1px 4px;">P2</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">2 pts</span><div class="abg-sprint-av" style="background:#3fb950;margin-left:6px;">C</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T012</span><span class="abg-st-title">Entity-relationship diagram &amp; schema design</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#ef6f2e;margin-left:6px;">D</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T013</span><span class="abg-st-title">Schema-per-tenant isolation with TypeORM</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">8 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T014</span><span class="abg-st-title">DB migrations pipeline (TypeORM + rollback)</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T015</span><span class="abg-st-title">Stripe product &amp; pricing tier setup</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">3 pts</span><div class="abg-sprint-av" style="background:#3fb950;margin-left:6px;">C</div></div>
+            </div>
+          </div>
+
+          <!-- Sprint 3 -->
+          <div class="abg-sprint-block">
+            <div class="abg-sprint-hd">
+              <span class="abg-sprint-num">S3</span>
+              <span class="abg-sprint-name">Sprint 3 — Payments &amp; Billing</span>
+              <span class="abg-sprint-dates">Jul 1 – Jul 14, 2025</span>
+              <span class="abg-sprint-badge planned">Planned</span>
+            </div>
+            <div class="abg-sprint-meta">
+              <div class="abg-sprint-prog-wrap">
+                <div class="abg-sprint-prog-row">
+                  <div class="abg-sprint-prog-bar"><div class="abg-sprint-prog-fill" style="width:0%;background:linear-gradient(90deg,#e3b341,#f5cc3c);" data-w="0%"></div></div>
+                  <span class="abg-sprint-prog-pct">0%</span>
+                </div>
+                <div class="abg-sprint-summary">0 done · 0 in progress · 4 todo</div>
+              </div>
+              <div class="abg-sprint-avs">
+                <div class="abg-sprint-av" style="background:#3fb950;">C</div>
+                <div class="abg-sprint-av" style="background:#e3b341;">E</div>
+                <div class="abg-sprint-av" style="background:#58a6ff;">A</div>
+              </div>
+              <span class="abg-sprint-pts">18 pts</span>
+            </div>
+            <div class="abg-sprint-tasks">
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T016</span><span class="abg-st-title">Checkout session &amp; payment intent flow</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#e3b341;margin-left:6px;">E</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T017</span><span class="abg-st-title">Webhook handler — subscription lifecycle events</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T018</span><span class="abg-st-title">Invoice PDF generation &amp; email delivery</span><span class="abg-pri p2" style="font-size:7.5px;padding:1px 4px;">P2</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+            </div>
+          </div>
+
+          <!-- Sprint 4 -->
+          <div class="abg-sprint-block">
+            <div class="abg-sprint-hd">
+              <span class="abg-sprint-num">S4</span>
+              <span class="abg-sprint-name">Sprint 4 — QA, Security &amp; Deploy</span>
+              <span class="abg-sprint-dates">Jul 15 – Jul 28, 2025</span>
+              <span class="abg-sprint-badge planned">Planned</span>
+            </div>
+            <div class="abg-sprint-meta">
+              <div class="abg-sprint-prog-wrap">
+                <div class="abg-sprint-prog-row">
+                  <div class="abg-sprint-prog-bar"><div class="abg-sprint-prog-fill" style="width:0%;background:linear-gradient(90deg,#bc8cff,#d0aaff);" data-w="0%"></div></div>
+                  <span class="abg-sprint-prog-pct">0%</span>
+                </div>
+                <div class="abg-sprint-summary">0 done · 0 in progress · 6 todo</div>
+              </div>
+              <div class="abg-sprint-avs">
+                <div class="abg-sprint-av" style="background:#58a6ff;">A</div>
+                <div class="abg-sprint-av" style="background:#bc8cff;">B</div>
+                <div class="abg-sprint-av" style="background:#3fb950;">C</div>
+                <div class="abg-sprint-av" style="background:#ef6f2e;">D</div>
+                <div class="abg-sprint-av" style="background:#e3b341;">E</div>
+              </div>
+              <span class="abg-sprint-pts">56 pts</span>
+            </div>
+            <div class="abg-sprint-tasks">
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T019</span><span class="abg-st-title">End-to-end integration test suite</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">8 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T020</span><span class="abg-st-title">Security audit — OWASP Top 10 checklist</span><span class="abg-pri p0" style="font-size:7.5px;padding:1px 4px;">P0</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">8 pts</span><div class="abg-sprint-av" style="background:#ef6f2e;margin-left:6px;">D</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T021</span><span class="abg-st-title">Docker containerization &amp; compose setup</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#bc8cff;margin-left:6px;">B</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T022</span><span class="abg-st-title">CI/CD pipeline — GitHub Actions + AWS deploy</span><span class="abg-pri p1" style="font-size:7.5px;padding:1px 4px;">P1</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">8 pts</span><div class="abg-sprint-av" style="background:#3fb950;margin-left:6px;">C</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T023</span><span class="abg-st-title">Performance load testing — k6 scenarios</span><span class="abg-pri p2" style="font-size:7.5px;padding:1px 4px;">P2</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#e3b341;margin-left:6px;">E</div></div>
+              <div class="abg-sprint-task"><span class="abg-st-dot todo"></span><span class="abg-st-id">QAI-T024</span><span class="abg-st-title">Monitoring setup — Datadog APM + alerts</span><span class="abg-pri p2" style="font-size:7.5px;padding:1px 4px;">P2</span><span class="abg-sprint-pts" style="min-width:28px;text-align:right;">5 pts</span><div class="abg-sprint-av" style="background:#58a6ff;margin-left:6px;">A</div></div>
+            </div>
+          </div>
+
+        </div><!-- /abg-sprints-body -->
+        <div class="abg-footer-bar">
+          <span class="abg-footer-txt">4 sprints · Jun 3 – Jul 28, 2025 · 134 pts total</span>
+          <div class="abg-progress-bar"><div class="abg-progress-fill" style="width:33%;"></div></div>
+          <span class="abg-footer-txt" style="text-align:right;min-width:80px;">Sprint 1 of 4</span>
+        </div>
+      </div><!-- /abg-view sprints -->
+
+
+      <!-- ═══ BOARD VIEW (Kanban) ═══ -->
+      <div class="abg-view" data-view="board">
+        <div class="abg-toolbar">
+          <span class="abg-toolbar-label">Kanban Board</span>
+          <div class="abg-toolbar-sep"></div>
+          <span class="abg-toolbar-label">18 tasks · 3 columns</span>
+          <div class="abg-gen-badge" style="margin-left:auto;">
+            <span class="abg-gen-dot"></span>
+            AI Generated
+          </div>
+        </div>
+        <div class="abg-kanban">
+
+          <!-- Todo column -->
+          <div class="abg-kan-col">
+            <div class="abg-kan-col-hd">
+              <div class="abg-kan-dot" style="background:#6e7681;"></div>
+              <span class="abg-kan-col-name">Todo</span>
+              <span class="abg-kan-col-cnt">11 · 60 pts</span>
+            </div>
+            <div class="abg-kan-cards">
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T003</span><span class="abg-pri p2" style="font-size:7px;padding:1px 4px;margin-left:auto;">P2</span></div>
+                <div class="abg-kan-card-title">OAuth 2.0 — Google &amp; GitHub SSO</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#3fb950;">C</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T006</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Rate limiting on /auth endpoints</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T007</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">RBAC middleware — role enforcement</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">4 pts</span><div class="abg-kan-card-av" style="background:#3fb950;">C</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T011</span><span class="abg-pri p2" style="font-size:7px;padding:1px 4px;margin-left:auto;">P2</span></div>
+                <div class="abg-kan-card-title">OpenAPI / Swagger documentation setup</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">2 pts</span><div class="abg-kan-card-av" style="background:#3fb950;">C</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T012</span><span class="abg-pri p0" style="font-size:7px;padding:1px 4px;margin-left:auto;">P0</span></div>
+                <div class="abg-kan-card-title">ER diagram &amp; schema design</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#ef6f2e;">D</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T013</span><span class="abg-pri p0" style="font-size:7px;padding:1px 4px;margin-left:auto;">P0</span></div>
+                <div class="abg-kan-card-title">Schema-per-tenant isolation (TypeORM)</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">8 pts</span><div class="abg-kan-card-av" style="background:#58a6ff;">A</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T014</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">DB migrations pipeline + rollback</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#3fb950;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T015</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Stripe product &amp; pricing tier setup</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#3fb950;">C</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#3fb950;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T017</span><span class="abg-pri p0" style="font-size:7px;padding:1px 4px;margin-left:auto;">P0</span></div>
+                <div class="abg-kan-card-title">Webhook handler — billing events</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#58a6ff;">A</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#3fb950;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T018</span><span class="abg-pri p2" style="font-size:7px;padding:1px 4px;margin-left:auto;">P2</span></div>
+                <div class="abg-kan-card-title">Invoice PDF generation &amp; email delivery</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#3fb950;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T016</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Checkout session &amp; payment intent</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#e3b341;">E</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- In Progress column -->
+          <div class="abg-kan-col">
+            <div class="abg-kan-col-hd">
+              <div class="abg-kan-dot" style="background:var(--orange);"></div>
+              <span class="abg-kan-col-name">In Progress</span>
+              <span class="abg-kan-col-cnt">4 · 13 pts</span>
+            </div>
+            <div class="abg-kan-cards">
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T002</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Implement email verification flow</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T005</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Token rotation &amp; revocation logic</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#58a6ff;">A</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T009</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Global request validation (class-validator)</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#58a6ff;">A</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T006</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title">Rate limiting on /auth endpoints</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Done column -->
+          <div class="abg-kan-col">
+            <div class="abg-kan-col-hd">
+              <div class="abg-kan-dot" style="background:#3fb950;"></div>
+              <span class="abg-kan-col-name">Done</span>
+              <span class="abg-kan-col-cnt">4 · 12 pts</span>
+            </div>
+            <div class="abg-kan-cards">
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;opacity:.7;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T001</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title" style="text-decoration:line-through;opacity:.5;">Design signup form &amp; validation UI</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">3 pts</span><div class="abg-kan-card-av" style="background:#58a6ff;">A</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#58a6ff;opacity:.7;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T004</span><span class="abg-pri p0" style="font-size:7px;padding:1px 4px;margin-left:auto;">P0</span></div>
+                <div class="abg-kan-card-title" style="text-decoration:line-through;opacity:.5;">JWT access + refresh token generation</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">5 pts</span><div class="abg-kan-card-av" style="background:#ef6f2e;">D</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;opacity:.7;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T008</span><span class="abg-pri p0" style="font-size:7px;padding:1px 4px;margin-left:auto;">P0</span></div>
+                <div class="abg-kan-card-title" style="text-decoration:line-through;opacity:.5;">NestJS project scaffold &amp; module structure</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">2 pts</span><div class="abg-kan-card-av" style="background:#ef6f2e;">D</div></div>
+              </div>
+              <div class="abg-kan-card" style="border-left-color:#ef6f2e;opacity:.7;">
+                <div class="abg-kan-card-top"><span class="abg-kan-card-id">QAI-T010</span><span class="abg-pri p1" style="font-size:7px;padding:1px 4px;margin-left:auto;">P1</span></div>
+                <div class="abg-kan-card-title" style="text-decoration:line-through;opacity:.5;">Global error handler &amp; exception filters</div>
+                <div class="abg-kan-card-bot"><span class="abg-kan-card-pts">2 pts</span><div class="abg-kan-card-av" style="background:#bc8cff;">B</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /abg-kanban -->
+        <div class="abg-footer-bar">
+          <span class="abg-footer-txt">18 tasks across 3 columns · 4 done · 4 in progress · 10 todo</span>
+          <div class="abg-progress-bar"><div class="abg-progress-fill" style="width:22%;"></div></div>
+          <span class="abg-footer-txt" style="text-align:right;min-width:80px;">22% done</span>
+        </div>
+      </div><!-- /abg-view board -->
+
+    </div><!-- /abg-shell -->
+
+    <!-- Feature callouts -->
+    <div class="abg-feats">
+      <div class="abg-feat">
+        <div class="abg-feat-icon">⬡</div>
+        <div class="abg-feat-title">Full Hierarchy</div>
+        <div class="abg-feat-desc">Epics, stories, and tasks auto-generated in the correct parent-child hierarchy — ready to import into Jira, Linear, or GitHub Projects.</div>
+      </div>
+      <div class="abg-feat">
+        <div class="abg-feat-icon">◎</div>
+        <div class="abg-feat-title">Prioritized &amp; Estimated</div>
+        <div class="abg-feat-desc">Every task comes with a priority level (P0–P3) and story point estimate based on technical complexity from the architecture analysis.</div>
+      </div>
+      <div class="abg-feat">
+        <div class="abg-feat-icon">◈</div>
+        <div class="abg-feat-title">Sprint-Ready Roadmap</div>
+        <div class="abg-feat-desc">Tasks are grouped into recommended sprints aligned with your architecture phases — so your team can start the first sprint on day one.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
      WHO IT'S FOR
 ════════════════════════════════════════════════ -->
 <section class="section">
@@ -3727,166 +4642,293 @@ hssRenderArch('marketplace');
 
   /* ── System Patterns Console ── */
   (function () {
-    const spData = {
+    /* ── node type palette ── */
+    const NS = {
+      client:   {s:'#58a6ff', f:'rgba(88,166,255,.13)',  tl:'#93c8ff', ts:'rgba(88,166,255,.52)'},
+      service:  {s:'#ef6f2e', f:'rgba(239,111,46,.13)',  tl:'#ff8c4b', ts:'rgba(239,111,46,.52)'},
+      data:     {s:'#3fb950', f:'rgba(63,185,80,.13)',   tl:'#4dd966', ts:'rgba(63,185,80,.52)' },
+      cache:    {s:'#e3b341', f:'rgba(227,179,65,.12)',  tl:'#f5cc3c', ts:'rgba(227,179,65,.52)'},
+      queue:    {s:'#bc8cff', f:'rgba(188,140,255,.12)', tl:'#d0aaff', ts:'rgba(188,140,255,.52)'},
+      external: {s:'#8b949e', f:'rgba(139,148,158,.10)', tl:'#c9d1d9', ts:'rgba(139,148,158,.5)'},
+      infra:    {s:'#a5d6ff', f:'rgba(165,214,255,.09)', tl:'#cce8ff', ts:'rgba(165,214,255,.5)'},
+    };
+    const DW=560, DH=390, NW=118, NH=44;
+
+    /* ── diagram node/edge data per project type ── */
+    const DIAG = {
       saas: {
-        title: 'Multi-tenant SaaS Application',
-        pattern: 'SaaS · Multi-tenant Pattern',
-        confidence: 97,
-        layers: [
-          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'React Query', 'Tailwind CSS'] },
-          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'API Gateway', 'WebSockets'] },
-          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Redis', 'S3'] },
-          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'RDS Multi-AZ', 'CloudFront'] },
+        nodes: [
+          {id:'browser', label:'Browser / Mobile', sub:'React + PWA',          type:'client',   cx:280, cy:48 },
+          {id:'gateway', label:'API Gateway',       sub:'Rate Limit + Guard',   type:'service',  cx:280, cy:148},
+          {id:'auth',    label:'Auth Service',      sub:'JWT + RBAC',           type:'service',  cx:110, cy:248},
+          {id:'app',     label:'NestJS App',        sub:'Business Logic',       type:'service',  cx:360, cy:248},
+          {id:'db',      label:'PostgreSQL',        sub:'Schema-per-tenant',    type:'data',     cx:160, cy:345},
+          {id:'redis',   label:'Redis Cache',       sub:'Session + Queue',      type:'cache',    cx:360, cy:345},
+          {id:'stripe',  label:'Stripe API',        sub:'Subscriptions',        type:'external', cx:500, cy:345},
         ],
-        decisions: [
-          { key: 'Isolation',  val: 'Schema-per-tenant',  pct: 97, hi: true  },
-          { key: 'Auth',       val: 'JWT + RBAC',          pct: 92, hi: true  },
-          { key: 'Billing',    val: 'Stripe Subs',          pct: 88, hi: false },
-          { key: 'Admin',      val: 'Separate Service',     pct: 82, hi: false },
-          { key: 'Audit Log',  val: 'PG + Events',          pct: 90, hi: false },
+        edges: [
+          {from:'browser',to:'gateway',lbl:'HTTPS',        d:0.0},
+          {from:'gateway',to:'auth',   lbl:'JWT verify',   d:0.3},
+          {from:'gateway',to:'app',    lbl:'proxy',        d:0.5},
+          {from:'app',    to:'db',     lbl:'tenant query', d:0.7},
+          {from:'app',    to:'redis',  lbl:'cache r/w',    d:0.9},
+          {from:'app',    to:'stripe', lbl:'billing',      d:1.1},
         ],
-        constraints: ['multi-tenant', 'schema isolation', 'RBAC', 'audit logging', 'subscription billing'],
-        reasoning: [
-          { text: '<em>Multi-tenant</em> → schema-per-tenant on PostgreSQL' },
-          { text: '<em>RBAC</em> → JWT with role claims, not session-based' },
-          { text: '<em>Billing</em> → Stripe Subscriptions + webhook events' },
-        ],
-        costMin: '$120', costMax: '$280',
       },
       marketplace: {
-        title: 'Two-sided Marketplace',
-        pattern: 'Marketplace · Escrow Model',
-        confidence: 94,
-        layers: [
-          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'React Native', 'CDN Edge'] },
-          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'Stripe Connect', 'WebSockets'] },
-          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Elasticsearch', 'Redis'] },
-          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'S3 + CDN', 'SQS Queues'] },
+        nodes: [
+          {id:'mobile',  label:'Mobile App',      sub:'React Native',        type:'client',   cx:140, cy:48 },
+          {id:'browser', label:'Browser / Web',   sub:'Next.js 14',          type:'client',   cx:420, cy:48 },
+          {id:'cdn',     label:'CDN / Edge',      sub:'CloudFront',          type:'infra',    cx:280, cy:148},
+          {id:'gateway', label:'API Gateway',     sub:'NestJS + Guard',      type:'service',  cx:210, cy:248},
+          {id:'stripe',  label:'Stripe Connect',  sub:'Escrow + Payouts',    type:'external', cx:430, cy:248},
+          {id:'db',      label:'PostgreSQL',      sub:'Listings + Orders',   type:'data',     cx:100, cy:345},
+          {id:'redis',   label:'Redis',           sub:'RT + Pub/Sub',        type:'cache',    cx:260, cy:345},
+          {id:'search',  label:'Elasticsearch',   sub:'Full-text Search',    type:'data',     cx:430, cy:345},
         ],
-        decisions: [
-          { key: 'Payments',  val: 'Stripe Connect',    pct: 96, hi: true  },
-          { key: 'Search',    val: 'Elasticsearch',     pct: 88, hi: true  },
-          { key: 'Real-time', val: 'WebSocket + Redis', pct: 91, hi: false },
-          { key: 'Storage',   val: 'S3 + CloudFront',   pct: 85, hi: false },
-          { key: 'Mobile',    val: 'React Native',      pct: 80, hi: false },
+        edges: [
+          {from:'mobile',  to:'cdn',     lbl:'HTTP/S',   d:0.0},
+          {from:'browser', to:'cdn',     lbl:'HTTP/S',   d:0.2},
+          {from:'cdn',     to:'gateway', lbl:'forward',  d:0.4},
+          {from:'cdn',     to:'stripe',  lbl:'payments', d:0.6},
+          {from:'gateway', to:'db',      lbl:'query',    d:0.7},
+          {from:'gateway', to:'redis',   lbl:'pub/sub',  d:0.9},
+          {from:'stripe',  to:'search',  lbl:'search',   d:1.1},
         ],
-        constraints: ['escrow payments', 'buyer protection', 'real-time listings', 'mobile-first', 'review system'],
-        reasoning: [
-          { text: '<em>Escrow</em> → Stripe Connect with managed payouts' },
-          { text: '<em>Real-time listings</em> → WebSocket gateway + Redis pub/sub' },
-          { text: '<em>Mobile-first</em> → React Native over Flutter for marketplace UX' },
-        ],
-        costMin: '$180', costMax: '$450',
       },
       ai: {
-        title: 'AI Chatbot + RAG Pipeline',
-        pattern: 'AI App · RAG Pipeline',
-        confidence: 93,
-        layers: [
-          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'SSE Streaming', 'Markdown UI'] },
-          { label: 'API',    color: 'orange',  nodes: ['FastAPI', 'LLM Gateway', 'Token Limiter'] },
-          { label: 'DATA',   color: 'green',   nodes: ['pgvector', 'Redis Context', 'PostgreSQL'] },
-          { label: 'INFRA',  color: 'purple',  nodes: ['Anthropic API', 'OpenAI API', 'Modal.com'] },
+        nodes: [
+          {id:'browser', label:'Browser / App',  sub:'Next.js + SSE',       type:'client',   cx:280, cy:48 },
+          {id:'gateway', label:'API Proxy',       sub:'FastAPI + Guard',     type:'service',  cx:280, cy:148},
+          {id:'llm',     label:'LLM Gateway',     sub:'Anthropic / OAI',    type:'service',  cx:140, cy:248},
+          {id:'rag',     label:'RAG Engine',       sub:'Retrieval + Rank',   type:'service',  cx:430, cy:248},
+          {id:'llmapi',  label:'Anthropic API',    sub:'claude-sonnet',      type:'external', cx:80,  cy:345},
+          {id:'ctx',     label:'Redis Context',    sub:'Sliding Window',     type:'cache',    cx:270, cy:345},
+          {id:'vec',     label:'pgvector',         sub:'Embeddings Store',   type:'data',     cx:450, cy:345},
         ],
-        decisions: [
-          { key: 'LLM',       val: 'Anthropic Claude',  pct: 91, hi: true  },
-          { key: 'Vector DB', val: 'pgvector',           pct: 88, hi: true  },
-          { key: 'Context',   val: 'Redis Sliding Win',  pct: 86, hi: false },
-          { key: 'Streaming', val: 'SSE / WebSocket',    pct: 93, hi: false },
-          { key: 'Rate Limit',val: 'Token-bucket',       pct: 84, hi: false },
+        edges: [
+          {from:'browser',to:'gateway', lbl:'SSE stream', d:0.0},
+          {from:'gateway',to:'llm',     lbl:'prompt',     d:0.3},
+          {from:'gateway',to:'rag',     lbl:'fetch ctx',  d:0.5},
+          {from:'llm',    to:'llmapi',  lbl:'API call',   d:0.7},
+          {from:'llm',    to:'ctx',     lbl:'cache ctx',  d:0.9},
+          {from:'rag',    to:'vec',     lbl:'similarity', d:1.1},
         ],
-        constraints: ['RAG pipeline', 'context window', 'prompt caching', 'streaming responses', 'rate limiting'],
-        reasoning: [
-          { text: '<em>RAG</em> → pgvector over Pinecone for &lt;10M vectors' },
-          { text: '<em>Context</em> → Redis sliding window with 24h TTL' },
-          { text: '<em>Streaming</em> → SSE for simplicity, WS for bidirectional' },
-        ],
-        costMin: '$90', costMax: '$600',
       },
       ecommerce: {
-        title: 'E-commerce Platform',
-        pattern: 'E-commerce · Stateless Checkout',
-        confidence: 95,
-        layers: [
-          { label: 'CLIENT', color: 'blue',   nodes: ['Next.js 14', 'Vercel Edge', 'CloudFront'] },
-          { label: 'API',    color: 'orange',  nodes: ['NestJS', 'Stripe + 3DS', 'Order Queue'] },
-          { label: 'DATA',   color: 'green',   nodes: ['PostgreSQL', 'Redis Cart', 'Elasticsearch'] },
-          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'RDS', 'SQS + Lambda'] },
+        nodes: [
+          {id:'browser',   label:'Browser',          sub:'Next.js 14',         type:'client',   cx:280, cy:48 },
+          {id:'cdn',       label:'CDN / Vercel Edge', sub:'Global CDN',        type:'infra',    cx:280, cy:148},
+          {id:'gateway',   label:'API Gateway',      sub:'NestJS + Auth',      type:'service',  cx:170, cy:248},
+          {id:'payment',   label:'Stripe + 3DS',     sub:'PCI Compliant',      type:'external', cx:420, cy:248},
+          {id:'cart',      label:'Redis Cart',        sub:'TTL Session Store',  type:'cache',    cx:80,  cy:345},
+          {id:'orders',    label:'Order Service',    sub:'Idempotent Flow',     type:'service',  cx:250, cy:345},
+          {id:'inventory', label:'PostgreSQL',        sub:'Event-sourced DB',   type:'data',     cx:430, cy:345},
         ],
-        decisions: [
-          { key: 'Checkout',  val: 'Stateless + Stripe', pct: 95, hi: true  },
-          { key: 'Cart',      val: 'Redis TTL Store',    pct: 90, hi: true  },
-          { key: 'Search',    val: 'Elasticsearch',      pct: 87, hi: false },
-          { key: 'Inventory', val: 'Event-sourced DB',   pct: 82, hi: false },
-          { key: 'CDN',       val: 'CloudFront + Edge',  pct: 93, hi: false },
+        edges: [
+          {from:'browser',  to:'cdn',      lbl:'HTTP/S',       d:0.0},
+          {from:'cdn',      to:'gateway',  lbl:'forward',      d:0.2},
+          {from:'cdn',      to:'payment',  lbl:'Stripe',       d:0.4},
+          {from:'gateway',  to:'cart',     lbl:'cart ops',     d:0.6},
+          {from:'gateway',  to:'orders',   lbl:'checkout',     d:0.8},
+          {from:'orders',   to:'inventory',lbl:'stock check',  d:1.0},
         ],
-        constraints: ['high-availability', 'peak traffic', 'PCI compliance', 'idempotent orders', 'inventory sync'],
-        reasoning: [
-          { text: '<em>Stateless checkout</em> → scales horizontally, idempotent orders' },
-          { text: '<em>Redis cart</em> → TTL-based, no DB writes until payment' },
-          { text: '<em>Event-sourced inventory</em> → prevents overselling on spikes' },
-        ],
-        costMin: '$140', costMax: '$520',
       },
       realtime: {
-        title: 'Real-time Collaborative App',
-        pattern: 'Real-time · CRDT / OT Sync',
-        confidence: 91,
-        layers: [
-          { label: 'CLIENT', color: 'blue',   nodes: ['React + Yjs', 'CRDT State', 'WS Client'] },
-          { label: 'API',    color: 'orange',  nodes: ['NestJS WS', 'Presence API', 'Sync Engine'] },
-          { label: 'DATA',   color: 'green',   nodes: ['Redis Streams', 'PostgreSQL', 'Redis Presence'] },
-          { label: 'INFRA',  color: 'purple',  nodes: ['AWS ECS', 'Sticky LB', 'ElastiCache'] },
+        nodes: [
+          {id:'c1',      label:'Client A',       sub:'React + Yjs',        type:'client',  cx:140, cy:48 },
+          {id:'c2',      label:'Client B',       sub:'React + Yjs',        type:'client',  cx:420, cy:48 },
+          {id:'lb',      label:'Sticky LB',      sub:'Session Affinity',   type:'infra',   cx:280, cy:148},
+          {id:'ws',      label:'WS Cluster',     sub:'NestJS WebSocket',   type:'service', cx:280, cy:248},
+          {id:'presence',label:'Presence Store', sub:'Redis + Heartbeat',  type:'cache',   cx:100, cy:345},
+          {id:'streams', label:'Redis Streams',  sub:'Pub/Sub Fan-out',    type:'queue',   cx:280, cy:345},
+          {id:'db',      label:'PostgreSQL',     sub:'Persist Events',     type:'data',    cx:460, cy:345},
         ],
-        decisions: [
-          { key: 'Transport', val: 'WebSocket + Fallback', pct: 94, hi: true  },
-          { key: 'Sync',      val: 'CRDT / Yjs',           pct: 87, hi: true  },
-          { key: 'Pub/Sub',   val: 'Redis Streams',        pct: 91, hi: false },
-          { key: 'Presence',  val: 'Redis + Heartbeat',    pct: 85, hi: false },
-          { key: 'SLA',       val: '< 100ms p99',          pct: 89, hi: false },
+        edges: [
+          {from:'c1',      to:'lb',       lbl:'WS connect',   d:0.0},
+          {from:'c2',      to:'lb',       lbl:'WS connect',   d:0.2},
+          {from:'lb',      to:'ws',       lbl:'sticky route', d:0.4},
+          {from:'ws',      to:'presence', lbl:'heartbeat',    d:0.6},
+          {from:'ws',      to:'streams',  lbl:'pub/sub',      d:0.8},
+          {from:'ws',      to:'db',       lbl:'persist',      d:1.0},
         ],
-        constraints: ['sub-100ms latency', 'conflict resolution', 'presence system', 'reconnection', 'offline support'],
-        reasoning: [
-          { text: '<em>CRDT</em> → Yjs over OT for merge-conflict-free collaboration' },
-          { text: '<em>Sticky LB</em> → required for WebSocket connection persistence' },
-          { text: '<em>Redis Streams</em> → fan-out to all connected clients per room' },
-        ],
-        costMin: '$80', costMax: '$380',
       },
     };
 
-    function buildBlueprint(d) {
-      const layerRows = d.layers.map((layer, i) => `
-        ${i > 0 ? `<div class="sp-lr-conn"><div class="sp-lr-conn-spacer"></div><div class="sp-lr-conn-line"></div></div>` : ''}
-        <div class="sp-lr">
-          <div class="sp-lr-label sp-lr-label--${layer.color}">${layer.label}</div>
-          <div class="sp-lr-nodes">
-            ${layer.nodes.map((n, ni) => `<div class="sp-node sp-node--${layer.color}" style="animation-delay:${(i * .1 + ni * .05).toFixed(2)}s">${n}</div>`).join('')}
-          </div>
-        </div>
-      `).join('');
-      return `
-        <div class="sp-bp-header">
-          <div class="sp-bp-tag">${d.pattern}</div>
-          <div class="sp-bp-title">${d.title}</div>
-        </div>
-        <div class="sp-layers">${layerRows}</div>
-      `;
+    /* ── analysis data per project type ── */
+    const spData = {
+      saas:       { title:'Multi-tenant SaaS Application',  pattern:'SaaS · Multi-tenant Pattern',    confidence:97,
+        decisions:[{key:'Isolation', val:'Schema-per-tenant',pct:97,hi:true},{key:'Auth',val:'JWT + RBAC',pct:92,hi:true},{key:'Billing',val:'Stripe Subs',pct:88,hi:false},{key:'Admin',val:'Separate Service',pct:82,hi:false},{key:'Audit Log',val:'PG + Events',pct:90,hi:false}],
+        constraints:['multi-tenant','schema isolation','RBAC','audit logging','subscription billing'],
+        reasoning:[{text:'<em>Multi-tenant</em> → schema-per-tenant on PostgreSQL'},{text:'<em>RBAC</em> → JWT with role claims, not session-based'},{text:'<em>Billing</em> → Stripe Subscriptions + webhook events'}],
+        costMin:'$120',costMax:'$280'},
+      marketplace:{ title:'Two-sided Marketplace',           pattern:'Marketplace · Escrow Model',      confidence:94,
+        decisions:[{key:'Payments',val:'Stripe Connect',pct:96,hi:true},{key:'Search',val:'Elasticsearch',pct:88,hi:true},{key:'Real-time',val:'WebSocket + Redis',pct:91,hi:false},{key:'Storage',val:'S3 + CloudFront',pct:85,hi:false},{key:'Mobile',val:'React Native',pct:80,hi:false}],
+        constraints:['escrow payments','buyer protection','real-time listings','mobile-first','review system'],
+        reasoning:[{text:'<em>Escrow</em> → Stripe Connect with managed payouts'},{text:'<em>Real-time listings</em> → WebSocket gateway + Redis pub/sub'},{text:'<em>Mobile-first</em> → React Native over Flutter for marketplace UX'}],
+        costMin:'$180',costMax:'$450'},
+      ai:         { title:'AI Chatbot + RAG Pipeline',       pattern:'AI App · RAG Pipeline',           confidence:93,
+        decisions:[{key:'LLM',val:'Anthropic Claude',pct:91,hi:true},{key:'Vector DB',val:'pgvector',pct:88,hi:true},{key:'Context',val:'Redis Sliding Win',pct:86,hi:false},{key:'Streaming',val:'SSE / WebSocket',pct:93,hi:false},{key:'Rate Limit',val:'Token-bucket',pct:84,hi:false}],
+        constraints:['RAG pipeline','context window','prompt caching','streaming responses','rate limiting'],
+        reasoning:[{text:'<em>RAG</em> → pgvector over Pinecone for &lt;10M vectors'},{text:'<em>Context</em> → Redis sliding window with 24h TTL'},{text:'<em>Streaming</em> → SSE for simplicity, WS for bidirectional'}],
+        costMin:'$90',costMax:'$600'},
+      ecommerce:  { title:'E-commerce Platform',             pattern:'E-commerce · Stateless Checkout', confidence:95,
+        decisions:[{key:'Checkout',val:'Stateless + Stripe',pct:95,hi:true},{key:'Cart',val:'Redis TTL Store',pct:90,hi:true},{key:'Search',val:'Elasticsearch',pct:87,hi:false},{key:'Inventory',val:'Event-sourced DB',pct:82,hi:false},{key:'CDN',val:'CloudFront + Edge',pct:93,hi:false}],
+        constraints:['high-availability','peak traffic','PCI compliance','idempotent orders','inventory sync'],
+        reasoning:[{text:'<em>Stateless checkout</em> → scales horizontally, idempotent orders'},{text:'<em>Redis cart</em> → TTL-based, no DB writes until payment'},{text:'<em>Event-sourced inventory</em> → prevents overselling on spikes'}],
+        costMin:'$140',costMax:'$520'},
+      realtime:   { title:'Real-time Collaborative App',     pattern:'Real-time · CRDT / OT Sync',      confidence:91,
+        decisions:[{key:'Transport',val:'WebSocket + Fallback',pct:94,hi:true},{key:'Sync',val:'CRDT / Yjs',pct:87,hi:true},{key:'Pub/Sub',val:'Redis Streams',pct:91,hi:false},{key:'Presence',val:'Redis + Heartbeat',pct:85,hi:false},{key:'SLA',val:'< 100ms p99',pct:89,hi:false}],
+        constraints:['sub-100ms latency','conflict resolution','presence system','reconnection','offline support'],
+        reasoning:[{text:'<em>CRDT</em> → Yjs over OT for merge-conflict-free collaboration'},{text:'<em>Sticky LB</em> → required for WebSocket connection persistence'},{text:'<em>Redis Streams</em> → fan-out to all connected clients per room'}],
+        costMin:'$80',costMax:'$380'},
+    };
+
+    /* ── SVG diagram builder ── */
+    function epath(src, dst) {
+      const sx = src.cx, sy = src.cy + NH/2 - 1;
+      const dx = dst.cx, dy = dst.cy - NH/2 + 1;
+      const my = (sy + dy) / 2;
+      return `M${sx},${sy} C${sx},${my} ${dx},${my} ${dx},${dy}`;
     }
 
+    function buildBlueprint(key) {
+      const diag = DIAG[key];
+      if (!diag) return '';
+      const nMap = {};
+      diag.nodes.forEach(n => { nMap[n.id] = n; });
+      const uid = 'spd' + key;
+
+      const markers = Object.keys(NS).map(t =>
+        `<marker id="${uid}-a${t}" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto">
+           <path d="M0,0 L0,6 L6,3 z" fill="${NS[t].s}" opacity="0.85"/>
+         </marker>`).join('');
+
+      const edgesSvg = diag.edges.map((e, i) => {
+        const src = nMap[e.from], dst = nMap[e.to];
+        if (!src || !dst) return '';
+        const c = NS[src.type], pd = epath(src, dst), pid = `${uid}-p${i}`;
+        const dur = (1.3 + i * 0.09).toFixed(2);
+        /* for label path: always left-to-right so text never flips */
+        const rtl = src.cx > dst.cx;
+        const plbl = rtl ? epath(dst, src) : pd;
+        const lpid = `${uid}-lp${i}`;
+        return `
+          <path id="${pid}" d="${pd}" fill="none" stroke="${c.s}" stroke-width="1.5" stroke-opacity="0.2" marker-end="url(#${uid}-a${src.type})"/>
+          <path d="${pd}" fill="none" stroke="${c.s}" stroke-width="2" stroke-opacity="0.65"
+            stroke-dasharray="5 8" style="animation:spFlowDash ${dur}s linear ${e.d}s infinite"/>
+          <circle r="3" fill="${c.s}" opacity="0.85">
+            <animateMotion dur="${dur}s" repeatCount="indefinite" begin="${e.d}s">
+              <mpath href="#${pid}"/>
+            </animateMotion>
+          </circle>
+          ${e.lbl ? `<path id="${lpid}" d="${plbl}" fill="none" stroke="none"/>
+          <text font-family="monospace" font-size="9" fill="${c.s}" opacity="0.75">
+            <textPath href="#${lpid}" startOffset="50%" text-anchor="middle">${e.lbl}</textPath>
+          </text>` : ''}`;
+      }).join('');
+
+      const nodesSvg = diag.nodes.map((n, i) => {
+        const c = NS[n.type];
+        const nx = n.cx - NW/2, ny = n.cy - NH/2;
+        const lblY = n.cy - 5, subY = n.cy + 8;
+        return `
+          <g style="animation:spNodeIn .32s ease ${(i * 0.07).toFixed(2)}s both">
+            <rect x="${nx}" y="${ny}" width="${NW}" height="${NH}" rx="7"
+              fill="rgba(13,17,23,.96)" stroke="rgba(255,255,255,.11)" stroke-width="1"/>
+            <line x1="${nx+10}" y1="${ny+1.5}" x2="${nx+NW-10}" y2="${ny+1.5}"
+              stroke="${c.s}" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+            <text x="${n.cx}" y="${lblY}" text-anchor="middle"
+              font-family="'Courier New',monospace" font-size="11"
+              fill="#f0f6fc" font-weight="500" letter-spacing="0.03em">${n.label}</text>
+            <text x="${n.cx}" y="${subY}" text-anchor="middle"
+              font-family="'Courier New',monospace" font-size="9"
+              fill="${c.tl}" letter-spacing="0.01em">${n.sub}</text>
+          </g>`;
+      }).join('');
+
+      return `<div class="sp-diag-wrap" id="${uid}-wrap">
+        <svg class="sp-diag-svg" viewBox="0 0 ${DW} ${DH}" id="${uid}-svg" style="background:transparent">
+          <defs>${markers}</defs>
+          <g id="${uid}-vp">${edgesSvg}${nodesSvg}</g>
+        </svg>
+        <div class="sp-zoom-bar">
+          <button class="sp-zoom-btn" id="${uid}-zi">+</button>
+          <div class="sp-zoom-pct" id="${uid}-zl">100%</div>
+          <button class="sp-zoom-btn" id="${uid}-zo">−</button>
+        </div>
+      </div>`;
+    }
+
+    /* ── zoom / pan controller ── */
+    function initDiagram(body) {
+      const wrap = body.querySelector('.sp-diag-wrap');
+      if (!wrap) return;
+      const uid = wrap.id.replace('-wrap', '');
+      const vp  = document.getElementById(uid + '-vp');
+      const svg = document.getElementById(uid + '-svg');
+      const ziB = document.getElementById(uid + '-zi');
+      const zoB = document.getElementById(uid + '-zo');
+      const zlEl = document.getElementById(uid + '-zl');
+      if (!vp || !svg) return;
+
+      let sc = 1, tx = 0, ty = 0, drag = false, mx = 0, my = 0, otx = 0, oty = 0;
+
+      function applyT() {
+        vp.setAttribute('transform', `translate(${tx.toFixed(1)},${ty.toFixed(1)}) scale(${sc.toFixed(3)})`);
+        if (zlEl) zlEl.textContent = Math.round(sc * 100) + '%';
+      }
+
+      function zoom(delta, cx, cy) {
+        const prev = sc;
+        sc = Math.max(0.3, Math.min(3.5, sc * (1 + delta)));
+        const r = sc / prev;
+        tx = cx - r * (cx - tx);
+        ty = cy - r * (cy - ty);
+        applyT();
+      }
+
+      if (ziB) ziB.addEventListener('click', () => zoom(0.15, DW/2, DH/2));
+      if (zoB) zoB.addEventListener('click', () => zoom(-0.15, DW/2, DH/2));
+
+      svg.addEventListener('wheel', e => {
+        e.preventDefault();
+        const rect = svg.getBoundingClientRect();
+        zoom(e.deltaY < 0 ? 0.04 : -0.04,
+          (e.clientX - rect.left) / rect.width  * DW,
+          (e.clientY - rect.top)  / rect.height * DH);
+      }, { passive: false });
+
+      svg.addEventListener('mousedown', e => {
+        drag = true; mx = e.clientX; my = e.clientY; otx = tx; oty = ty;
+        svg.style.cursor = 'grabbing'; e.preventDefault();
+      });
+      const onMv = e => {
+        if (!drag) return;
+        const r = svg.getBoundingClientRect();
+        const ratio = DW / r.width;
+        tx = otx + (e.clientX - mx) * ratio;
+        ty = oty + (e.clientY - my) * ratio;
+        applyT();
+      };
+      const onUp = () => { drag = false; svg.style.cursor = 'grab'; };
+      window.addEventListener('mousemove', onMv);
+      window.addEventListener('mouseup', onUp);
+      svg.style.cursor = 'grab';
+    }
+
+    /* ── right-panel analysis HTML builder ── */
     function buildAnalysis(d) {
       const decs = d.decisions.map((dec, i) => `
-        <div class="sp-dec" style="animation-delay:${(i * .06).toFixed(2)}s">
+        <div class="sp-dec" style="animation-delay:${(i*.06).toFixed(2)}s">
           <span class="sp-dec-key">${dec.key}</span>
           <span class="sp-dec-val">${dec.val}</span>
-          <div class="sp-dec-track"><div class="sp-dec-fill${dec.hi ? ' sp-dec-fill--hi' : ''}" data-pct="${dec.pct}"></div></div>
+          <div class="sp-dec-track"><div class="sp-dec-fill${dec.hi?' sp-dec-fill--hi':''}" data-pct="${dec.pct}"></div></div>
           <span class="sp-dec-pct">${dec.pct}%</span>
-        </div>
-      `).join('');
-      const chips = d.constraints.map(c => `<span class="sp-constraint">${c}</span>`).join('');
-      const reasons = d.reasoning.map(r => `
-        <div class="sp-reason"><span class="sp-reason-arrow">→</span><span class="sp-reason-text">${r.text}</span></div>
-      `).join('');
+        </div>`).join('');
+      const chips   = d.constraints.map(c => `<span class="sp-constraint">${c}</span>`).join('');
+      const reasons = d.reasoning.map(r =>
+        `<div class="sp-reason"><span class="sp-reason-arrow">→</span><span class="sp-reason-text">${r.text}</span></div>`).join('');
       return `
         <div>
           <div class="sp-an-label">Confidence Score</div>
@@ -3896,41 +4938,23 @@ hssRenderArch('marketplace');
           </div>
         </div>
         <div class="sp-an-divider"></div>
-        <div>
-          <div class="sp-an-label">Stack Decisions</div>
-          <div class="sp-decisions">${decs}</div>
-        </div>
+        <div><div class="sp-an-label">Stack Decisions</div><div class="sp-decisions">${decs}</div></div>
         <div class="sp-an-divider"></div>
-        <div>
-          <div class="sp-an-label">Constraints Detected</div>
-          <div class="sp-constraints">${chips}</div>
-        </div>
+        <div><div class="sp-an-label">Constraints Detected</div><div class="sp-constraints">${chips}</div></div>
         <div class="sp-an-divider"></div>
-        <div>
-          <div class="sp-an-label">AI Reasoning</div>
-          <div class="sp-reasoning">${reasons}</div>
-        </div>
+        <div><div class="sp-an-label">AI Reasoning</div><div class="sp-reasoning">${reasons}</div></div>
         <div class="sp-an-divider"></div>
         <div>
           <div class="sp-an-label">Cost Estimate</div>
           <div class="sp-cost-row">
-            <div class="sp-cost-num">
-              <div class="sp-cost-num-val">${d.costMin}</div>
-              <div class="sp-cost-num-lbl">min / mo</div>
-            </div>
-            <div class="sp-cost-mid">
-              <div class="sp-cost-track"><div class="sp-cost-fill"></div></div>
-              <div class="sp-cost-range-lbl">estimated range</div>
-            </div>
-            <div class="sp-cost-num">
-              <div class="sp-cost-num-val">${d.costMax}</div>
-              <div class="sp-cost-num-lbl">max / mo</div>
-            </div>
+            <div class="sp-cost-num"><div class="sp-cost-num-val">${d.costMin}</div><div class="sp-cost-num-lbl">min / mo</div></div>
+            <div class="sp-cost-mid"><div class="sp-cost-track"><div class="sp-cost-fill"></div></div><div class="sp-cost-range-lbl">estimated range</div></div>
+            <div class="sp-cost-num"><div class="sp-cost-num-val">${d.costMax}</div><div class="sp-cost-num-lbl">max / mo</div></div>
           </div>
-        </div>
-      `;
+        </div>`;
     }
 
+    /* ── render ── */
     function renderSp(key) {
       const d = spData[key];
       if (!d) return;
@@ -3939,19 +4963,17 @@ hssRenderArch('marketplace');
       body.classList.add('sp-fade');
       setTimeout(() => {
         body.innerHTML = `
-          <div class="sp-blueprint">${buildBlueprint(d)}</div>
-          <div class="sp-analysis">${buildAnalysis(d)}</div>
-        `;
+          <div class="sp-blueprint">${buildBlueprint(key)}</div>
+          <div class="sp-analysis">${buildAnalysis(d)}</div>`;
         body.classList.remove('sp-fade');
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const conf = body.querySelector('.sp-conf-fill');
-            if (conf) conf.style.width = conf.dataset.pct + '%';
-            body.querySelectorAll('.sp-dec-fill').forEach((el, i) => {
-              setTimeout(() => { el.style.width = el.dataset.pct + '%'; }, i * 40);
-            });
+        initDiagram(body);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const cf = body.querySelector('.sp-conf-fill');
+          if (cf) cf.style.width = cf.dataset.pct + '%';
+          body.querySelectorAll('.sp-dec-fill').forEach((el, i) => {
+            setTimeout(() => { el.style.width = el.dataset.pct + '%'; }, i * 40);
           });
-        });
+        }));
       }, 200);
     }
 
@@ -4109,6 +5131,165 @@ hssRenderArch('marketplace');
       }
     }, { threshold: 0.25 });
     obs.observe(root);
+  })();
+
+  /* ══════════════════════════════════════════════════
+     BACKLOG INTELLIGENCE — interactive board
+  ══════════════════════════════════════════════════ */
+  (() => {
+    const shell = document.getElementById('abgShell');
+    if (!shell) return;
+
+    /* ── team members ── */
+    const TEAM = [
+      { id: 'A', name: 'Alex',       color: '#58a6ff' },
+      { id: 'B', name: 'Blake',      color: '#bc8cff' },
+      { id: 'C', name: 'Casey',      color: '#3fb950' },
+      { id: 'D', name: 'Dana',       color: '#ef6f2e' },
+      { id: 'E', name: 'Ellis',      color: '#e3b341' },
+      { id: '—', name: 'Unassigned', color: '#484f58' },
+    ];
+
+    /* ── status cycle ── */
+    const CYCLE  = ['todo', 'inprog', 'done'];
+    const LABELS = { todo: 'Todo', inprog: 'In Progress', done: 'Done' };
+    const CHK_ICONS = { todo: '', inprog: '▸', done: '✓' };
+
+    /* ── tab switching ── */
+    const TITLES = {
+      backlog: 'SaaS Marketplace — Project Backlog',
+      sprints: 'SaaS Marketplace — Sprint Planning',
+      board:   'SaaS Marketplace — Kanban Board',
+    };
+    shell.querySelectorAll('.abg-shell-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const view = tab.dataset.tab;
+        shell.querySelectorAll('.abg-shell-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        shell.querySelectorAll('.abg-view').forEach(v => v.classList.toggle('active', v.dataset.view === view));
+        const titleEl = shell.querySelector('.abg-shell-title');
+        if (titleEl) titleEl.textContent = TITLES[view] || '';
+        if (view === 'sprints') {
+          shell.querySelectorAll('.abg-sprint-prog-fill[data-w]').forEach(f => {
+            setTimeout(() => { f.style.width = f.dataset.w; }, 80);
+          });
+        }
+      });
+    });
+
+    /* ── sprint block expand/collapse ── */
+    shell.querySelectorAll('.abg-sprint-hd').forEach(hd => {
+      hd.addEventListener('click', () => hd.closest('.abg-sprint-block').classList.toggle('open'));
+    });
+
+    function applyTaskStatus(task, status) {
+      task.dataset.status = status;
+      const chk = task.querySelector('.abg-task-chk');
+      const st  = task.querySelector('.abg-task-st');
+      if (chk) { chk.textContent = CHK_ICONS[status]; }
+      if (st)  { st.className = 'abg-task-st ' + status; st.textContent = LABELS[status]; }
+    }
+
+    function applyStoryStatus(btn, status) {
+      btn.dataset.status = status;
+      btn.className = 'abg-story-status ' + status;
+      btn.textContent = LABELS[status];
+    }
+
+    /* ── checkbox / status chip click on tasks ── */
+    shell.addEventListener('click', e => {
+      /* task checkbox */
+      const chk = e.target.closest('.abg-task-chk');
+      if (chk) {
+        const task = chk.closest('.abg-task');
+        const cur  = task.dataset.status || 'todo';
+        const next = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
+        applyTaskStatus(task, next);
+        return;
+      }
+      /* task status chip */
+      const st = e.target.closest('.abg-task-st');
+      if (st) {
+        const task = st.closest('.abg-task');
+        const cur  = task.dataset.status || 'todo';
+        const next = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
+        applyTaskStatus(task, next);
+        return;
+      }
+      /* story status badge */
+      const ss = e.target.closest('.abg-story-status');
+      if (ss) {
+        const cur  = ss.dataset.status || 'todo';
+        const next = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
+        applyStoryStatus(ss, next);
+        return;
+      }
+      /* assignee avatar */
+      const av = e.target.closest('.abg-task-av');
+      if (av) {
+        const cur    = parseInt(av.dataset.avid, 10);
+        const next   = (cur + 1) % TEAM.length;
+        const member = TEAM[next];
+        av.dataset.avid     = next;
+        av.style.background = member.color;
+        const tip = av.querySelector('.abg-av-tip');
+        if (tip) tip.textContent = member.name + ' · Click to reassign';
+        /* keep only initial letter node (text) */
+        av.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = member.id; });
+        return;
+      }
+      /* epic expand/collapse */
+      const hd = e.target.closest('.abg-epic-hd');
+      if (hd) {
+        hd.closest('.abg-epic-block').classList.toggle('open');
+      }
+    });
+
+    /* ── count-up util ── */
+    function countUp(el, target, dur) {
+      const start = performance.now();
+      (function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target;
+      })(start);
+    }
+
+    /* ── staggered reveal + progress bar (on scroll) ── */
+    function revealBoard() {
+      const stories = shell.querySelectorAll('.abg-story');
+      const tasks   = shell.querySelectorAll('.abg-task');
+      stories.forEach((s, i) => setTimeout(() => s.classList.add('visible'), 100 + i * 80));
+      tasks.forEach((t, i)   => setTimeout(() => t.classList.add('visible'), 260 + i * 48));
+
+      const fill = document.getElementById('abgProgressFill');
+      const pct  = document.getElementById('abgFooterPct');
+      const ftxt = document.getElementById('abgFooterTxt');
+      [
+        { d: 150,  w: '18%',  t: '18%',  txt: 'Parsing architecture decisions…' },
+        { d: 500,  w: '44%',  t: '44%',  txt: 'Generating epics & stories…' },
+        { d: 1000, w: '68%',  t: '68%',  txt: 'Expanding tasks & estimates…' },
+        { d: 1600, w: '88%',  t: '88%',  txt: 'Assigning team members…' },
+        { d: 2200, w: '100%', t: '100%', txt: 'Backlog ready — 18 tasks · 3 epics ✓' },
+      ].forEach(s => setTimeout(() => {
+        if (fill) fill.style.width = s.w;
+        if (pct)  pct.textContent  = s.t;
+        if (ftxt) ftxt.textContent = s.txt;
+      }, s.d));
+
+      const tEl = document.getElementById('abgCountTasks');
+      const pEl = document.getElementById('abgCountPts');
+      const sEl = document.getElementById('abgCountSprint');
+      if (tEl) countUp(tEl, 47, 1800);
+      if (pEl) countUp(pEl, 134, 2000);
+      if (sEl) countUp(sEl, 4, 1400);
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { revealBoard(); obs.disconnect(); }
+    }, { threshold: 0.15 });
+    obs.observe(shell);
   })();
 </script>
 

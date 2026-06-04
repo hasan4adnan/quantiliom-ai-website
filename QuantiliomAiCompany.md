@@ -562,6 +562,7 @@ graph LR
     AE --> O8["✅ MVP Scope"]
     AE --> O9["💰 Cost Estimate"]
     AE --> O10["📄 Documentation Summary"]
+    AE --> O11["📋 AI Project Backlog\n(Epics · Stories · Tasks)"]
 
     style AE fill:#4c6ef5,color:#fff
 ```
@@ -1471,6 +1472,8 @@ timeline
                           : Better explanations
                           : More accurate cost analysis
                           : Export improvements
+                          : Backlog Intelligence (Epic/Story/Task generation)
+                          : Jira / Linear export integration
 
     section Phase 3
         Interactive Workspace : Clickable components
@@ -1495,11 +1498,125 @@ timeline
 | 🏢 Enterprise system design | B2B, complex org structures |
 | 💻 Code scaffold suggestions | Starter code generation |
 | 🏗️ Infra-as-code output | Terraform / Pulumi starter |
-| 📋 Jira / Linear integration | Task backlog generation |
+| 📋 **Backlog Intelligence** *(bkz. Bölüm 36.1)* | **Tam AI destekli proje backlog üretimi** |
 | 📊 Pitch deck technical appendix | Founder-ready tech slides |
 | 📦 Dev handoff package | Handing off to developers |
 | 🔍 Architecture review mode | Mevcut projeyi analiz et |
 | 🤝 AI pair architect mode | Gerçek zamanlı co-design |
+
+### 36.1 Backlog Intelligence — AI-Powered Project Backlog Generation
+
+> **Statü:** Core hizmet — MVP sonrası Phase 2 hedefi
+
+#### Servis Tanımı
+
+Quantiliom AI, mimari analiz tamamlandıktan sonra kullanıcıya yalnızca bir sistem tasarımı sunmakla kalmaz; aynı zamanda projenin **tüm proje yönetimi backlog'unu otomatik olarak üretir.**
+
+Bu servis, Jira / Linear / GitHub Projects gibi araçlarda normalde **saatlerce manuel çalışma** gerektiren epic, story ve task hiyerarşisini, AI aracılığıyla **saniyeler içinde** oluşturur.
+
+#### Sorun
+
+Mevcut proje yönetimi araçlarında (Jira by Atlassian, Linear, Shortcut vb.) ekipler:
+- Her epic'i manuel olarak oluşturur
+- Her story'yi tek tek yazar
+- Her task'ı ayrı ayrı girer
+- Önceliklendirmeyi elle belirler
+- Story point tahminini ayrıca tartışır
+- Sprint planlamasını ayrı bir süreçte yapar
+
+Bu süreç; tekrarlayan, zaman alan ve hata-prone bir iştir. Üstelik mimari kararlardan **kopuk** olarak yapıldığı için tutarsızlıklar kaçınılmazdır.
+
+#### Quantiliom Çözümü
+
+Mimari analiz aşamasının çıktısı olan structured requirements ve component graph kullanılarak:
+
+```
+Architecture Output
+        ↓
+  Backlog Engine
+        ↓
+┌────────────────────────────────────┐
+│ EPIC-01: Auth & User Management    │
+│   STORY-01: Registration flow      │
+│     TASK-01: Signup form UI    3pt │
+│     TASK-02: Email verification 5pt│
+│     TASK-03: OAuth integration  5pt│
+│   STORY-02: Session management     │
+│     TASK-04: JWT generation    3pt │
+│     TASK-05: Token rotation    3pt │
+├────────────────────────────────────┤
+│ EPIC-02: Core API Layer            │
+│   ...                              │
+├────────────────────────────────────┤
+│ EPIC-03: Payments & Billing        │
+│   ...                              │
+└────────────────────────────────────┘
+```
+
+#### Çıktının İçeriği
+
+Her üretilen backlog öğesi şunları içerir:
+
+| Alan | Açıklama |
+|------|----------|
+| **Hiyerarşi** | Epic → Story → Task üç kademeli yapı |
+| **Unique ID** | QAI-E01, QAI-S01, QAI-T001 formatında ticket ID |
+| **Başlık** | Teknik olarak doğru, spesifik görev tanımı |
+| **Öncelik** | P0 (Critical) → P3 (Low) AI tarafından belirlenir |
+| **Story Points** | Fibonacci skalasında tahmin (1, 2, 3, 5, 8, 13) |
+| **Sprint Ataması** | Hangi sprint'e ait olduğu architecture phase'e göre |
+| **Tip** | Frontend / Backend / DevOps / Database vb. kategori |
+| **Bağımlılık** | Başka bir task'a dependency varsa işaretlenir |
+
+#### Desteklenen Export Formatları
+
+- **Jira CSV Import** — Jira'ya direkt import edilebilir format
+- **Linear Import** — Linear API uyumlu JSON
+- **GitHub Issues Export** — GitHub Projects ile uyumlu
+- **Notion Database Export** — Notion tablo formatı
+- **Raw JSON** — Custom integration için
+
+#### Teknik Akış
+
+```mermaid
+sequenceDiagram
+    participant U as Kullanıcı
+    participant AE as Architecture Engine
+    participant BE as Backlog Engine
+    participant EX as Export Service
+
+    U->>AE: Proje analizi tamamlandı
+    AE->>BE: Structured architecture output
+    BE->>BE: Epic mapping (architecture phases → epics)
+    BE->>BE: Story decomposition (components → stories)
+    BE->>BE: Task generation (technical subtasks)
+    BE->>BE: Priority inference (criticality scoring)
+    BE->>BE: Point estimation (complexity model)
+    BE->>BE: Sprint grouping (phase alignment)
+    BE->>U: Generated backlog (preview)
+    U->>EX: Export to Jira / Linear / GitHub
+    EX->>U: Import-ready file
+```
+
+#### İş Değeri
+
+| Metrik | Manuel Süreç | Backlog Intelligence |
+|--------|-------------|---------------------|
+| Backlog oluşturma süresi | 4–12 saat | &lt; 30 saniye |
+| Architecture alignment | Düşük | %100 (aynı analizden üretildi) |
+| Task tutarlılığı | Ekibe göre değişir | Standart, deterministik |
+| Önceliklendirme kalitesi | Subjektif | AI-driven, gerekçeli |
+| Sprint planlaması | Ayrı toplantı gerekli | Otomatik ön-öneri |
+
+#### Gelir Modeli Etkisi
+
+Bu servis, **Pro ve Team planlarına** özel bir premium özellik olarak konumlandırılacaktır:
+
+- **Free:** Backlog önizleme (ilk 5 task görünür)
+- **Pro:** Tam backlog üretimi + JSON export
+- **Team:** Tüm export formatları + ekip ataması + Jira/Linear entegrasyonu
+
+---
 
 ---
 
