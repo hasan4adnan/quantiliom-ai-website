@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — Quantiliom AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --black: #020202; --light-gray: #ffffff; --silver: #ffffff;
+      --cool-gray: #020202; --graphite: #020202; --ash: #020202;
+      --orange: #ef6f2e;
+      --sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --max-w: 1440px; --r-sm: 5px; --r-card: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans); background: #fff; color: var(--black);
+      font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── PAGE TRANSITION ANIMATIONS ── */
+    @keyframes page-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes page-exit  { from { opacity: 1; transform: translateY(0); }    to { opacity: 0; transform: translateY(-14px); } }
+    body { animation: page-enter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    body.exiting { animation: page-exit 0.26s cubic-bezier(0.55, 0, 0.45, 1) both; }
+
+    /* ── Stagger content items on load ── */
+    @keyframes svc-stag { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    body .svc-hdr        { animation: svc-stag 0.38s 0.08s both; }
+    body .svc-intro      { animation: svc-stag 0.38s 0.16s both; }
+    body .svc-cta-strip  { animation: svc-stag 0.38s 0.24s both; }
+
+    /* Top bar */
+    .svc-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px; flex-shrink: 0; padding: 0 72px;
+      background: #fff; border-bottom: 1px solid #020202;
+    }
+    .svc-topbar-left { display: flex; align-items: center; gap: 14px; }
+    .svc-topbar-logo { height: 26px; }
+    .svc-topbar-badge {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .09em;
+      text-transform: uppercase; color: var(--orange);
+      padding: 2px 9px; border: 1px solid rgba(239,111,46,0.35); border-radius: 4px;
+    }
+    .svc-topbar-sep { width: 1px; height: 18px; background: #e5e7eb; }
+    .svc-topbar-hint {
+      font-family: var(--mono); font-size: 10px; color: #9ca3af;
+      letter-spacing: .04em;
+    }
+    .svc-close-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: 1px solid #020202; border-radius: var(--r-sm);
+      padding: 6px 16px; font-family: var(--mono); font-size: 11px;
+      letter-spacing: .04em; cursor: pointer; color: #020202;
+      transition: background .15s ease, color .15s ease;
+    }
+    .svc-close-btn:hover { background: #020202; color: #fff; }
+
+    /* Scrollable body */
+    .svc-body { flex: 1; overflow-y: auto; padding: 60px 72px 80px; }
+
+    /* Page header */
+    .svc-hdr {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: end; gap: 48px; margin-bottom: 48px;
+    }
+    .svc-hdr-eyebrow {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--orange);
+      display: block; margin-bottom: 14px;
+    }
+    .svc-hdr-title {
+      font-size: 54px; font-weight: 400; line-height: 1.03;
+      letter-spacing: -2.6px; color: #020202;
+    }
+    .svc-hdr-sub {
+      font-size: 16px; line-height: 1.65; color: #4b5563;
+      margin-top: 14px; max-width: 500px;
+    }
+    .svc-stats-box {
+      display: flex; flex-shrink: 0;
+      border: 1px solid #020202; border-radius: var(--r-card); overflow: hidden;
+    }
+    .svc-stat { padding: 16px 26px; text-align: center; border-right: 1px solid #020202; }
+    .svc-stat:last-child { border-right: none; }
+    .svc-stat-n { font-size: 28px; font-weight: 400; letter-spacing: -1px; line-height: 1; color: #020202; }
+    .svc-stat-l { font-family: var(--mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; color: #9ca3af; margin-top: 5px; }
+
+    /* CTA strip */
+    .svc-cta-strip {
+      display: flex; align-items: center; justify-content: space-between; gap: 32px;
+      padding: 36px 44px; background: #020202;
+      border: 1px solid #020202; border-radius: var(--r-card);
+    }
+    .svc-cta-title { font-size: 26px; font-weight: 400; letter-spacing: -.8px; color: #fff; line-height: 1.2; }
+    .svc-cta-sub { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: .04em; margin-top: 7px; }
+    .svc-cta-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    .svc-cta-primary {
+      padding: 10px 24px; background: var(--orange); color: #fff;
+      border: 1px solid var(--orange); border-radius: var(--r-sm);
+      font-size: 14px; cursor: pointer; white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .svc-cta-primary:hover { opacity: 0.85; }
+    .svc-cta-secondary {
+      padding: 10px 24px; background: transparent;
+      color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--r-sm); font-size: 14px; cursor: pointer;
+      white-space: nowrap; transition: all .15s;
+    }
+    .svc-cta-secondary:hover { color: #fff; border-color: rgba(255,255,255,0.55); }
+
+    /* ── Service detail rows ── */
+    .svc-intro {
+      font-size: 17px; line-height: 1.8; color: #4b5563;
+      max-width: 720px; margin: 36px 0 0;
+      padding-bottom: 56px; border-bottom: 1px solid #e5e7eb;
+    }
+    .svc-srow { padding: 72px 0; border-bottom: 1px solid #e5e7eb; }
+    .svc-srow:last-of-type { border-bottom: none; }
+    .svc-srow-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .svc-srow--flip .svc-srow-text { order: 2; }
+    .svc-srow--flip .svc-srow-visual { order: 1; }
+    .svc-srow-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .svc-srow-num { font-family: var(--mono); font-size: 10px; color: #9ca3af; letter-spacing: .06em; }
+    .svc-srow-sep { width: 22px; height: 1px; background: #d1d5db; }
+    .svc-srow-cat { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 500; }
+    .svc-srow-name { font-size: 38px; font-weight: 400; letter-spacing: -1.5px; color: #020202; line-height: 1.1; margin-bottom: 16px; }
+    .svc-srow-desc { font-size: 15px; line-height: 1.78; color: #4b5563; margin-bottom: 26px; }
+    .svc-srow-sh { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #9ca3af; margin-bottom: 10px; display: block; }
+    .svc-srow-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+    .svc-srow-feats li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #374151; line-height: 1.55; }
+    .svc-srow-feats li .fd { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .svc-srow-outputs { display: flex; flex-wrap: wrap; gap: 6px; }
+    .svc-out-chip { padding: 4px 11px; border-radius: 4px; border: 1px solid #e5e7eb; font-family: var(--mono); font-size: 10px; color: #6b7280; background: #f9f9f9; }
+
+    /* Mock device frame */
+    .svc-mock { border: 1px solid #d1d5db; border-radius: 10px; overflow: hidden; background: #f8f9fa; box-shadow: 0 8px 32px rgba(0,0,0,.07), 0 2px 6px rgba(0,0,0,.04); }
+    .svc-mock-bar { height: 38px; background: #f0f2f5; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; padding: 0 14px; gap: 10px; }
+    .svc-mock-dots { display: flex; gap: 6px; }
+    .svc-mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .svc-mock-lbl { font-family: var(--mono); font-size: 10px; color: #9ca3af; letter-spacing: .03em; flex: 1; text-align: center; }
+    .svc-mock-body { padding: 20px 20px 22px; }
+
+    /* Mock 1 — Architecture generation */
+    .svc-m-input { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; margin-bottom: 12px; }
+    .svc-m-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: #9ca3af; margin-bottom: 5px; }
+    .svc-m-input-txt { font-size: 12px; color: #374151; line-height: 1.55; font-style: italic; }
+    .svc-m-steps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .svc-m-step { font-family: var(--mono); font-size: 10.5px; color: #374151; display: flex; align-items: center; gap: 7px; }
+    .svc-m-step-ic { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-style: normal; }
+    .svc-m-step-ok   { background: #dcfce7; color: #16a34a; }
+    .svc-m-step-live { background: #fef9c3; color: #ca8a04; }
+    .svc-m-arch { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 14px; }
+    .svc-m-arch-row { display: flex; gap: 5px; justify-content: center; margin-bottom: 5px; }
+    .svc-m-arch-row:last-child { margin-bottom: 0; }
+    .svc-m-arch-arr { text-align: center; font-size: 10px; color: #d1d5db; margin: 1px 0; }
+    .mn { padding: 3px 9px; border-radius: 4px; border: 1px solid rgba(0,0,0,.06); font-family: var(--mono); font-size: 9px; white-space: nowrap; }
+    .mn-b { background:rgba(88,166,255,.08); border-color:rgba(88,166,255,.28); color:#1d6fa8; }
+    .mn-o { background:rgba(239,111,46,.09); border-color:rgba(239,111,46,.28); color:#c2410c; font-weight:600; }
+    .mn-p { background:rgba(188,140,255,.08); border-color:rgba(188,140,255,.28); color:#7c3aed; }
+    .mn-g { background:rgba(63,185,80,.08); border-color:rgba(63,185,80,.28); color:#166534; }
+    .mn-r { background:rgba(220,56,45,.08); border-color:rgba(220,56,45,.28); color:#991b1b; }
+    .mn-i { background:rgba(99,91,255,.08); border-color:rgba(99,91,255,.28); color:#4338ca; }
+    .mn-s { background:rgba(0,0,0,.05); border-color:rgba(0,0,0,.08); color:#374151; }
+
+    /* Mock 2 — Backlog */
+    .svc-m-tk-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .svc-m-tk-total { font-family: var(--mono); font-size: 9.5px; color: #9ca3af; }
+    .svc-m-tk-exports { display: flex; gap: 4px; }
+    .svc-m-xbadge { padding: 2px 8px; border-radius: 3px; border: 1px solid #e5e7eb; font-family: var(--mono); font-size: 9px; color: #6b7280; background: #fff; }
+    .svc-m-epic { border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; margin-bottom: 7px; }
+    .svc-m-epic-hdr { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #f9f9f9; border-bottom: 1px solid #e5e7eb; }
+    .svc-m-epic--col .svc-m-epic-hdr { border-bottom: none; }
+    .svc-m-eid { font-family: var(--mono); font-size: 9px; color: #9ca3af; min-width: 54px; }
+    .svc-m-ename { font-family: var(--mono); font-size: 11px; font-weight: 600; color: #374151; flex: 1; }
+    .svc-m-ecount { font-family: var(--mono); font-size: 9px; color: #9ca3af; }
+    .svc-m-sp { font-family: var(--mono); font-size: 9px; color: #fff; background: #635BFF; padding: 1px 6px; border-radius: 3px; flex-shrink: 0; }
+    .svc-m-story { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 20px; border-bottom: 1px solid #f3f4f6; }
+    .svc-m-story:last-child { border-bottom: none; }
+    .svc-m-sid { font-family: var(--mono); font-size: 9px; color: #9ca3af; min-width: 54px; }
+    .svc-m-sname { font-size: 11px; color: #374151; flex: 1; }
+    .svc-m-task { display: flex; align-items: center; gap: 7px; padding: 5px 12px 5px 32px; border-bottom: 1px solid #f3f4f6; }
+    .svc-m-task:last-child { border-bottom: none; }
+    .svc-m-tid { font-family: var(--mono); font-size: 8.5px; color: #9ca3af; min-width: 54px; }
+    .svc-m-tname { font-size: 10.5px; color: #374151; flex: 1; }
+    .svc-m-prio { font-family: var(--mono); font-size: 8px; padding: 1px 5px; border-radius: 2px; flex-shrink: 0; }
+    .svc-m-prio--p0 { background:rgba(239,68,68,.12); color:#dc2626; }
+    .svc-m-prio--p1 { background:rgba(249,115,22,.12); color:#ea580c; }
+    .svc-m-prio--p2 { background:rgba(234,179,8,.12); color:#ca8a04; }
+    .svc-m-pts { font-family: var(--mono); font-size: 8px; color: #fff; background: #635BFF; padding: 1px 5px; border-radius: 2px; flex-shrink: 0; }
+
+    /* Mock 3 — Diagram */
+    .svc-m-diag-flow { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .svc-m-diag-row { display: flex; gap: 7px; justify-content: center; align-items: center; }
+    .svc-m-dn { padding: 6px 13px; border: 1px solid rgba(0,0,0,.07); border-radius: 8px; font-family: var(--mono); font-size: 9.5px; background: #fff; color: #374151; text-align: center; min-width: 76px; }
+    .svc-m-dn sub { display: block; font-size: 8px; color: #9ca3af; margin-top: 2px; }
+    .svc-m-dn--hub { background:rgba(239,111,46,.06); border-color:rgba(239,111,46,.35); color:#c2410c; font-weight:600; min-width:120px; padding:8px 16px; }
+    .svc-m-dn--b   { background:rgba(88,166,255,.06); border-color:rgba(88,166,255,.3); color:#1d6fa8; }
+    .svc-m-dn--p   { background:rgba(188,140,255,.06); border-color:rgba(188,140,255,.3); color:#7c3aed; }
+    .svc-m-dn--g   { background:rgba(63,185,80,.06); border-color:rgba(63,185,80,.3); color:#166534; }
+    .svc-m-dn--r   { background:rgba(220,56,45,.06); border-color:rgba(220,56,45,.3); color:#991b1b; }
+    .svc-m-dn--i   { background:rgba(99,91,255,.06); border-color:rgba(99,91,255,.3); color:#4338ca; }
+    .svc-m-diag-arr { font-size: 11px; color: #d1d5db; }
+    .svc-m-diag-panel { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 10px 12px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; }
+    .svc-m-diag-panel-body { flex: 1; }
+    .svc-m-diag-panel-title { font-family: var(--mono); font-size: 11px; font-weight: 600; color: #020202; margin-bottom: 3px; }
+    .svc-m-diag-panel-row { font-family: var(--mono); font-size: 10px; color: #6b7280; display: flex; justify-content: space-between; margin-bottom: 2px; }
+    .svc-m-diag-panel-tag { font-family: var(--mono); font-size: 9px; color: var(--orange); padding: 1px 6px; border: 1px solid rgba(239,111,46,.3); border-radius: 3px; flex-shrink: 0; }
+
+    /* Mock 4 — Stack advisor */
+    .svc-m-stack { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .svc-m-stack th { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; padding: 7px 10px; background: #f9f9f9; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    .svc-m-stack td { padding: 9px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+    .svc-m-stack tr:last-child td { border-bottom: none; }
+    .svc-m-stack .s-layer { font-family: var(--mono); font-size: 10px; color: #9ca3af; }
+    .svc-m-stack .s-why { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+    .svc-s-badge { display: inline-block; padding: 1px 7px; border-radius: 3px; font-family: var(--mono); font-size: 9.5px; margin-right: 3px; }
+    .svc-s-rec { background:rgba(63,185,80,.1); color:#166534; }
+    .svc-s-alt { background:rgba(0,0,0,.05); color:#6b7280; }
+
+    /* Mock 5 — Cost */
+    .svc-m-cost-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+    .svc-m-cost-n { font-size: 30px; font-weight: 400; letter-spacing: -1.2px; color: #020202; line-height: 1; }
+    .svc-m-cost-period { font-family: var(--mono); font-size: 10px; color: #9ca3af; }
+    .svc-m-cost-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .svc-m-cost-item { display: flex; align-items: center; }
+    .svc-m-cost-name { font-family: var(--mono); font-size: 10px; color: #374151; width: 76px; flex-shrink: 0; }
+    .svc-m-cost-track { flex: 1; height: 7px; background: #f3f4f6; border-radius: 3px; overflow: hidden; margin: 0 10px; }
+    .svc-m-cost-fill { height: 100%; border-radius: 3px; }
+    .svc-m-cost-val { font-family: var(--mono); font-size: 10px; color: #6b7280; width: 38px; text-align: right; flex-shrink: 0; }
+    .svc-m-cost-alert { padding: 9px 11px; background:rgba(249,115,22,.05); border:1px solid rgba(249,115,22,.2); border-radius: 5px; display: flex; gap: 8px; align-items: flex-start; }
+    .svc-m-cost-alert-icon { color: #ea580c; flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+    .svc-m-cost-alert-txt { font-size: 11px; color: #374151; line-height: 1.55; }
+    .svc-m-cost-alt-lnk { font-family: var(--mono); font-size: 10px; color: #3fb950; display: block; margin-top: 3px; }
+
+    /* Mock 6 — Docs */
+    .svc-m-doc-title { font-size: 14px; font-weight: 600; color: #020202; margin-bottom: 2px; }
+    .svc-m-doc-meta { font-family: var(--mono); font-size: 9px; color: #9ca3af; margin-bottom: 14px; }
+    .svc-m-doc-h2 { font-family: var(--mono); font-size: 9.5px; letter-spacing: .09em; text-transform: uppercase; color: #9ca3af; margin-bottom: 6px; border-bottom: 1px solid #f3f4f6; padding-bottom: 4px; }
+    .svc-m-doc-p { font-size: 11px; color: #4b5563; line-height: 1.6; margin-bottom: 10px; }
+    .svc-m-doc-rows { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+    .svc-m-doc-row { display: flex; gap: 8px; align-items: baseline; }
+    .svc-m-doc-k { font-family: var(--mono); font-size: 9.5px; color: #9ca3af; width: 74px; flex-shrink: 0; }
+    .svc-m-doc-v { font-size: 11px; color: #374151; }
+    .svc-m-doc-exports { display: flex; gap: 6px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .svc-m-xbtn { padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 4px; font-family: var(--mono); font-size: 9.5px; color: #374151; background: #fff; }
+
+    /* Mock 7 — Roadmap */
+    .svc-m-rm-phases { display: flex; flex-direction: column; gap: 12px; }
+    .svc-m-rm-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+    .svc-m-rm-pname { font-family: var(--mono); font-size: 10px; font-weight: 600; color: #374151; }
+    .svc-m-rm-pwk { font-family: var(--mono); font-size: 9px; color: #9ca3af; }
+    .svc-m-rm-bars { display: flex; flex-direction: column; gap: 5px; }
+    .svc-m-rm-brow { display: flex; align-items: center; gap: 8px; }
+    .svc-m-rm-bname { font-family: var(--mono); font-size: 9px; color: #6b7280; width: 100px; flex-shrink: 0; }
+    .svc-m-rm-btrack { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+    .svc-m-rm-bfill { height: 100%; border-radius: 4px; }
+    .svc-m-rm-div { height: 1px; background: #e5e7eb; margin: 4px 0; }
+    .svc-m-rm-ms { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 9px; color: var(--orange); padding: 3px 8px; background: rgba(239,111,46,.06); border: 1px solid rgba(239,111,46,.2); border-radius: 3px; margin-top: 8px; }
+
+    /* Mock 8 — Decision analysis */
+    .svc-m-da-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .svc-m-da-card { border: 1px solid #e5e7eb; border-radius: 6px; padding: 14px; background: #fff; }
+    .svc-m-da-card--rec { border-color: rgba(239,111,46,.4); background:rgba(239,111,46,.025); }
+    .svc-m-da-tag { font-family: var(--mono); font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; margin-bottom: 6px; display: block; }
+    .svc-m-da-card--rec .svc-m-da-tag { color: var(--orange); }
+    .svc-m-da-name { font-size: 12px; font-weight: 600; color: #020202; margin-bottom: 10px; }
+    .svc-m-da-metric { margin-bottom: 7px; }
+    .svc-m-da-mlbl { font-family: var(--mono); font-size: 9px; color: #9ca3af; margin-bottom: 3px; }
+    .svc-m-da-pips { display: flex; gap: 3px; }
+    .svc-m-da-pip { width: 18px; height: 5px; border-radius: 2px; background: #e5e7eb; }
+    .svc-m-da-pip--on { background: var(--orange); }
+    .svc-m-da-items { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid #f3f4f6; padding-top: 8px; margin-top: 8px; }
+    .svc-m-da-item { font-size: 10px; display: flex; gap: 5px; align-items: baseline; }
+    .svc-m-da-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .svc-m-da-yes { color: #374151; } .svc-m-da-yes::before { background: #3fb950; }
+    .svc-m-da-no  { color: #9ca3af; } .svc-m-da-no::before  { background: #e5e7eb; }
+    .svc-m-da-rec-badge { display: block; text-align: center; margin-top: 10px; font-family: var(--mono); font-size: 8px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange); padding: 4px 0; border-top: 1px solid rgba(239,111,46,.15); }
+
+    /* How-it-connects section */
+    .svc-connect { padding: 56px 0; border-top: 1px solid #020202; border-bottom: 1px solid #e5e7eb; margin-bottom: 40px; }
+    .svc-connect-title { font-size: 26px; font-weight: 400; letter-spacing: -.8px; color: #020202; margin-bottom: 8px; }
+    .svc-connect-sub { font-size: 14px; color: #6b7280; margin-bottom: 40px; }
+    .svc-connect-flow { display: flex; align-items: stretch; gap: 0; }
+    .svc-connect-step { flex: 1; padding: 24px 22px; border: 1px solid #e5e7eb; border-right: none; background: #fff; }
+    .svc-connect-step:first-child { border-radius: var(--r-card) 0 0 var(--r-card); }
+    .svc-connect-step:last-child  { border-right: 1px solid #e5e7eb; border-radius: 0 var(--r-card) var(--r-card) 0; }
+    .svc-connect-arrow { display: flex; align-items: center; padding: 0 8px; color: #9ca3af; font-size: 16px; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; background: #f9f9f9; flex-shrink: 0; }
+    .svc-connect-step-num { font-family: var(--mono); font-size: 10px; color: var(--orange); letter-spacing: .06em; margin-bottom: 8px; }
+    .svc-connect-step-name { font-size: 15px; font-weight: 500; color: #020202; margin-bottom: 6px; }
+    .svc-connect-step-desc { font-size: 12.5px; color: #6b7280; line-height: 1.6; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="svc-topbar">
+    <div class="svc-topbar-left">
+      <img src="QuantiliomMainLogo.png" alt="Quantiliom" class="svc-topbar-logo">
+      <div class="svc-topbar-sep"></div>
+      <span class="svc-topbar-badge">Services</span>
+      <div class="svc-topbar-sep"></div>
+      <span class="svc-topbar-hint">8 capabilities · AI-powered</span>
+    </div>
+    <button class="svc-close-btn" id="svc-close-btn" aria-label="Back to home">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Close
+    </button>
+  </div>
+
+  <!-- Scrollable body -->
+  <div class="svc-body">
+
+    <!-- Header -->
+    <div class="svc-hdr">
+      <div>
+        <span class="svc-hdr-eyebrow">Platform Capabilities</span>
+        <h1 class="svc-hdr-title">Every tool you need<br>to architect right.</h1>
+        <p class="svc-hdr-sub">Eight AI-powered services. One project context. From a rough idea to a production-ready architecture, full documentation, project backlog, cost estimates, and a development roadmap — in minutes.</p>
+      </div>
+      <div class="svc-stats-box">
+        <div class="svc-stat">
+          <div class="svc-stat-n">8</div>
+          <div class="svc-stat-l">Services</div>
+        </div>
+        <div class="svc-stat">
+          <div class="svc-stat-n">&lt;30s</div>
+          <div class="svc-stat-l">Generation</div>
+        </div>
+        <div class="svc-stat">
+          <div class="svc-stat-n">5+</div>
+          <div class="svc-stat-l">Patterns</div>
+        </div>
+        <div class="svc-stat">
+          <div class="svc-stat-n">100%</div>
+          <div class="svc-stat-l">AI-powered</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intro -->
+    <p class="svc-intro">Quantiliom replaces the weeks it takes a team to architect, plan, and document a software system. Every service runs on the same AI foundation, sharing one project context — describe your idea once and receive a complete engineering brief: architecture, diagrams, tech choices, cost estimates, a structured backlog, and a release roadmap, all aligned to each other.</p>
+
+    <!-- ── 8 Service detail rows ── -->
+
+    <!-- ───────── 01 Architecture Design ───────── -->
+    <div class="svc-srow">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">01</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(239,111,46,.08);color:#c2410c;">System Intelligence</span>
+          </div>
+          <h2 class="svc-srow-name">Architecture<br>Design</h2>
+          <p class="svc-srow-desc">Describe your project in plain language — a sentence or a paragraph. Quantiliom's Architecture Intelligence Engine systematically extracts requirements, matches them against proven system patterns, and generates a complete, production-ready architecture with every component, relationship, and data flow defined. No vague suggestions — specific, justified decisions at every layer.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#ef6f2e"></div>AI-driven requirement extraction from natural language descriptions</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Matches against 5+ proven system patterns (marketplace, SaaS, AI chatbot, e-commerce, real-time)</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Identifies hidden requirements — scale, security, compliance, real-time needs</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Generates 2–3 architecture alternatives with clear trade-off reasoning</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Every architectural decision is explained — no black boxes</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">System architecture document</span>
+            <span class="svc-out-chip">Component map</span>
+            <span class="svc-out-chip">2–3 alternative approaches</span>
+            <span class="svc-out-chip">Trade-off analysis</span>
+            <span class="svc-out-chip">Recommended default</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Architecture Workspace · FoodDeliveryApp</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-input">
+                <div class="svc-m-lbl">Project Description</div>
+                <div class="svc-m-input-txt">"I want to build a multi-vendor food delivery marketplace with real-time order tracking, Stripe payments, and a mobile app for iOS and Android."</div>
+              </div>
+              <div class="svc-m-steps">
+                <div class="svc-m-step"><span class="svc-m-step-ic svc-m-step-ok">✓</span> Analyzing requirements — 11 signals detected</div>
+                <div class="svc-m-step"><span class="svc-m-step-ic svc-m-step-ok">✓</span> Matched pattern: Marketplace System (hub-spoke)</div>
+                <div class="svc-m-step"><span class="svc-m-step-ic svc-m-step-ok">✓</span> Identified real-time, payments, mobile — adjusting</div>
+                <div class="svc-m-step"><span class="svc-m-step-ic svc-m-step-ok">✓</span> Architecture generated · 3 alternatives ready</div>
+              </div>
+              <div class="svc-m-arch">
+                <div class="svc-m-lbl" style="text-align:center;margin-bottom:10px;">Recommended Architecture</div>
+                <div class="svc-m-arch-row"><span class="mn mn-b">Browser</span><span class="mn mn-b">iOS</span><span class="mn mn-b">Android</span></div>
+                <div class="svc-m-arch-arr">↓</div>
+                <div class="svc-m-arch-row"><span class="mn mn-o">API Gateway</span><span class="mn mn-p">Auth Service</span><span class="mn mn-s">Notification</span></div>
+                <div class="svc-m-arch-arr">↓</div>
+                <div class="svc-m-arch-row"><span class="mn mn-g">PostgreSQL</span><span class="mn mn-r">Redis</span><span class="mn mn-i">Stripe</span><span class="mn mn-s">S3 Storage</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 02 Backlog Intelligence ───────── -->
+    <div class="svc-srow svc-srow--flip">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">02</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(99,91,255,.08);color:#4338ca;">Project Intelligence</span>
+          </div>
+          <h2 class="svc-srow-name">Backlog<br>Intelligence</h2>
+          <p class="svc-srow-desc">Once your architecture is defined, Quantiliom transforms it into a fully structured project backlog in under 30 seconds — the same work that takes a product team 4–12 hours to do manually. Every Epic, Story, and Task is derived directly from the architecture output, ensuring they are always perfectly aligned. Export directly to Jira, Linear, GitHub Projects, or Notion.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#635BFF"></div>Generates a complete Epic → Story → Task three-tier hierarchy from architecture</li>
+            <li><div class="fd" style="background:#635BFF"></div>Fibonacci story point estimation (1, 2, 3, 5, 8, 13) per task based on complexity</li>
+            <li><div class="fd" style="background:#635BFF"></div>AI-driven priority scoring — P0 (critical) through P3 (low)</li>
+            <li><div class="fd" style="background:#635BFF"></div>Sprint grouping aligned to architecture phases (Phase 1 MVP, Phase 2 features...)</li>
+            <li><div class="fd" style="background:#635BFF"></div>Dependency detection between tasks (e.g. auth must precede protected routes)</li>
+          </ul>
+          <span class="svc-srow-sh">Export Formats</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Jira CSV import</span>
+            <span class="svc-out-chip">Linear JSON</span>
+            <span class="svc-out-chip">GitHub Issues</span>
+            <span class="svc-out-chip">Notion database</span>
+            <span class="svc-out-chip">Raw JSON</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Backlog · FoodDeliveryApp · 54 tickets generated</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-tk-topbar">
+                <span class="svc-m-tk-total">54 tickets · 127 story points · 4 epics</span>
+                <div class="svc-m-tk-exports"><span class="svc-m-xbadge">↗ Jira</span><span class="svc-m-xbadge">↗ Linear</span><span class="svc-m-xbadge">↗ GitHub</span></div>
+              </div>
+              <div class="svc-m-epic">
+                <div class="svc-m-epic-hdr"><span class="svc-m-eid">EPIC-01</span><span class="svc-m-ename">Auth &amp; User Management</span><span class="svc-m-sp">14sp</span></div>
+                <div class="svc-m-story"><span class="svc-m-sid">STORY-01</span><span class="svc-m-sname">Registration &amp; Onboarding</span></div>
+                <div class="svc-m-task"><span class="svc-m-tid">TASK-001</span><span class="svc-m-tname">Signup form UI</span><span class="svc-m-prio svc-m-prio--p0">P0</span><span class="svc-m-pts">3pt</span></div>
+                <div class="svc-m-task"><span class="svc-m-tid">TASK-002</span><span class="svc-m-tname">Email verification flow</span><span class="svc-m-prio svc-m-prio--p0">P0</span><span class="svc-m-pts">5pt</span></div>
+                <div class="svc-m-task"><span class="svc-m-tid">TASK-003</span><span class="svc-m-tname">Google OAuth2 integration</span><span class="svc-m-prio svc-m-prio--p1">P1</span><span class="svc-m-pts">5pt</span></div>
+                <div class="svc-m-story"><span class="svc-m-sid">STORY-02</span><span class="svc-m-sname">Session Management</span></div>
+                <div class="svc-m-task"><span class="svc-m-tid">TASK-004</span><span class="svc-m-tname">JWT generation &amp; refresh</span><span class="svc-m-prio svc-m-prio--p0">P0</span><span class="svc-m-pts">3pt</span></div>
+              </div>
+              <div class="svc-m-epic svc-m-epic--col">
+                <div class="svc-m-epic-hdr"><span class="svc-m-eid">EPIC-02</span><span class="svc-m-ename">Core API &amp; Business Logic</span><span class="svc-m-ecount">▸ 18 tasks</span><span class="svc-m-sp">22sp</span></div>
+              </div>
+              <div class="svc-m-epic svc-m-epic--col">
+                <div class="svc-m-epic-hdr"><span class="svc-m-eid">EPIC-03</span><span class="svc-m-ename">Payments &amp; Order Flow</span><span class="svc-m-ecount">▸ 14 tasks</span><span class="svc-m-sp">18sp</span></div>
+              </div>
+              <div class="svc-m-epic svc-m-epic--col">
+                <div class="svc-m-epic-hdr"><span class="svc-m-eid">EPIC-04</span><span class="svc-m-ename">Mobile App (iOS + Android)</span><span class="svc-m-ecount">▸ 17 tasks</span><span class="svc-m-sp">21sp</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 03 Interactive Diagrams ───────── -->
+    <div class="svc-srow">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">03</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(88,166,255,.08);color:#1d6fa8;">Visual Output</span>
+          </div>
+          <h2 class="svc-srow-name">Interactive<br>Diagrams</h2>
+          <p class="svc-srow-desc">Every architecture Quantiliom produces is visualised as an interactive, animated system diagram — not a static image. Components are live cards you can click. Animated particles travel the data paths. The hub-and-spoke layout reveals the actual flow of data through your system, so both technical and non-technical stakeholders immediately understand the structure.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#58a6ff"></div>Animated data-flow particles travel each connection path in real time</li>
+            <li><div class="fd" style="background:#58a6ff"></div>Click any component to open a detail panel: role, tech stack, pros, cons</li>
+            <li><div class="fd" style="background:#58a6ff"></div>Glass card UI with colour-coded service layers (client, API, data, infra)</li>
+            <li><div class="fd" style="background:#58a6ff"></div>Radial glow effects highlight the central gateway and data relationships</li>
+            <li><div class="fd" style="background:#58a6ff"></div>Export as SVG for use in presentations, RFCs, or documentation</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Animated SVG diagram</span>
+            <span class="svc-out-chip">Clickable component panels</span>
+            <span class="svc-out-chip">Layer colour coding</span>
+            <span class="svc-out-chip">SVG export</span>
+            <span class="svc-out-chip">Embeddable</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">System Diagram · FoodDeliveryApp · 9 services</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-diag-flow">
+                <div class="svc-m-diag-row">
+                  <div class="svc-m-dn svc-m-dn--b">Browser<sub>Next.js</sub></div>
+                  <div class="svc-m-dn svc-m-dn--b">iOS<sub>Flutter</sub></div>
+                  <div class="svc-m-dn svc-m-dn--b">Android<sub>Flutter</sub></div>
+                </div>
+                <div class="svc-m-diag-arr">↓ ↓ ↓</div>
+                <div class="svc-m-diag-row">
+                  <div class="svc-m-dn svc-m-dn--hub">API Gateway<sub>Rate limit · Auth · Routing</sub></div>
+                </div>
+                <div class="svc-m-diag-arr">↓ ↓ ↓</div>
+                <div class="svc-m-diag-row">
+                  <div class="svc-m-dn svc-m-dn--p">Auth<sub>JWT · RBAC</sub></div>
+                  <div class="svc-m-dn" style="background:rgba(239,111,46,.05);border-color:rgba(239,111,46,.2);color:#c2410c;">App Core<sub>Business logic</sub></div>
+                  <div class="svc-m-dn svc-m-dn--b">Notif<sub>Push · Email</sub></div>
+                </div>
+                <div class="svc-m-diag-arr">↓ ↓ ↓</div>
+                <div class="svc-m-diag-row">
+                  <div class="svc-m-dn svc-m-dn--g">PostgreSQL<sub>Primary DB</sub></div>
+                  <div class="svc-m-dn svc-m-dn--r">Redis<sub>Cache · Sessions</sub></div>
+                  <div class="svc-m-dn svc-m-dn--i">Stripe<sub>Payments</sub></div>
+                </div>
+              </div>
+              <div class="svc-m-diag-panel">
+                <span class="svc-m-diag-panel-tag">● selected</span>
+                <div class="svc-m-diag-panel-body">
+                  <div class="svc-m-diag-panel-title">API Gateway</div>
+                  <div class="svc-m-diag-panel-row"><span>Role</span><span>Central hub — all traffic</span></div>
+                  <div class="svc-m-diag-panel-row"><span>Stack</span><span>Kong / NGINX + Node.js</span></div>
+                  <div class="svc-m-diag-panel-row"><span>Scale</span><span>Horizontal + Redis-backed rate limit</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 04 Tech Stack Advisor ───────── -->
+    <div class="svc-srow svc-srow--flip">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">04</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(188,140,255,.08);color:#7c3aed;">Decision Intelligence</span>
+          </div>
+          <h2 class="svc-srow-name">Tech Stack<br>Advisor</h2>
+          <p class="svc-srow-desc">Choosing the wrong technology early is one of the most expensive mistakes a team can make — rebuilds, migrations, and unexpected costs can take months. The Tech Stack Advisor provides precise, project-specific recommendations across every layer of your stack, with real alternatives and clear "why this, not that" explanations. It's not generic advice — it accounts for your scale expectations, team size, budget, and time-to-market constraints.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#bc8cff"></div>Full-stack coverage: frontend, backend, mobile, database, cache, search, infra</li>
+            <li><div class="fd" style="background:#bc8cff"></div>Scale-sensitive recommendations — what works at 1k users breaks at 1M</li>
+            <li><div class="fd" style="background:#bc8cff"></div>Every recommendation includes 1–2 ranked alternatives</li>
+            <li><div class="fd" style="background:#bc8cff"></div>Vendor lock-in risk rating for each chosen technology</li>
+            <li><div class="fd" style="background:#bc8cff"></div>Cost-adjusted choices — flags when a free-tier tool becomes expensive at scale</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Full stack matrix</span>
+            <span class="svc-out-chip">Alternatives per layer</span>
+            <span class="svc-out-chip">Decision rationale</span>
+            <span class="svc-out-chip">Lock-in risk ratings</span>
+            <span class="svc-out-chip">Cost projections</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Stack Recommendations · FoodDeliveryApp</div>
+            </div>
+            <div class="svc-mock-body" style="padding:0;">
+              <table class="svc-m-stack" style="width:100%;">
+                <thead><tr>
+                  <th style="width:80px;">Layer</th>
+                  <th>Recommended</th>
+                  <th>Alternatives</th>
+                </tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="s-layer">Frontend</td>
+                    <td><span class="svc-s-badge svc-s-rec">Next.js</span><div class="s-why">SSR + SEO critical for marketplace discovery</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">SvelteKit</span><span class="svc-s-badge svc-s-alt">Remix</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-layer">Backend</td>
+                    <td><span class="svc-s-badge svc-s-rec">NestJS</span><div class="s-why">Modular, type-safe, scales to microservices later</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">FastAPI</span><span class="svc-s-badge svc-s-alt">Go Fiber</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-layer">Mobile</td>
+                    <td><span class="svc-s-badge svc-s-rec">Flutter</span><div class="s-why">Single codebase, near-native on iOS &amp; Android</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">React Native</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-layer">Database</td>
+                    <td><span class="svc-s-badge svc-s-rec">PostgreSQL</span><div class="s-why">ACID for payments; JSONB for flexible fields</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">PlanetScale</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-layer">Cache</td>
+                    <td><span class="svc-s-badge svc-s-rec">Redis</span><div class="s-why">Sub-ms latency for menus, sessions, rate limits</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">Upstash</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-layer">Infra</td>
+                    <td><span class="svc-s-badge svc-s-rec">AWS</span><div class="s-why">Widest managed service catalogue, mature CDN</div></td>
+                    <td><span class="svc-s-badge svc-s-alt">GCP</span><span class="svc-s-badge svc-s-alt">Fly.io</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 05 Cost Intelligence ───────── -->
+    <div class="svc-srow">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">05</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(63,185,80,.08);color:#166534;">Financial Analysis</span>
+          </div>
+          <h2 class="svc-srow-name">Cost<br>Intelligence</h2>
+          <p class="svc-srow-desc">Infrastructure costs are invisible until they become a crisis. Cost Intelligence makes every monetary consequence of your architecture visible before you write a line of code. It breaks down estimated monthly infrastructure spend by component, detects expensive choices (Firebase at scale, over-provisioned compute, redundant managed services), and suggests concrete cheaper alternatives with estimated savings.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#3fb950"></div>Monthly infrastructure cost breakdown by component (compute, DB, cache, storage, bandwidth)</li>
+            <li><div class="fd" style="background:#3fb950"></div>Expensive choice detection — flags Firebase, over-provisioned EC2, over-engineered microservices at early stage</li>
+            <li><div class="fd" style="background:#3fb950"></div>Concrete cheaper alternatives with estimated percentage savings</li>
+            <li><div class="fd" style="background:#3fb950"></div>Low / medium / high estimates based on traffic scale assumptions</li>
+            <li><div class="fd" style="background:#3fb950"></div>Third-party service cost modelling (Stripe fees, SendGrid, Twilio)</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Monthly cost estimate</span>
+            <span class="svc-out-chip">Component breakdown</span>
+            <span class="svc-out-chip">Expensive choice alerts</span>
+            <span class="svc-out-chip">Cheaper alternatives</span>
+            <span class="svc-out-chip">Scale projections</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Cost Estimate · FoodDeliveryApp · ~10k MAU</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-cost-total">
+                <span class="svc-m-cost-n">$340</span>
+                <span class="svc-m-cost-period">— $520 / month</span>
+                <span style="font-family:var(--mono);font-size:9px;color:#9ca3af;margin-left:auto;">estimated</span>
+              </div>
+              <div class="svc-m-cost-rows">
+                <div class="svc-m-cost-item"><span class="svc-m-cost-name">Compute</span><div class="svc-m-cost-track"><div class="svc-m-cost-fill" style="width:65%;background:#ef6f2e;"></div></div><span class="svc-m-cost-val">$120</span></div>
+                <div class="svc-m-cost-item"><span class="svc-m-cost-name">Database</span><div class="svc-m-cost-track"><div class="svc-m-cost-fill" style="width:48%;background:#3fb950;"></div></div><span class="svc-m-cost-val">$85</span></div>
+                <div class="svc-m-cost-item"><span class="svc-m-cost-name">Bandwidth</span><div class="svc-m-cost-track"><div class="svc-m-cost-fill" style="width:35%;background:#58a6ff;"></div></div><span class="svc-m-cost-val">$60</span></div>
+                <div class="svc-m-cost-item"><span class="svc-m-cost-name">Storage</span><div class="svc-m-cost-track"><div class="svc-m-cost-fill" style="width:26%;background:#bc8cff;"></div></div><span class="svc-m-cost-val">$45</span></div>
+                <div class="svc-m-cost-item"><span class="svc-m-cost-name">Cache</span><div class="svc-m-cost-track"><div class="svc-m-cost-fill" style="width:18%;background:#DC382D;"></div></div><span class="svc-m-cost-val">$30</span></div>
+              </div>
+              <div class="svc-m-cost-alert">
+                <span class="svc-m-cost-alert-icon">⚠</span>
+                <div class="svc-m-cost-alert-txt">Firebase Realtime DB would cost <strong>$290–$800/mo</strong> at this scale due to per-read pricing. PostgreSQL + Redis delivers the same features at ~60% lower cost.<span class="svc-m-cost-alt-lnk">→ Switch to PostgreSQL + Supabase to save ~$200/mo</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 06 Software Documentation ───────── -->
+    <div class="svc-srow svc-srow--flip">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">06</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(220,56,45,.07);color:#991b1b;">Documentation</span>
+          </div>
+          <h2 class="svc-srow-name">Software<br>Documentation</h2>
+          <p class="svc-srow-desc">Architecture decisions that live only in someone's head are a liability. Quantiliom exports a complete, shareable documentation pack — architecture overview, component glossary, tech stack rationale, security notes, risk register, and a full Architecture Decision Record (ADR). Useful for onboarding engineers, briefing investors, preparing handoffs, or writing RFCs.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#DC382D"></div>Architecture Decision Record (ADR) — every major choice documented with reasoning</li>
+            <li><div class="fd" style="background:#DC382D"></div>Component glossary — what each service does, why it was chosen, how it connects</li>
+            <li><div class="fd" style="background:#DC382D"></div>Security recommendations — auth strategy, encryption, rate limiting, audit logging</li>
+            <li><div class="fd" style="background:#DC382D"></div>Risk register — technical risks identified with mitigation strategies</li>
+            <li><div class="fd" style="background:#DC382D"></div>Export to PDF (investor-ready), Markdown (GitHub-ready), or JSON (API-ready)</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Architecture overview</span>
+            <span class="svc-out-chip">ADR document</span>
+            <span class="svc-out-chip">Component glossary</span>
+            <span class="svc-out-chip">Risk register</span>
+            <span class="svc-out-chip">PDF · Markdown · JSON</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Documentation Pack · FoodDeliveryApp v1.0</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-doc-title">FoodDeliveryApp — Architecture Documentation</div>
+              <div class="svc-m-doc-meta">Generated by Quantiliom AI · v1.0 · 2026-06-04 · 9 components · 4 layers</div>
+              <div class="svc-m-doc-h2">Architecture Overview</div>
+              <div class="svc-m-doc-p">Hub-and-spoke architecture centred on an API Gateway. Three client applications (Browser, iOS, Android) communicate exclusively through the gateway, which handles rate limiting, auth validation, and request routing to downstream services.</div>
+              <div class="svc-m-doc-h2">Component Glossary</div>
+              <div class="svc-m-doc-rows">
+                <div class="svc-m-doc-row"><span class="svc-m-doc-k">API Gateway</span><span class="svc-m-doc-v">Central hub. Rate limit, JWT validation, routing. Kong on ECS.</span></div>
+                <div class="svc-m-doc-row"><span class="svc-m-doc-k">Auth Service</span><span class="svc-m-doc-v">Issues JWT tokens, enforces RBAC, handles OAuth2 social login.</span></div>
+                <div class="svc-m-doc-row"><span class="svc-m-doc-k">PostgreSQL</span><span class="svc-m-doc-v">Primary ACID store. Orders, users, restaurants, payments history.</span></div>
+                <div class="svc-m-doc-row"><span class="svc-m-doc-k">Redis</span><span class="svc-m-doc-v">Menu cache (TTL 5m), session store, rate-limit counters.</span></div>
+              </div>
+              <div class="svc-m-doc-h2">Risk Register</div>
+              <div class="svc-m-doc-p" style="color:#dc2626;background:rgba(220,56,45,.05);padding:8px 10px;border-radius:5px;border:1px solid rgba(220,56,45,.15);">⚠ HIGH: API Gateway is a single point of failure — mitigate with multi-AZ deployment + circuit breaker.</div>
+              <div class="svc-m-doc-exports">
+                <button class="svc-m-xbtn">↓ PDF</button>
+                <button class="svc-m-xbtn">↓ Markdown</button>
+                <button class="svc-m-xbtn">↓ JSON</button>
+                <button class="svc-m-xbtn">↓ Notion</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 07 Roadmap Planner ───────── -->
+    <div class="svc-srow">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">07</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(245,158,11,.08);color:#b45309;">Timeline Planning</span>
+          </div>
+          <h2 class="svc-srow-name">Roadmap<br>Planner</h2>
+          <p class="svc-srow-desc">A software roadmap built independently from the architecture is guesswork. Quantiliom's Roadmap Planner generates a phased development timeline derived directly from your architecture output — phases are aligned to component dependencies, not invented. Each phase has defined deliverables, realistic time estimates based on team size, and a clear MVP boundary so you know what ships first.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#f59e0b"></div>Phase 0 (validation) through launch — full development timeline</li>
+            <li><div class="fd" style="background:#f59e0b"></div>Phases derived from architectural dependencies, not guessed independently</li>
+            <li><div class="fd" style="background:#f59e0b"></div>MVP scope clearly identified — what must ship vs. what can wait</li>
+            <li><div class="fd" style="background:#f59e0b"></div>Time estimates adjusted for solo, small team, or startup team contexts</li>
+            <li><div class="fd" style="background:#f59e0b"></div>Milestones and deliverables defined per phase</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Phased roadmap</span>
+            <span class="svc-out-chip">MVP scope definition</span>
+            <span class="svc-out-chip">Week-by-week timeline</span>
+            <span class="svc-out-chip">Phase milestones</span>
+            <span class="svc-out-chip">Dependency order</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Development Roadmap · FoodDeliveryApp · 14 weeks</div>
+            </div>
+            <div class="svc-mock-body">
+              <div class="svc-m-rm-phases">
+                <div>
+                  <div class="svc-m-rm-hdr"><span class="svc-m-rm-pname">Phase 1 — Core MVP</span><span class="svc-m-rm-pwk">Week 1–6</span></div>
+                  <div class="svc-m-rm-bars">
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Auth &amp; User Mgmt</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#ef6f2e;"></div></div></div>
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Core API Layer</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#ef6f2e;opacity:.75;"></div></div></div>
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Restaurant &amp; Menu</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#ef6f2e;opacity:.55;"></div></div></div>
+                  </div>
+                  <span class="svc-m-rm-ms">✓ MVP milestone: working order flow</span>
+                </div>
+                <div class="svc-m-rm-div"></div>
+                <div>
+                  <div class="svc-m-rm-hdr"><span class="svc-m-rm-pname">Phase 2 — Payments &amp; Mobile</span><span class="svc-m-rm-pwk">Week 7–10</span></div>
+                  <div class="svc-m-rm-bars">
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Stripe Integration</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#635BFF;"></div></div></div>
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Flutter Mobile App</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#635BFF;opacity:.7;"></div></div></div>
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Real-time Tracking</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#635BFF;opacity:.5;"></div></div></div>
+                  </div>
+                </div>
+                <div class="svc-m-rm-div"></div>
+                <div>
+                  <div class="svc-m-rm-hdr"><span class="svc-m-rm-pname">Phase 3 — Scale &amp; Launch</span><span class="svc-m-rm-pwk">Week 11–14</span></div>
+                  <div class="svc-m-rm-bars">
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Performance &amp; CDN</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#3fb950;"></div></div></div>
+                    <div class="svc-m-rm-brow"><span class="svc-m-rm-bname">Monitoring &amp; Alerts</span><div class="svc-m-rm-btrack"><div class="svc-m-rm-bfill" style="width:100%;background:#3fb950;opacity:.7;"></div></div></div>
+                  </div>
+                  <span class="svc-m-rm-ms">🚀 Production launch</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── 08 Decision Analysis ───────── -->
+    <div class="svc-srow svc-srow--flip">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">08</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(14,165,233,.08);color:#0369a1;">Comparative Analysis</span>
+          </div>
+          <h2 class="svc-srow-name">Decision<br>Analysis</h2>
+          <p class="svc-srow-desc">There is never one correct architecture — there are always trade-offs. Decision Analysis generates 2–3 concrete architecture alternatives for your project, each evaluated across cost, complexity, scalability, and time-to-market. One is clearly recommended as the default, but the others are fully documented so your team can make an informed choice rather than just following a black-box recommendation.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#0ea5e9"></div>2–3 distinct architecture approaches per project (e.g. modular monolith vs. microservices)</li>
+            <li><div class="fd" style="background:#0ea5e9"></div>Side-by-side comparison across cost, complexity, scalability, and team fit</li>
+            <li><div class="fd" style="background:#0ea5e9"></div>One option recommended as default — clearly flagged with reasoning</li>
+            <li><div class="fd" style="background:#0ea5e9"></div>Covers key structural decisions: monolith vs. microservices, SQL vs. NoSQL, self-hosted vs. managed</li>
+            <li><div class="fd" style="background:#0ea5e9"></div>Non-technical summary included — shareable with founders and PMs</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">2–3 architecture options</span>
+            <span class="svc-out-chip">Trade-off matrix</span>
+            <span class="svc-out-chip">Recommended default</span>
+            <span class="svc-out-chip">Non-technical summary</span>
+            <span class="svc-out-chip">Switch-cost estimate</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">Architecture Alternatives · FoodDeliveryApp</div>
+            </div>
+            <div class="svc-mock-body">
+              <div style="font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;">3 alternatives generated — pick what fits your team</div>
+              <div class="svc-m-da-grid">
+                <div class="svc-m-da-card">
+                  <span class="svc-m-da-tag">Option A</span>
+                  <div class="svc-m-da-name">Lean MVP</div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Cost</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip"></div><div class="svc-m-da-pip"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Complexity</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip"></div><div class="svc-m-da-pip"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Scalability</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip"></div><div class="svc-m-da-pip"></div></div></div>
+                  <div class="svc-m-da-items">
+                    <div class="svc-m-da-item svc-m-da-yes">Fast launch</div>
+                    <div class="svc-m-da-item svc-m-da-yes">Low infra cost</div>
+                    <div class="svc-m-da-item svc-m-da-no">Limited scale</div>
+                    <div class="svc-m-da-item svc-m-da-no">Rebuild risk</div>
+                  </div>
+                </div>
+                <div class="svc-m-da-card svc-m-da-card--rec">
+                  <span class="svc-m-da-tag">Option B · Recommended</span>
+                  <div class="svc-m-da-name">Balanced</div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Cost</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Complexity</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Scalability</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div></div></div>
+                  <div class="svc-m-da-items">
+                    <div class="svc-m-da-item svc-m-da-yes">Scales to 500k users</div>
+                    <div class="svc-m-da-item svc-m-da-yes">Reasonable cost</div>
+                    <div class="svc-m-da-item svc-m-da-yes">Modular design</div>
+                    <div class="svc-m-da-item svc-m-da-no">Medium complexity</div>
+                  </div>
+                  <span class="svc-m-da-rec-badge">★ RECOMMENDED DEFAULT</span>
+                </div>
+                <div class="svc-m-da-card">
+                  <span class="svc-m-da-tag">Option C</span>
+                  <div class="svc-m-da-name">Scale-first</div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Cost</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Complexity</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div></div></div>
+                  <div class="svc-m-da-metric"><div class="svc-m-da-mlbl">Scalability</div><div class="svc-m-da-pips"><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div><div class="svc-m-da-pip svc-m-da-pip--on"></div></div></div>
+                  <div class="svc-m-da-items">
+                    <div class="svc-m-da-item svc-m-da-yes">Scales to millions</div>
+                    <div class="svc-m-da-item svc-m-da-yes">Enterprise-ready</div>
+                    <div class="svc-m-da-item svc-m-da-no">High cost early</div>
+                    <div class="svc-m-da-item svc-m-da-no">Slow to launch</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── How it connects ───────── -->
+    <div class="svc-connect">
+      <div class="svc-hdr-eyebrow" style="margin-bottom:12px;">How it all comes together</div>
+      <div class="svc-connect-title">One input. Eight coordinated outputs.</div>
+      <p class="svc-connect-sub">All services share the same project context — every output is consistent with every other.</p>
+      <div class="svc-connect-flow">
+        <div class="svc-connect-step">
+          <div class="svc-connect-step-num">INPUT</div>
+          <div class="svc-connect-step-name">Describe your project</div>
+          <div class="svc-connect-step-desc">Write a paragraph about your idea. Quantiliom asks clarifying questions to capture scale, payments, mobile, real-time, and compliance requirements.</div>
+        </div>
+        <div class="svc-connect-arrow">→</div>
+        <div class="svc-connect-step">
+          <div class="svc-connect-step-num">PHASE 1</div>
+          <div class="svc-connect-step-name">Architecture &amp; Diagrams</div>
+          <div class="svc-connect-step-desc">The AI produces architecture, interactive diagram, tech stack recommendations, and 2–3 alternatives with trade-off analysis.</div>
+        </div>
+        <div class="svc-connect-arrow">→</div>
+        <div class="svc-connect-step">
+          <div class="svc-connect-step-num">PHASE 2</div>
+          <div class="svc-connect-step-name">Plan &amp; Estimate</div>
+          <div class="svc-connect-step-desc">Backlog with story points, roadmap with milestones, and a detailed cost intelligence report — all derived from the same architecture context.</div>
+        </div>
+        <div class="svc-connect-arrow">→</div>
+        <div class="svc-connect-step">
+          <div class="svc-connect-step-num">OUTPUT</div>
+          <div class="svc-connect-step-name">Full Project Kit</div>
+          <div class="svc-connect-step-desc">Export your complete architecture documentation pack in PDF, Markdown, or JSON. Import the backlog directly into Jira, Linear, or GitHub.</div>
+        </div>
+      </div>
+    </div><!-- /svc-connect -->
+
+    <!-- CTA strip -->
+    <div class="svc-cta-strip">
+      <div class="svc-cta-text">
+        <div class="svc-cta-title">Ready to architect<br>your next project?</div>
+        <div class="svc-cta-sub">Free to start · No credit card required · Architecture in under 30 seconds</div>
+      </div>
+      <div class="svc-cta-actions">
+        <button class="svc-cta-secondary" onclick="goBack()">See the demo first</button>
+        <button class="svc-cta-primary">Start for free →</button>
+      </div>
+    </div>
+
+  </div><!-- /svc-body -->
+
+  <script>
+    /* ── Page transitions ── */
+    function goBack() {
+      document.body.classList.add('exiting');
+      setTimeout(function() { window.location.href = 'index.html'; }, 250);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var closeBtn = document.getElementById('svc-close-btn');
+      if (closeBtn) closeBtn.addEventListener('click', goBack);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') goBack();
+      });
+    });
+  </script>
+
+</body>
+</html>

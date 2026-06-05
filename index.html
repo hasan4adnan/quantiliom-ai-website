@@ -399,6 +399,97 @@
     .problem-title { font-size: 15px; color: var(--black); margin-bottom: 4px; }
     .problem-desc { font-size: 14px; color: var(--graphite); line-height: 1.55; }
 
+    /* ADG node interactivity */
+    .adg-node { cursor: pointer; transition: transform 0.18s ease, filter 0.18s ease; }
+    .adg-node:hover { transform: translateY(-2px); filter: drop-shadow(0 8px 20px rgba(0,0,0,0.13)); }
+    .adg-node:active { transform: scale(0.96); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.10)); transition: transform 0.08s ease, filter 0.08s ease; }
+    #adg-wrap { position: relative; height: 100%; }
+    /* Diagram fades out when a detail panel is open */
+    #adg-wrap > svg { transition: opacity 0.32s ease, transform 0.32s ease, filter 0.32s ease; }
+    #adg-wrap.adg-detail-open > svg { opacity: 0.15; transform: scale(0.96) translateY(-5px); filter: blur(2px); pointer-events: none; }
+    #adg-detail {
+      display: none; flex-direction: column;
+      position: absolute; inset: 0;
+      background: #f5f7fb; border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      overflow: hidden; z-index: 10;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+    }
+    /* Enter: panel rises + sharpens into view */
+    #adg-detail.adg-visible {
+      animation: adg-enter 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    /* Leave: panel sinks + blurs out */
+    #adg-detail.adg-leaving {
+      animation: adg-leave 0.26s cubic-bezier(0.55, 0, 0.45, 1) both;
+    }
+    @keyframes adg-enter {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0);   }
+    }
+    @keyframes adg-leave {
+      from { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0);   }
+      to   { opacity: 0; transform: translateY(14px) scale(0.97); filter: blur(3px); }
+    }
+    /* Stagger content inside the panel on open */
+    #adg-detail.adg-visible .adg-detail-header     { animation: adg-stagger 0.30s 0.08s both; }
+    #adg-detail.adg-visible .adg-detail-role       { animation: adg-stagger 0.30s 0.14s both; }
+    #adg-detail.adg-visible .adg-detail-desc       { animation: adg-stagger 0.30s 0.19s both; }
+    #adg-detail.adg-visible .adg-detail-grid       { animation: adg-stagger 0.30s 0.24s both; }
+    #adg-detail.adg-visible .adg-detail-stack-title,
+    #adg-detail.adg-visible .adg-detail-stack      { animation: adg-stagger 0.30s 0.29s both; }
+    @keyframes adg-stagger {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .adg-detail-titlebar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 16px; height: 38px; flex-shrink: 0;
+      background: #eef0f5; border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .adg-detail-dots { display: flex; gap: 6px; }
+    .adg-detail-dots span { width: 12px; height: 12px; border-radius: 50%; }
+    .adg-detail-back {
+      margin-left: auto; display: flex; align-items: center; gap: 5px;
+      background: none; border: 1px solid rgba(0,0,0,0.12); border-radius: 6px;
+      padding: 3px 10px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: #374151; cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .adg-detail-back:hover { background: rgba(0,0,0,0.06); transform: translateX(-2px); }
+    .adg-detail-body { flex: 1; overflow-y: auto; padding: 24px 26px; }
+    .adg-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .adg-detail-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .adg-detail-name { font-size: 20px; font-weight: 700; color: #111827; }
+    .adg-detail-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+    .adg-detail-role {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600; margin-bottom: 16px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .adg-detail-desc { font-size: 13px; color: #374151; line-height: 1.7; margin-bottom: 20px; }
+    .adg-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .adg-detail-col h4 {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .adg-detail-col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .adg-detail-col li { font-size: 12px; color: #374151; display: flex; gap: 6px; align-items: flex-start; line-height: 1.5; }
+    .adg-detail-col li::before { content: ''; flex-shrink: 0; margin-top: 5px; width: 6px; height: 6px; border-radius: 50%; }
+    .adg-pros li::before { background: #3fb950; }
+    .adg-cons li::before { background: #f87171; }
+    .adg-detail-stack-title { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6b7280; margin-bottom: 10px; }
+    .adg-detail-stack { display: flex; flex-wrap: wrap; gap: 7px; }
+    .adg-detail-stack span {
+      padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      background: rgba(0,0,0,0.05); color: #374151;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .adg-detail-statusbar {
+      height: 38px; flex-shrink: 0; display: flex; align-items: center; padding: 0 16px; gap: 10px;
+      background: rgba(238,240,245,0.97); border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .adg-detail-statusbar span { font-size: 9px; color: rgba(0,0,0,0.3); }
     /* Before/After cards */
     .compare-stack { display: flex; flex-direction: column; gap: 12px; }
     .compare-card {
@@ -1660,6 +1751,14 @@
     .rm-gantt-weeks { display: flex; justify-content: space-between; margin-top: 6px; }
     .rm-gantt-wk { font-family: var(--mono); font-size: 9px; color: #c8c8c8; }
 
+    /* ════════════════════════════════════════════════
+       SERVICES OVERLAY
+    ════════════════════════════════════════════════ */
+    /* ── Page transition ── */
+    @keyframes pg-exit { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-12px)} }
+    .page-exiting { animation: pg-exit 0.26s cubic-bezier(0.55, 0, 0.45, 1) both; pointer-events: none; }
+    .nav-links a[href="services.html"] { }
+
   </style>
 </head>
 <body>
@@ -1677,6 +1776,7 @@
     <ul class="nav-links">
       <li><a href="#">Product</a></li>
       <li><a href="#">Use Cases</a></li>
+      <li><a href="services.html" id="svc-nav-link">Services</a></li>
       <li><a href="#">Pricing</a></li>
       <li><a href="#">Docs</a></li>
       <li><a href="#">Blog</a></li>
@@ -1690,6 +1790,8 @@
 
   </div>
 </nav>
+
+<!-- SERVICES PAGE: services.html -->
 
 
 <!-- ════════════════════════════════════════════════
@@ -1951,7 +2053,7 @@
       </div>
 
       <!-- Right — architecture graph diagram (redesigned) -->
-      <div style="height:100%;">
+      <div id="adg-wrap" style="height:100%;">
         <svg viewBox="0 0 600 720" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;min-height:540px;" preserveAspectRatio="xMidYMid meet" aria-label="Marketplace architecture diagram generated by Quantiliom AI">
           <defs>
             <clipPath id="adg-clip">
@@ -2066,63 +2168,79 @@
           <!-- ═══ NODES (light glass cards) ═══ -->
 
           <!-- Browser (cx=155, cy=120, NW=155, NH=58) -->
-          <rect x="77" y="91" width="155" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="77" y="91" width="155" height="3" rx="2" fill="#58a6ff"/>
-          <circle cx="98" cy="120" r="5" fill="#58a6ff" opacity="0.8"/>
-          <text x="113" y="115" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Browser</text>
-          <text x="113" y="131" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Next.js / React</text>
+          <g class="adg-node" data-node="browser">
+            <rect x="77" y="91" width="155" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="77" y="91" width="155" height="3" rx="2" fill="#58a6ff"/>
+            <circle cx="98" cy="120" r="5" fill="#58a6ff" opacity="0.8"/>
+            <text x="113" y="115" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Browser</text>
+            <text x="113" y="131" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Next.js / React</text>
+          </g>
 
           <!-- Mobile (cx=445, cy=120, NW=155, NH=58) -->
-          <rect x="367" y="91" width="155" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="367" y="91" width="155" height="3" rx="2" fill="#58a6ff"/>
-          <circle cx="388" cy="120" r="5" fill="#58a6ff" opacity="0.8"/>
-          <text x="403" y="115" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Mobile</text>
-          <text x="403" y="131" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Flutter / RN</text>
+          <g class="adg-node" data-node="mobile">
+            <rect x="367" y="91" width="155" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="367" y="91" width="155" height="3" rx="2" fill="#58a6ff"/>
+            <circle cx="388" cy="120" r="5" fill="#58a6ff" opacity="0.8"/>
+            <text x="403" y="115" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Mobile</text>
+            <text x="403" y="131" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Flutter / RN</text>
+          </g>
 
           <!-- Auth Service (cx=100, cy=345, NW=162, NH=58) -->
-          <rect x="19" y="316" width="162" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="19" y="316" width="162" height="3" rx="2" fill="#bc8cff"/>
-          <circle cx="40" cy="345" r="5" fill="#bc8cff" opacity="0.8"/>
-          <text x="55" y="340" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Auth Service</text>
-          <text x="55" y="356" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">JWT · RBAC · OAuth2</text>
+          <g class="adg-node" data-node="auth">
+            <rect x="19" y="316" width="162" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="19" y="316" width="162" height="3" rx="2" fill="#bc8cff"/>
+            <circle cx="40" cy="345" r="5" fill="#bc8cff" opacity="0.8"/>
+            <text x="55" y="340" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Auth Service</text>
+            <text x="55" y="356" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">JWT · RBAC · OAuth2</text>
+          </g>
 
           <!-- HUB: API Gateway (cx=300, cy=345, NW=215, NH=66) -->
-          <rect x="192" y="312" width="215" height="66" rx="12" fill="rgba(255,255,255,0.94)" stroke="rgba(239,111,46,0.3)" stroke-width="1.5" filter="url(#adg-hub-sh)"/>
-          <rect x="192" y="312" width="215" height="3" rx="2" fill="#ef6f2e"/>
-          <circle cx="216" cy="345" r="6" fill="#ef6f2e" opacity="0.9">
-            <animate attributeName="r" values="6;8.5;6" dur="1.5s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.9;0.35;0.9" dur="1.5s" repeatCount="indefinite"/>
-          </circle>
-          <text x="233" y="339" font-family="'JetBrains Mono',monospace" font-size="15" font-weight="700" text-anchor="start" fill="#111827">API Gateway</text>
-          <text x="233" y="357" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Rate limit · Auth · Routing</text>
+          <g class="adg-node" data-node="gateway">
+            <rect x="192" y="312" width="215" height="66" rx="12" fill="rgba(255,255,255,0.94)" stroke="rgba(239,111,46,0.3)" stroke-width="1.5" filter="url(#adg-hub-sh)"/>
+            <rect x="192" y="312" width="215" height="3" rx="2" fill="#ef6f2e"/>
+            <circle cx="216" cy="345" r="6" fill="#ef6f2e" opacity="0.9">
+              <animate attributeName="r" values="6;8.5;6" dur="1.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.9;0.35;0.9" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <text x="233" y="339" font-family="'JetBrains Mono',monospace" font-size="15" font-weight="700" text-anchor="start" fill="#111827">API Gateway</text>
+            <text x="233" y="357" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Rate limit · Auth · Routing</text>
+          </g>
 
           <!-- App Core (cx=500, cy=345, NW=162, NH=58) -->
-          <rect x="419" y="316" width="162" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="419" y="316" width="162" height="3" rx="2" fill="#ef6f2e"/>
-          <circle cx="440" cy="345" r="5" fill="#ef6f2e" opacity="0.8"/>
-          <text x="455" y="340" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">App Core</text>
-          <text x="455" y="356" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Business logic · API</text>
+          <g class="adg-node" data-node="appcore">
+            <rect x="419" y="316" width="162" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="419" y="316" width="162" height="3" rx="2" fill="#ef6f2e"/>
+            <circle cx="440" cy="345" r="5" fill="#ef6f2e" opacity="0.8"/>
+            <text x="455" y="340" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">App Core</text>
+            <text x="455" y="356" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Business logic · API</text>
+          </g>
 
           <!-- PostgreSQL (cx=120, cy=570, NW=152, NH=58) -->
-          <rect x="44" y="541" width="152" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="44" y="541" width="152" height="3" rx="2" fill="#3fb950"/>
-          <circle cx="65" cy="570" r="5" fill="#3fb950" opacity="0.8"/>
-          <text x="80" y="565" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" text-anchor="start" fill="#111827">PostgreSQL</text>
-          <text x="80" y="581" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Primary database</text>
+          <g class="adg-node" data-node="postgresql">
+            <rect x="44" y="541" width="152" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="44" y="541" width="152" height="3" rx="2" fill="#3fb950"/>
+            <circle cx="65" cy="570" r="5" fill="#3fb950" opacity="0.8"/>
+            <text x="80" y="565" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" text-anchor="start" fill="#111827">PostgreSQL</text>
+            <text x="80" y="581" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Primary database</text>
+          </g>
 
           <!-- Redis (cx=300, cy=582, NW=148, NH=58) -->
-          <rect x="226" y="553" width="148" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="226" y="553" width="148" height="3" rx="2" fill="#DC382D"/>
-          <circle cx="247" cy="582" r="5" fill="#DC382D" opacity="0.8"/>
-          <text x="262" y="577" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Redis</text>
-          <text x="262" y="593" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Cache · Sessions</text>
+          <g class="adg-node" data-node="redis">
+            <rect x="226" y="553" width="148" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="226" y="553" width="148" height="3" rx="2" fill="#DC382D"/>
+            <circle cx="247" cy="582" r="5" fill="#DC382D" opacity="0.8"/>
+            <text x="262" y="577" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Redis</text>
+            <text x="262" y="593" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Cache · Sessions</text>
+          </g>
 
           <!-- Stripe (cx=480, cy=570, NW=152, NH=58) -->
-          <rect x="404" y="541" width="152" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
-          <rect x="404" y="541" width="152" height="3" rx="2" fill="#635BFF"/>
-          <circle cx="425" cy="570" r="5" fill="#635BFF" opacity="0.8"/>
-          <text x="440" y="565" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Stripe</text>
-          <text x="440" y="581" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Payments · Billing</text>
+          <g class="adg-node" data-node="stripe">
+            <rect x="404" y="541" width="152" height="58" rx="10" fill="rgba(255,255,255,0.82)" stroke="rgba(0,0,0,0.07)" stroke-width="1" filter="url(#adg-sh)"/>
+            <rect x="404" y="541" width="152" height="3" rx="2" fill="#635BFF"/>
+            <circle cx="425" cy="570" r="5" fill="#635BFF" opacity="0.8"/>
+            <text x="440" y="565" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" text-anchor="start" fill="#111827">Stripe</text>
+            <text x="440" y="581" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start" fill="#6b7280">Payments · Billing</text>
+          </g>
 
           <!-- Bottom status bar -->
           <rect x="0" y="676" width="600" height="44" fill="rgba(238,240,245,0.97)"/>
@@ -2138,6 +2256,48 @@
           </g><!-- end clip -->
 
         </svg>
+
+        <!-- Detail panel overlay -->
+        <div id="adg-detail" role="region" aria-label="Component detail">
+          <div class="adg-detail-titlebar">
+            <div class="adg-detail-dots">
+              <span style="background:#ff5f57;"></span>
+              <span style="background:#febc2e;"></span>
+              <span style="background:#28c840;"></span>
+            </div>
+            <span id="adg-detail-tab" style="font-size:11px;color:#374151;margin-left:4px;"></span>
+            <button class="adg-detail-back" id="adg-back-btn" aria-label="Back to diagram">
+              ← Back
+            </button>
+          </div>
+          <div class="adg-detail-body">
+            <div class="adg-detail-header">
+              <div class="adg-detail-dot" id="adg-dot"></div>
+              <div>
+                <div class="adg-detail-name" id="adg-name"></div>
+                <div class="adg-detail-sub" id="adg-sub"></div>
+              </div>
+            </div>
+            <div class="adg-detail-role" id="adg-role"></div>
+            <p class="adg-detail-desc" id="adg-desc"></p>
+            <div class="adg-detail-grid">
+              <div class="adg-detail-col adg-pros">
+                <h4 style="color:#3fb950;">Pros</h4>
+                <ul id="adg-pros"></ul>
+              </div>
+              <div class="adg-detail-col adg-cons">
+                <h4 style="color:#f87171;">Cons</h4>
+                <ul id="adg-cons"></ul>
+              </div>
+            </div>
+            <div class="adg-detail-stack-title">Tech Stack</div>
+            <div class="adg-detail-stack" id="adg-stack"></div>
+          </div>
+          <div class="adg-detail-statusbar">
+            <span id="adg-status-layer"></span>
+            <span style="margin-left:auto;">quantiliom.ai</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -5206,6 +5366,265 @@ hssRenderArch('marketplace');
     }, { threshold: 0.15 });
     obs.observe(shell);
   })();
+</script>
+
+<script>
+/* ── Page transitions ── */
+document.querySelectorAll('a[href="services.html"]').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.body.classList.add('page-exiting');
+    setTimeout(function() { window.location.href = 'services.html'; }, 250);
+  });
+});
+</script>
+
+<script>
+/* ── ADG Node detail panels ── */
+(function () {
+  const NODES = {
+    browser: {
+      name: 'Browser Client',
+      sub: 'Next.js / React',
+      color: '#58a6ff',
+      role: 'Frontend Layer',
+      roleColor: 'rgba(88,166,255,0.12)',
+      roleTextColor: '#1d6fa8',
+      layer: 'Client · Frontend',
+      desc: 'The browser-facing application built with Next.js and React. It handles server-side rendering for SEO, client-side interactivity, and communicates with the API Gateway for all data operations. Users access your marketplace through this interface on any desktop or mobile browser.',
+      pros: [
+        'Server-side rendering improves SEO and initial load',
+        'React ecosystem — massive library support',
+        'Next.js file-based routing simplifies navigation',
+        'Incremental Static Regeneration for near-instant pages',
+      ],
+      cons: [
+        'Larger bundle sizes without careful code-splitting',
+        'SSR adds server compute cost on every uncached request',
+        'Hydration mismatches can surface tricky bugs',
+      ],
+      stack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'SWR'],
+    },
+    mobile: {
+      name: 'Mobile App',
+      sub: 'Flutter / React Native',
+      color: '#58a6ff',
+      role: 'Frontend Layer',
+      roleColor: 'rgba(88,166,255,0.12)',
+      roleTextColor: '#1d6fa8',
+      layer: 'Client · Mobile',
+      desc: 'Cross-platform mobile client built with Flutter or React Native. Shares the same API Gateway as the browser client, enabling feature parity across platforms. Delivers native-like performance with a single codebase for iOS and Android, reducing time-to-market significantly.',
+      pros: [
+        'Single codebase targets iOS and Android simultaneously',
+        'Flutter\'s widget system enables pixel-perfect UI on both platforms',
+        'Near-native performance with compiled Dart/JS runtimes',
+        'Hot reload dramatically speeds up development cycles',
+      ],
+      cons: [
+        'App store review cycles slow down iteration',
+        'Larger app size compared to pure native apps',
+        'Some platform-specific APIs require bridge plugins',
+      ],
+      stack: ['Flutter', 'Dart', 'React Native', 'Expo', 'Redux'],
+    },
+    auth: {
+      name: 'Auth Service',
+      sub: 'JWT · RBAC · OAuth2',
+      color: '#bc8cff',
+      role: 'Security Layer',
+      roleColor: 'rgba(188,140,255,0.12)',
+      roleTextColor: '#7c3aed',
+      layer: 'Middleware · Security',
+      desc: 'Dedicated authentication and authorization microservice. Issues short-lived JWT access tokens and long-lived refresh tokens. Enforces Role-Based Access Control (RBAC) across all API routes and supports OAuth2 social login flows (Google, GitHub). Isolating auth logic here means a single vulnerability fix protects the entire system.',
+      pros: [
+        'Single source of truth for all auth decisions',
+        'JWT statelessness reduces database lookups per request',
+        'RBAC enables fine-grained permissions per user role',
+        'OAuth2 enables "Sign in with Google/GitHub" out of the box',
+      ],
+      cons: [
+        'Token revocation requires a blocklist or short expiry tradeoffs',
+        'Adds a network hop for every authenticated request',
+        'Key rotation must be coordinated across all services',
+      ],
+      stack: ['Node.js', 'JWT', 'OAuth2', 'Passport.js', 'bcrypt', 'Redis'],
+    },
+    gateway: {
+      name: 'API Gateway',
+      sub: 'Rate limit · Auth · Routing',
+      color: '#ef6f2e',
+      role: 'Central Hub',
+      roleColor: 'rgba(239,111,46,0.12)',
+      roleTextColor: '#c2410c',
+      layer: 'Infrastructure · Hub',
+      desc: 'The central traffic coordinator for the entire platform — every client request flows through here. Handles request routing to downstream services, enforces rate limits to prevent abuse, validates JWT tokens before forwarding, and provides a unified API surface to clients. It also manages CORS, request logging, and circuit-breaking for resilience.',
+      pros: [
+        'Single entry point simplifies client-side integration',
+        'Rate limiting and DDoS protection at the edge',
+        'Centralised logging and distributed tracing',
+        'Circuit breaker prevents cascade failures across services',
+      ],
+      cons: [
+        'Single point of failure — must be highly available',
+        'Can become a bottleneck under extreme load',
+        'Adds latency if deployed in a different region than services',
+      ],
+      stack: ['Kong', 'NGINX', 'Node.js', 'Express', 'Redis', 'Prometheus'],
+    },
+    appcore: {
+      name: 'App Core',
+      sub: 'Business logic · API',
+      color: '#ef6f2e',
+      role: 'Backend Layer',
+      roleColor: 'rgba(239,111,46,0.12)',
+      roleTextColor: '#c2410c',
+      layer: 'Backend · Business Logic',
+      desc: 'The heart of the platform — contains all domain-specific business logic, data models, and service orchestration. Handles marketplace operations like listings, orders, payments, and notifications. Talks to PostgreSQL for durable data, Redis for caching hot paths, and Stripe for billing flows. Built as a modular monolith or microservice depending on team size.',
+      pros: [
+        'Central location for all business rules reduces duplication',
+        'Modular structure keeps features independently deployable',
+        'Direct ORM access to PostgreSQL for complex queries',
+        'Easy to test individual domain modules in isolation',
+      ],
+      cons: [
+        'Can grow into a monolith if boundaries are not enforced',
+        'All features share the same deployment lifecycle',
+        'Scaling one feature requires scaling the whole service',
+      ],
+      stack: ['Node.js', 'TypeScript', 'Prisma', 'Express', 'Zod', 'Bull'],
+    },
+    postgresql: {
+      name: 'PostgreSQL',
+      sub: 'Primary database',
+      color: '#3fb950',
+      role: 'Data Layer',
+      roleColor: 'rgba(63,185,80,0.12)',
+      roleTextColor: '#166534',
+      layer: 'Persistence · SQL',
+      desc: 'The primary relational database storing all durable marketplace data — users, listings, orders, payments, and audit logs. PostgreSQL\'s ACID guarantees ensure data integrity for financial transactions. Row-level security and foreign key constraints are enforced at the database level, not just the application layer.',
+      pros: [
+        'ACID transactions ensure consistency for payment records',
+        'Row-level security adds database-enforced access control',
+        'Rich JSON support via JSONB for flexible schema fields',
+        'Mature ecosystem with excellent tooling (Prisma, pgAdmin)',
+      ],
+      cons: [
+        'Vertical scaling has limits — sharding is complex to implement',
+        'Schema migrations require careful planning to avoid downtime',
+        'Connection pooling (PgBouncer) needed at high concurrency',
+      ],
+      stack: ['PostgreSQL 16', 'Prisma', 'PgBouncer', 'pg_cron', 'pg_partman'],
+    },
+    redis: {
+      name: 'Redis',
+      sub: 'Cache · Sessions',
+      color: '#DC382D',
+      role: 'Cache Layer',
+      roleColor: 'rgba(220,56,45,0.10)',
+      roleTextColor: '#991b1b',
+      layer: 'Persistence · Cache',
+      desc: 'In-memory data store used for high-speed caching of expensive database queries, session token storage, and real-time pub/sub messaging. Reduces PostgreSQL load for frequently-read data like product listings and user profiles. Also serves as the backend for rate-limiting counters and distributed locks.',
+      pros: [
+        'Sub-millisecond read/write latency for hot data',
+        'Built-in TTL for automatic cache expiry management',
+        'Pub/Sub enables real-time notifications without polling',
+        'Lua scripting enables atomic multi-step operations',
+      ],
+      cons: [
+        'Data is lost on restart without persistence (RDB/AOF tradeoffs)',
+        'Memory cost — storing large objects is expensive',
+        'Cache invalidation logic must be maintained carefully',
+      ],
+      stack: ['Redis 7', 'ioredis', 'Bull (queues)', 'Redis Cluster', 'Upstash'],
+    },
+    stripe: {
+      name: 'Stripe',
+      sub: 'Payments · Billing',
+      color: '#635BFF',
+      role: 'Payments Layer',
+      roleColor: 'rgba(99,91,255,0.10)',
+      roleTextColor: '#4338ca',
+      layer: 'External · Payments',
+      desc: 'Third-party payment infrastructure handling all money movement on the platform — one-time charges, subscriptions, marketplace split payments, refunds, and payouts to sellers. Stripe\'s webhook system notifies the app of async events like payment success, subscription renewal, or chargeback disputes. PCI compliance is handled by Stripe, significantly reducing regulatory burden.',
+      pros: [
+        'PCI DSS compliance handled entirely by Stripe',
+        'Marketplace payments with automatic seller payouts via Connect',
+        'Robust webhook system for reliable async event handling',
+        'Excellent developer experience with detailed error messages',
+      ],
+      cons: [
+        'Processing fees (2.9% + 30¢) can impact margins at scale',
+        'Vendor lock-in — switching payment providers is non-trivial',
+        'Webhooks must be idempotent to handle duplicate deliveries',
+      ],
+      stack: ['Stripe API', 'Stripe Connect', 'Stripe Webhooks', 'stripe-node', 'Stripe CLI'],
+    },
+  };
+
+  const detail  = document.getElementById('adg-detail');
+  const wrap    = document.getElementById('adg-wrap');
+  const backBtn = document.getElementById('adg-back-btn');
+
+  function showDetail(key) {
+    const d = NODES[key];
+    if (!d) return;
+
+    document.getElementById('adg-detail-tab').textContent = d.name;
+    document.getElementById('adg-dot').style.background = d.color;
+    document.getElementById('adg-name').textContent = d.name;
+    document.getElementById('adg-sub').textContent = d.sub;
+
+    const roleEl = document.getElementById('adg-role');
+    roleEl.textContent = d.role;
+    roleEl.style.background = d.roleColor;
+    roleEl.style.color = d.roleTextColor;
+    roleEl.style.border = '1px solid ' + d.color + '44';
+
+    document.getElementById('adg-desc').textContent = d.desc;
+
+    const prosEl = document.getElementById('adg-pros');
+    prosEl.innerHTML = d.pros.map(p => '<li>' + p + '</li>').join('');
+
+    const consEl = document.getElementById('adg-cons');
+    consEl.innerHTML = d.cons.map(c => '<li>' + c + '</li>').join('');
+
+    const stackEl = document.getElementById('adg-stack');
+    stackEl.innerHTML = d.stack.map(s =>
+      '<span style="border-color:' + d.color + '33;color:#374151;">' + s + '</span>'
+    ).join('');
+
+    document.getElementById('adg-status-layer').textContent = d.layer;
+
+    /* cancel any in-progress leave */
+    detail.classList.remove('adg-leaving');
+    detail.style.display = 'flex';
+    /* force reflow so the browser registers the display change before animating */
+    void detail.offsetHeight;
+    detail.classList.add('adg-visible');
+    wrap.classList.add('adg-detail-open');
+    detail.scrollTop = 0;
+  }
+
+  function hideDetail() {
+    detail.classList.remove('adg-visible');
+    detail.classList.add('adg-leaving');
+    wrap.classList.remove('adg-detail-open');
+    function onEnd() {
+      detail.style.display = 'none';
+      detail.classList.remove('adg-leaving');
+      detail.removeEventListener('animationend', onEnd);
+    }
+    detail.addEventListener('animationend', onEnd);
+  }
+
+  backBtn.addEventListener('click', hideDetail);
+
+  document.querySelectorAll('.adg-node').forEach(function (node) {
+    node.addEventListener('click', function () {
+      showDetail(node.dataset.node);
+    });
+  });
+})();
 </script>
 
 </body>

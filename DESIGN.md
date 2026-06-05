@@ -163,6 +163,63 @@ Transparent background, text Code Orange (#ef6f2e). Radius 0px, padding 0. Appea
 
 The visual language for imagery is primarily functional and technical, leaning heavily on abstract conceptual graphics, UI screenshots, and code blocks. Product screenshots are contained within precise, slightly rounded frames, often featuring stylized UI elements rather than raw interfaces. Graphics are typically monochromatic or use a limited palette, often employing dotted patterns (like the 'grid' in the hero section) and stark lines. There's an absence of photography or human elements, focusing instead on the tools and concepts of software development. Imagery serves an explanatory role, illustrating functionality or abstracting complex ideas, with a high density relative to other pure UI sites.
 
+## Page Transitions (MANDATORY for all screens)
+
+Every screen in this website — current and future — must use the same page transition animation. This keeps the product feel consistent and professional.
+
+### Standard: Enter animation
+When a new page loads, the body animates in from below and fades in:
+```css
+@keyframes page-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+body { animation: page-enter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both; }
+```
+Curve `cubic-bezier(0.22, 1, 0.36, 1)` is a spring ease-out — fast start, gently settles.
+
+### Standard: Exit animation
+Before navigating away, add `.exiting` to `<body>`:
+```css
+@keyframes page-exit { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-14px); } }
+body.exiting { animation: page-exit 0.26s cubic-bezier(0.55, 0, 0.45, 1) both; }
+```
+Curve `cubic-bezier(0.55, 0, 0.45, 1)` is ease-in — accelerates out.
+
+### Standard: Content stagger
+Key content sections stagger in after the page enter with 80ms delays:
+```css
+@keyframes svc-stag { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+body .page-hdr   { animation: svc-stag 0.38s 0.08s both; }
+body .page-intro { animation: svc-stag 0.38s 0.16s both; }
+body .page-cta   { animation: svc-stag 0.38s 0.24s both; }
+```
+Add 80ms per stagger group. Max delay should stay under ~400ms.
+
+### Navigation pattern
+From the main `index.html`, clicking a nav link that goes to another page:
+```javascript
+link.addEventListener('click', function(e) {
+  e.preventDefault();
+  document.body.classList.add('page-exiting');
+  setTimeout(function() { window.location.href = 'target.html'; }, 250);
+});
+```
+Wait 250ms (matches the 0.26s exit duration) before navigating.
+
+On the destination page, the body auto-plays `page-enter` on load — no extra JS needed.
+
+On the "Back" / "Close" button inside a child page:
+```javascript
+function goBack() {
+  document.body.classList.add('exiting');
+  setTimeout(function() { window.location.href = 'index.html'; }, 250);
+}
+```
+
+### Implementation reference
+- `services.html` — fully implements this pattern (first sub-page)
+- `index.html` — has `.page-exiting` CSS + transition intercept JS for the Services nav link
+
+---
+
 ## Layout
 
 The page structure employs a full-width layout with a primary content area constrained by a clear maximum width, centered on the screen. The hero section is a split two-column design: text-dominant on the left with a headline and descriptive copy, and abstract/UI visuals on the right, punctuated by sparse dot patterns. Sections generally follow a consistent vertical rhythm, often alternating between text-heavy content and content paired with product screenshots or conceptual graphics, typically in a two-column arrangement (text left, image right, or vice versa). There are occasional three-column card grids for presenting features or articles. The navigation is a persistent top bar, clean and functional, with a clear separation of branding and menu items. The layout emphasizes clarity and content organization, feeling spacious yet structured.
