@@ -163,6 +163,54 @@ Transparent background, text Code Orange (#ef6f2e). Radius 0px, padding 0. Appea
 
 The visual language for imagery is primarily functional and technical, leaning heavily on abstract conceptual graphics, UI screenshots, and code blocks. Product screenshots are contained within precise, slightly rounded frames, often featuring stylized UI elements rather than raw interfaces. Graphics are typically monochromatic or use a limited palette, often employing dotted patterns (like the 'grid' in the hero section) and stark lines. There's an absence of photography or human elements, focusing instead on the tools and concepts of software development. Imagery serves an explanatory role, illustrating functionality or abstracting complex ideas, with a high density relative to other pure UI sites.
 
+## Global Navigation Bar (MANDATORY on every page)
+
+The nav is a **shared JS component** in `nav.js`. Every page must include it — no copy-pasting HTML or CSS.
+
+### How to add the nav to any page
+
+Place this single script tag **at the very top of `<body>`**, before any other content:
+```html
+<body>
+  <script src="nav.js"></script>
+  <!-- rest of page content -->
+```
+
+That's it. `nav.js` auto-detects the current filename, renders the nav, marks the active link in orange, and attaches scroll-shadow + page-transition behaviors automatically.
+
+### To navigate between pages (with transition animation)
+
+Use the public API exposed by `nav.js` — **never use `window.location.href` directly**:
+```javascript
+QuantiliomNav.navigateTo('pricing.html'); // go to any page with exit animation
+QuantiliomNav.goBack();                   // return to index.html with exit animation
+```
+
+### Adding a new page to the nav links
+
+Open `nav.js` and add an entry to the `PAGES` array at the top:
+```javascript
+var PAGES = [
+  { label: 'Product',   href: '#' },
+  { label: 'Services',  href: 'services.html' },
+  { label: 'Pricing',   href: 'pricing.html' },   // ← add like this
+  ...
+];
+```
+The active highlight is automatic — the component compares each `href` to the current filename.
+
+### What nav.js provides (no need to add these to page CSS)
+- Global nav bar styles (`.qnav-*` classes, `#qnav`)
+- `--q-spring` easing variable
+- `body.page-exiting` exit animation class (used by `navigateTo`)
+
+### Implementation reference
+- `nav.js` — the component (source of truth)
+- `index.html` — uses `<script src="nav.js"></script>` at top of body
+- `services.html` — uses `<script src="nav.js"></script>` + calls `QuantiliomNav.goBack()` on close
+
+---
+
 ## Page Transitions (MANDATORY for all screens)
 
 Every screen in this website — current and future — must use the same page transition animation. This keeps the product feel consistent and professional.

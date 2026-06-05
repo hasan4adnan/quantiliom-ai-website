@@ -38,32 +38,30 @@
     body .svc-intro      { animation: svc-stag 0.38s 0.16s both; }
     body .svc-cta-strip  { animation: svc-stag 0.38s 0.24s both; }
 
-    /* Top bar */
+    /* nav styles live in nav.js */
+
+    /* ── SERVICES SUB-BAR ── */
     .svc-topbar {
       display: flex; align-items: center; justify-content: space-between;
-      height: 60px; flex-shrink: 0; padding: 0 72px;
-      background: #fff; border-bottom: 1px solid #020202;
+      height: 50px; flex-shrink: 0; padding: 0 72px;
+      background: #fafafa; border-bottom: 1px solid #e5e7eb;
     }
     .svc-topbar-left { display: flex; align-items: center; gap: 14px; }
-    .svc-topbar-logo { height: 26px; }
     .svc-topbar-badge {
       font-family: var(--mono); font-size: 10px; letter-spacing: .09em;
       text-transform: uppercase; color: var(--orange);
       padding: 2px 9px; border: 1px solid rgba(239,111,46,0.35); border-radius: 4px;
     }
     .svc-topbar-sep { width: 1px; height: 18px; background: #e5e7eb; }
-    .svc-topbar-hint {
-      font-family: var(--mono); font-size: 10px; color: #9ca3af;
-      letter-spacing: .04em;
-    }
+    .svc-topbar-hint { font-family: var(--mono); font-size: 10px; color: #9ca3af; letter-spacing: .04em; }
     .svc-close-btn {
       display: flex; align-items: center; gap: 8px;
-      background: none; border: 1px solid #020202; border-radius: var(--r-sm);
-      padding: 6px 16px; font-family: var(--mono); font-size: 11px;
-      letter-spacing: .04em; cursor: pointer; color: #020202;
-      transition: background .15s ease, color .15s ease;
+      background: none; border: 1px solid #d1d5db; border-radius: var(--r-sm);
+      padding: 5px 14px; font-family: var(--mono); font-size: 11px;
+      letter-spacing: .04em; cursor: pointer; color: #6b7280;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
     }
-    .svc-close-btn:hover { background: #020202; color: #fff; }
+    .svc-close-btn:hover { background: #020202; color: #fff; border-color: #020202; }
 
     /* Scrollable body */
     .svc-body { flex: 1; overflow-y: auto; padding: 60px 72px 80px; }
@@ -304,18 +302,19 @@
 </head>
 <body>
 
-  <!-- Top bar -->
+  <!-- Global nav rendered by nav.js -->
+  <script src="nav.js"></script>
+
+  <!-- ── Services sub-bar ── -->
   <div class="svc-topbar">
     <div class="svc-topbar-left">
-      <img src="QuantiliomMainLogo.png" alt="Quantiliom" class="svc-topbar-logo">
-      <div class="svc-topbar-sep"></div>
       <span class="svc-topbar-badge">Services</span>
       <div class="svc-topbar-sep"></div>
       <span class="svc-topbar-hint">8 capabilities · AI-powered</span>
     </div>
     <button class="svc-close-btn" id="svc-close-btn" aria-label="Back to home">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Close
+      ← Back to home
     </button>
   </div>
 
@@ -947,15 +946,13 @@
   </div><!-- /svc-body -->
 
   <script>
-    /* ── Page transitions ── */
-    function goBack() {
-      document.body.classList.add('exiting');
-      setTimeout(function() { window.location.href = 'index.html'; }, 250);
-    }
-    document.addEventListener('DOMContentLoaded', function() {
+    /* Close/back behaviour — nav transitions handled by nav.js */
+    function goBack() { QuantiliomNav.goBack(); }
+
+    document.addEventListener('DOMContentLoaded', function () {
       var closeBtn = document.getElementById('svc-close-btn');
       if (closeBtn) closeBtn.addEventListener('click', goBack);
-      document.addEventListener('keydown', function(e) {
+      document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') goBack();
       });
     });

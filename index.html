@@ -126,39 +126,7 @@
     /* ────────────────────────────────────────────────
        NAV
     ──────────────────────────────────────────────── */
-    .nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--light-gray);
-      border-bottom: 1px solid var(--cool-gray);
-      height: 96px; display: flex; align-items: center;
-    }
-    .nav-inner {
-      max-width: var(--max-w); margin: 0 auto;
-      padding: 0 72px; width: 100%;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo {
-      display: flex; align-items: center;
-    }
-    .nav-logo-img {
-      height: 160px; width: auto; display: block;
-    }
-    .logomark {
-      width: 24px; height: 24px;
-      background: var(--black); border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .nav-links {
-      display: flex; align-items: center;
-      gap: 36px; list-style: none;
-    }
-    .nav-links a {
-      font-size: 15px; color: var(--graphite);
-      transition: color .15s;
-    }
-    .nav-links a:hover { color: var(--black); }
-    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    /* nav styles live in nav.js */
 
     /* ────────────────────────────────────────────────
        HERO
@@ -1361,16 +1329,7 @@
     .reveal-delay-3 { transition-delay: .24s; }
     .reveal-delay-4 { transition-delay: .32s; }
 
-    /* ── Nav ── */
-    .nav { transition: box-shadow .2s; }
-    .nav.scrolled { box-shadow: 0 1px 20px rgba(2,2,2,.07); }
-    .nav-links a { position: relative; }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -3px; left: 0;
-      width: 0; height: 1px; background: var(--black);
-      transition: width .25s var(--spring);
-    }
-    .nav-links a:hover::after { width: 100%; }
+    /* nav interaction styles live in nav.js */
 
     /* ── Buttons ── */
     .btn { transition: background .15s, color .15s, border-color .15s, transform .15s var(--spring), box-shadow .15s; }
@@ -1755,41 +1714,14 @@
        SERVICES OVERLAY
     ════════════════════════════════════════════════ */
     /* ── Page transition ── */
-    @keyframes pg-exit { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-12px)} }
-    .page-exiting { animation: pg-exit 0.26s cubic-bezier(0.55, 0, 0.45, 1) both; pointer-events: none; }
-    .nav-links a[href="services.html"] { }
+    /* page-exiting animation lives in nav.js */
 
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════
-     NAVIGATION — placeholder
-════════════════════════════════════════════════ -->
-<nav class="nav">
-  <div class="nav-inner">
-
-    <a href="#" class="nav-logo">
-      <img src="QuantiliomMainLogo.png" alt="Quantiliom" class="nav-logo-img">
-    </a>
-
-    <ul class="nav-links">
-      <li><a href="#">Product</a></li>
-      <li><a href="#">Use Cases</a></li>
-      <li><a href="services.html" id="svc-nav-link">Services</a></li>
-      <li><a href="#">Pricing</a></li>
-      <li><a href="#">Docs</a></li>
-      <li><a href="#">Blog</a></li>
-    </ul>
-
-    <div class="nav-actions">
-      <button class="btn btn-ghost">Log In</button>
-      <button class="btn btn-outline">Contact Sales</button>
-      <button class="btn btn-dark">Get Started</button>
-    </div>
-
-  </div>
-</nav>
+<!-- Global nav rendered by nav.js -->
+<script src="nav.js"></script>
 
 <!-- SERVICES PAGE: services.html -->
 
@@ -4649,12 +4581,6 @@ hssRenderArch('marketplace');
 </script>
 
 <script>
-  /* ── Nav shadow on scroll ── */
-  const nav = document.querySelector('.nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 12);
-  }, { passive: true });
-
   /* ── Scroll reveal via IntersectionObserver ── */
   const revealTargets = [
     '.section > .wrap > *',
@@ -5369,14 +5295,7 @@ hssRenderArch('marketplace');
 </script>
 
 <script>
-/* ── Page transitions ── */
-document.querySelectorAll('a[href="services.html"]').forEach(function(link) {
-  link.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.body.classList.add('page-exiting');
-    setTimeout(function() { window.location.href = 'services.html'; }, 250);
-  });
-});
+/* Page transitions handled by nav.js */
 </script>
 
 <script>
