@@ -1743,7 +1743,7 @@
       border-radius: 8px; transition: border-color .15s, box-shadow .15s;
     }
     .iac-cloud-logo:hover { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.08); }
-    .iac-cloud-logo img { width: 20px; height: 20px; object-fit: contain; display: block; }
+    .iac-cloud-logo img { width: 24px; height: 24px; object-fit: contain; display: block; }
     .iac-cloud-logo span { font-size: 13px; font-weight: 500; color: var(--black); }
 
     /* IaC Terminal */
@@ -1789,10 +1789,12 @@
     .iac-code {
       padding: 18px 22px 22px;
       font-family: var(--mono); font-size: 12px;
-      line-height: 1.85; overflow-x: auto;
+      line-height: 1.85; overflow: auto;
+      color: #c9d1d9;
+      height: 720px; box-sizing: border-box;
     }
     .iac-cl { display: block; white-space: pre; }
-    .iac-cm { color: #484f58; font-style: italic; }
+    .iac-cm { color: #8b949e; font-style: italic; }
     .iac-kw { color: #ff7b72; }
     .iac-bl { color: #79c0ff; }
     .iac-at { color: #e3b341; }
@@ -3757,15 +3759,15 @@
           <span class="iac-cloud-bar-label">Generates for</span>
           <div class="iac-cloud-logos">
             <div class="iac-cloud-logo">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original.svg" alt="AWS" loading="lazy">
+              <img src="https://api.iconify.design/logos:aws.svg" alt="AWS" loading="lazy">
               <span>AWS</span>
             </div>
             <div class="iac-cloud-logo">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/googlecloud/googlecloud-original.svg" alt="GCP" loading="lazy">
+              <img src="https://api.iconify.design/logos:google-cloud.svg" alt="GCP" loading="lazy">
               <span>Google Cloud</span>
             </div>
             <div class="iac-cloud-logo">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg" alt="Azure" loading="lazy">
+              <img src="https://api.iconify.design/logos:microsoft-azure.svg" alt="Azure" loading="lazy">
               <span>Azure</span>
             </div>
           </div>
