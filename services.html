@@ -40,29 +40,6 @@
 
     /* nav styles live in nav.js */
 
-    /* ── SERVICES SUB-BAR ── */
-    .svc-topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 50px; flex-shrink: 0; padding: 0 72px;
-      background: #fafafa; border-bottom: 1px solid #e5e7eb;
-    }
-    .svc-topbar-left { display: flex; align-items: center; gap: 14px; }
-    .svc-topbar-badge {
-      font-family: var(--mono); font-size: 10px; letter-spacing: .09em;
-      text-transform: uppercase; color: var(--orange);
-      padding: 2px 9px; border: 1px solid rgba(239,111,46,0.35); border-radius: 4px;
-    }
-    .svc-topbar-sep { width: 1px; height: 18px; background: #e5e7eb; }
-    .svc-topbar-hint { font-family: var(--mono); font-size: 10px; color: #9ca3af; letter-spacing: .04em; }
-    .svc-close-btn {
-      display: flex; align-items: center; gap: 8px;
-      background: none; border: 1px solid #d1d5db; border-radius: var(--r-sm);
-      padding: 5px 14px; font-family: var(--mono); font-size: 11px;
-      letter-spacing: .04em; cursor: pointer; color: #6b7280;
-      transition: background .15s ease, color .15s ease, border-color .15s ease;
-    }
-    .svc-close-btn:hover { background: #020202; color: #fff; border-color: #020202; }
-
     /* Scrollable body */
     .svc-body { flex: 1; overflow-y: auto; padding: 60px 72px 80px; }
 
@@ -285,6 +262,36 @@
     .svc-m-da-no  { color: #9ca3af; } .svc-m-da-no::before  { background: #e5e7eb; }
     .svc-m-da-rec-badge { display: block; text-align: center; margin-top: 10px; font-family: var(--mono); font-size: 8px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange); padding: 4px 0; border-top: 1px solid rgba(239,111,46,.15); }
 
+    /* Mock 9 — IaC / Terraform */
+    .svc-tf-file-tabs {
+      display: flex; background: #161b22;
+      border-bottom: 1px solid #21262d;
+    }
+    .svc-tf-tab {
+      font-family: var(--mono); font-size: 10px; color: #6e7681;
+      padding: 7px 14px; cursor: pointer; border-right: 1px solid #21262d;
+    }
+    .svc-tf-tab.active { color: #e6edf3; border-bottom: 2px solid #ef6f2e; }
+    .svc-tf-badge {
+      font-family: var(--mono); font-size: 10px; color: #10b981;
+      padding: 7px 14px; margin-left: auto;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .svc-tf-body {
+      background: #0d1117; padding: 16px 20px 20px;
+      font-family: var(--mono); font-size: 11.5px; line-height: 1.85;
+      overflow-x: auto;
+    }
+    .svc-tf-line { display: block; white-space: pre; }
+    .tf-cm  { color: #484f58; font-style: italic; }
+    .tf-kw  { color: #ff7b72; }
+    .tf-bl  { color: #79c0ff; }
+    .tf-at  { color: #e3b341; }
+    .tf-st  { color: #a5d6ff; }
+    .tf-vr  { color: #d2a8ff; }
+    .tf-rf  { color: #7ee787; }
+    .tf-nm  { color: #f78166; }
+
     /* How-it-connects section */
     .svc-connect { padding: 56px 0; border-top: 1px solid #020202; border-bottom: 1px solid #e5e7eb; margin-bottom: 40px; }
     .svc-connect-title { font-size: 26px; font-weight: 400; letter-spacing: -.8px; color: #020202; margin-bottom: 8px; }
@@ -305,19 +312,6 @@
   <!-- Global nav rendered by nav.js -->
   <script src="nav.js"></script>
 
-  <!-- ── Services sub-bar ── -->
-  <div class="svc-topbar">
-    <div class="svc-topbar-left">
-      <span class="svc-topbar-badge">Services</span>
-      <div class="svc-topbar-sep"></div>
-      <span class="svc-topbar-hint">8 capabilities · AI-powered</span>
-    </div>
-    <button class="svc-close-btn" id="svc-close-btn" aria-label="Back to home">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      ← Back to home
-    </button>
-  </div>
-
   <!-- Scrollable body -->
   <div class="svc-body">
 
@@ -326,11 +320,11 @@
       <div>
         <span class="svc-hdr-eyebrow">Platform Capabilities</span>
         <h1 class="svc-hdr-title">Every tool you need<br>to architect right.</h1>
-        <p class="svc-hdr-sub">Eight AI-powered services. One project context. From a rough idea to a production-ready architecture, full documentation, project backlog, cost estimates, and a development roadmap — in minutes.</p>
+        <p class="svc-hdr-sub">Nine AI-powered services. One project context. From a rough idea to a production-ready architecture, full documentation, project backlog, cost estimates, and a development roadmap — in minutes.</p>
       </div>
       <div class="svc-stats-box">
         <div class="svc-stat">
-          <div class="svc-stat-n">8</div>
+          <div class="svc-stat-n">9</div>
           <div class="svc-stat-l">Services</div>
         </div>
         <div class="svc-stat">
@@ -899,10 +893,92 @@
       </div>
     </div>
 
+    <!-- ───────── 09 Infrastructure as Code ───────── -->
+    <div class="svc-srow">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">09</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(16,185,129,.08);color:#065f46;">Infrastructure</span>
+            <span style="font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);padding:2px 8px;border:1px solid rgba(239,111,46,.3);border-radius:3px;margin-left:8px;">NEW</span>
+          </div>
+          <h2 class="svc-srow-name">Infrastructure<br>as Code</h2>
+          <p class="svc-srow-desc">Once your architecture is defined, Quantiliom generates production-ready Terraform code for your entire cloud infrastructure — VPCs, subnets, managed databases, compute clusters, load balancers, IAM roles, and object storage — all pre-configured for your chosen provider. Describe your project once; receive infrastructure you can deploy immediately.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#10b981"></div>Complete Terraform modules generated from your architecture — supports AWS, GCP, and Azure</li>
+            <li><div class="fd" style="background:#10b981"></div>Networking layer: VPC, subnets, security groups, NAT gateways, and route tables configured out of the box</li>
+            <li><div class="fd" style="background:#10b981"></div>Managed database resources (RDS PostgreSQL, Cloud SQL, Azure Database) with backups and multi-AZ failover</li>
+            <li><div class="fd" style="background:#10b981"></div>Compute definitions — ECS services, EKS node groups, or GKE clusters with autoscaling and health checks</li>
+            <li><div class="fd" style="background:#10b981"></div>Dev, staging, and production Terraform workspaces generated with environment-specific variable files</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <span class="svc-out-chip">Terraform modules (.tf)</span>
+            <span class="svc-out-chip">variables.tf + tfvars</span>
+            <span class="svc-out-chip">S3 state backend config</span>
+            <span class="svc-out-chip">Multi-env workspaces</span>
+            <span class="svc-out-chip">Deploy README</span>
+          </div>
+        </div>
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots"><div class="svc-mock-dot" style="background:#ff5f57"></div><div class="svc-mock-dot" style="background:#febc2e"></div><div class="svc-mock-dot" style="background:#28c840"></div></div>
+              <div class="svc-mock-lbl">IaC Generator · FoodDeliveryApp · AWS · Terraform</div>
+            </div>
+            <div class="svc-tf-file-tabs">
+              <div class="svc-tf-tab active">main.tf</div>
+              <div class="svc-tf-tab">variables.tf</div>
+              <div class="svc-tf-tab">outputs.tf</div>
+              <div class="svc-tf-badge">● 247 lines generated</div>
+            </div>
+            <div class="svc-tf-body">
+<span class="svc-tf-line"><span class="tf-cm"># Generated by Quantiliom AI · FoodDeliveryApp · AWS</span></span>
+<span class="svc-tf-line"></span>
+<span class="svc-tf-line"><span class="tf-kw">terraform</span> {</span>
+<span class="svc-tf-line">  required_providers {</span>
+<span class="svc-tf-line">    aws = { source = <span class="tf-st">"hashicorp/aws"</span>, version = <span class="tf-st">"~> 5.0"</span> }</span>
+<span class="svc-tf-line">  }</span>
+<span class="svc-tf-line">  backend <span class="tf-st">"s3"</span> {</span>
+<span class="svc-tf-line">    bucket = <span class="tf-st">"fooddeliveryapp-tf-state"</span></span>
+<span class="svc-tf-line">    key    = <span class="tf-st">"prod/terraform.tfstate"</span></span>
+<span class="svc-tf-line">  }</span>
+<span class="svc-tf-line">}</span>
+<span class="svc-tf-line"></span>
+<span class="svc-tf-line"><span class="tf-kw">resource</span> <span class="tf-bl">"aws_vpc"</span> <span class="tf-at">"main"</span> {</span>
+<span class="svc-tf-line">  cidr_block           = <span class="tf-vr">var.vpc_cidr</span></span>
+<span class="svc-tf-line">  enable_dns_hostnames = <span class="tf-kw">true</span></span>
+<span class="svc-tf-line">  tags = { Name = <span class="tf-st">"fooddeliveryapp-vpc"</span> }</span>
+<span class="svc-tf-line">}</span>
+<span class="svc-tf-line"></span>
+<span class="svc-tf-line"><span class="tf-kw">resource</span> <span class="tf-bl">"aws_db_instance"</span> <span class="tf-at">"postgres"</span> {</span>
+<span class="svc-tf-line">  engine                  = <span class="tf-st">"postgres"</span></span>
+<span class="svc-tf-line">  engine_version          = <span class="tf-st">"16.1"</span></span>
+<span class="svc-tf-line">  instance_class          = <span class="tf-st">"db.t3.medium"</span></span>
+<span class="svc-tf-line">  multi_az                = <span class="tf-kw">true</span></span>
+<span class="svc-tf-line">  backup_retention_period = <span class="tf-nm">7</span></span>
+<span class="svc-tf-line">  db_subnet_group_name    = <span class="tf-rf">aws_db_subnet_group.main.name</span></span>
+<span class="svc-tf-line">}</span>
+<span class="svc-tf-line"></span>
+<span class="svc-tf-line"><span class="tf-kw">resource</span> <span class="tf-bl">"aws_ecs_service"</span> <span class="tf-at">"api"</span> {</span>
+<span class="svc-tf-line">  name            = <span class="tf-st">"fooddeliveryapp-api"</span></span>
+<span class="svc-tf-line">  cluster         = <span class="tf-rf">aws_ecs_cluster.main.id</span></span>
+<span class="svc-tf-line">  desired_count   = <span class="tf-nm">2</span></span>
+<span class="svc-tf-line">  launch_type     = <span class="tf-st">"FARGATE"</span></span>
+<span class="svc-tf-line">  task_definition = <span class="tf-rf">aws_ecs_task_definition.api.arn</span></span>
+<span class="svc-tf-line">}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ───────── How it connects ───────── -->
     <div class="svc-connect">
       <div class="svc-hdr-eyebrow" style="margin-bottom:12px;">How it all comes together</div>
-      <div class="svc-connect-title">One input. Eight coordinated outputs.</div>
+      <div class="svc-connect-title">One input. Nine coordinated outputs.</div>
       <p class="svc-connect-sub">All services share the same project context — every output is consistent with every other.</p>
       <div class="svc-connect-flow">
         <div class="svc-connect-step">

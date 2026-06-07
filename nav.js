@@ -16,6 +16,9 @@
     { label: 'Blog',      href: '#' },
   ];
 
+  /* ── Action button routes ── */
+  var ACTION_HREFS = ['login.html', 'contact-sales.html', null];
+
   /* ── Injected CSS ── */
   var CSS = [
     ':root { --q-spring: cubic-bezier(0.16, 1, 0.3, 1); }',
@@ -66,6 +69,7 @@
     '.qnav-btn-dark { background: #020202; color: #fff; border-color: #020202; }',
     '.qnav-btn-dark:hover { background: #ef6f2e; border-color: #ef6f2e; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,2,2,.22); }',
     '.qnav-btn:active { transform: scale(0.97) !important; box-shadow: none !important; }',
+    '.qnav-btn-active-outline { color: #ef6f2e !important; border-color: #ef6f2e !important; }',
 
     /* Page exit animation (used by navigateTo) */
     '@keyframes qnav-pg-exit { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-12px)} }',
@@ -141,8 +145,18 @@
     actions.className = 'qnav-actions';
     ['Log In', 'Contact Sales', 'Get Started'].forEach(function (label, i) {
       var btn = document.createElement('button');
-      btn.className = 'qnav-btn ' + ['qnav-btn-ghost', 'qnav-btn-outline', 'qnav-btn-dark'][i];
+      var baseClass = 'qnav-btn ' + ['qnav-btn-ghost', 'qnav-btn-outline', 'qnav-btn-dark'][i];
+      var href = ACTION_HREFS[i];
+      /* Highlight "Contact Sales" when on that page */
+      if (href && filename === href) {
+        btn.className = baseClass + ' qnav-btn-active-outline';
+      } else {
+        btn.className = baseClass;
+      }
       btn.textContent = label;
+      if (href) {
+        btn.addEventListener('click', function () { navigateTo(href); });
+      }
       actions.appendChild(btn);
     });
 

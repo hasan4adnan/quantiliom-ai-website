@@ -45,11 +45,12 @@
 34. [Success Metrics](#34-success-metrics)
 35. [Roadmap](#35-roadmap-suggestion)
 36. [Long-Term Expansion](#36-long-term-expansion-ideas)
-37. [What This Product Is Not](#37-what-this-product-is-not)
-38. [Strategic Insight](#38-strategic-insight)
-39. [Final Product Definition](#39-final-product-definition)
-40. [Next Deliverables](#40-immediate-next-deliverables)
-41. [Sonuç](#41-short-conclusion)
+37. [Infrastructure as Code (IaC) Service](#37-infrastructure-as-code-iac-service)
+38. [What This Product Is Not](#38-what-this-product-is-not)
+39. [Strategic Insight](#39-strategic-insight)
+40. [Final Product Definition](#40-final-product-definition)
+41. [Next Deliverables](#41-immediate-next-deliverables)
+42. [Sonuç](#42-short-conclusion)
 
 ---
 
@@ -1620,7 +1621,119 @@ Bu servis, **Pro ve Team planlarına** özel bir premium özellik olarak konumla
 
 ---
 
-## 37. What This Product Is Not
+---
+
+## 37. Infrastructure as Code (IaC) Service
+
+> **Status:** New Service — Live / Available to Pro & Enterprise customers
+
+### 37.1 Service Definition
+
+Quantiliom AI's **Infrastructure as Code (IaC) Generator** is a direct extension of the Architecture Design service. Once a user's system architecture has been defined and approved, the IaC Generator transforms that architecture into a complete, production-ready Terraform codebase — covering every infrastructure resource the project requires.
+
+The user does not write a single line of Terraform. They describe their project; Quantiliom generates the infrastructure.
+
+### 37.2 Problem This Solves
+
+Setting up cloud infrastructure manually is one of the most error-prone and time-consuming parts of a new software project:
+
+| Pain Point | Reality |
+|------------|---------|
+| **Manual Terraform authoring** | Hours to days for a non-trivial project |
+| **Architecture drift** | Infrastructure often diverges from the designed architecture |
+| **Cloud expertise gap** | Most founders and junior devs don't know IAM, VPCs, or RDS well |
+| **No environment separation** | Dev/staging/prod parity is often skipped early and regretted later |
+| **Security misconfigurations** | Open security groups, no encryption at rest, public S3 buckets |
+
+Quantiliom eliminates all of these by generating infrastructure that is architecturally consistent, environment-separated, and security-hardened from the start.
+
+### 37.3 How It Works
+
+```
+Architecture Output (from Service 01)
+              ↓
+   IaC Generation Engine
+              ↓
+   ┌─────────────────────────────┐
+   │  main.tf                    │  — Provider, VPC, compute, DB, storage
+   │  variables.tf               │  — All configurable parameters
+   │  outputs.tf                 │  — Exported values (DB endpoint, LB DNS)
+   │  terraform.tfvars.dev       │  — Dev environment overrides
+   │  terraform.tfvars.staging   │  — Staging environment overrides
+   │  terraform.tfvars.prod      │  — Production values
+   │  backend.tf                 │  — S3 / GCS / Azure Blob state backend
+   └─────────────────────────────┘
+              ↓
+   terraform init && terraform apply
+              ↓
+         Cloud deployed ✓
+```
+
+### 37.4 Generated Resources (AWS Example)
+
+| Resource | Terraform Resource Type |
+|----------|------------------------|
+| VPC + subnets | `aws_vpc`, `aws_subnet` |
+| Security groups | `aws_security_group` |
+| NAT Gateway | `aws_nat_gateway`, `aws_eip` |
+| Application Load Balancer | `aws_lb`, `aws_lb_listener` |
+| ECS Cluster + Service | `aws_ecs_cluster`, `aws_ecs_service` |
+| ECS Task Definition | `aws_ecs_task_definition` |
+| RDS PostgreSQL (multi-AZ) | `aws_db_instance`, `aws_db_subnet_group` |
+| ElastiCache Redis | `aws_elasticache_cluster` |
+| S3 Object Storage | `aws_s3_bucket`, `aws_s3_bucket_policy` |
+| IAM Roles + Policies | `aws_iam_role`, `aws_iam_role_policy` |
+| Route 53 (DNS) | `aws_route53_record` |
+| ACM Certificate (HTTPS) | `aws_acm_certificate` |
+
+### 37.5 Cloud Provider Support
+
+| Provider | Status |
+|----------|--------|
+| **AWS** | ✅ Available |
+| **GCP** | ✅ Available |
+| **Azure** | ✅ Available |
+| **Multi-cloud** | 🔜 Planned (Phase 2) |
+
+### 37.6 Security Defaults
+
+Every generated configuration includes:
+
+- Encryption at rest on all databases and storage resources
+- No public access on S3 buckets (ACL disabled by default)
+- Security group rules with principle of least privilege
+- IAM roles scoped to minimum required permissions
+- HTTPS-only load balancer listeners
+- Private subnets for all backend compute and database resources
+
+### 37.7 Output Formats
+
+- **Terraform HCL** (`.tf` files) — primary output, ready for `terraform apply`
+- **Zip archive** — all files bundled for direct download
+- **GitHub Gist push** — optional one-click push to a private Gist
+- **Module documentation** — auto-generated README per module
+
+### 37.8 Revenue Model Integration
+
+| Plan | IaC Access |
+|------|-----------|
+| **Free** | Preview only — first 20 lines visible, download locked |
+| **Pro** | Full generation + download (AWS only) |
+| **Team / Enterprise** | All providers + multi-env workspaces + GitHub push |
+
+### 37.9 Why This Matters Strategically
+
+The IaC service completes the full product loop:
+
+```
+Idea → Architecture → Tech Stack → Backlog → Roadmap → Diagrams → IaC
+                                                                    ↓
+                                                          Deploy to Cloud
+```
+
+No other AI-powered architecture consultant currently offers infrastructure code generation that is derived directly from the same architecture that was designed — most tools generate generic templates. Quantiliom's IaC is project-specific, architecture-consistent, and immediately deployable.
+
+## 38. What This Product Is Not
 
 $$\text{Bu ürün} \neq \text{Kod yazan tam otomatik no-code builder}$$
 $$\text{Bu ürün} \neq \text{Sadece çizim yapan diagram aracı}$$
@@ -1634,7 +1747,7 @@ $$\boxed{\text{Güçlü, açıklanabilir, iteratif ve ürünleşmiş bir } \text
 
 ---
 
-## 38. Strategic Insight
+## 39. Strategic Insight
 
 Bu ürünün gerçek değeri, yalnızca LLM çağırmakta **değildir.**
 
@@ -1644,7 +1757,7 @@ $$\text{Gerçek Değer} = \underbrace{\text{Doğru requirement extraction}}_{\te
 
 ---
 
-## 39. Final Product Definition
+## 40. Final Product Definition
 
 $$\boxed{
 \begin{aligned}
@@ -1660,7 +1773,7 @@ $$\boxed{
 
 ---
 
-## 40. Immediate Next Deliverables
+## 41. Immediate Next Deliverables
 
 Bu dokümandan sonra hazırlanabilecek en mantıklı belgeler:
 
@@ -1679,7 +1792,7 @@ Bu dokümandan sonra hazırlanabilecek en mantıklı belgeler:
 
 ---
 
-## 41. Short Conclusion
+## 42. Short Conclusion
 
 Bu platform, doğru şekilde scope edilirse büyük bir startup fikrine dönüşebilir. Ancak başarı; *"her şeyi yapmak"* hedefinden değil, **çekirdek değeri doğru kanıtlamaktan** gelecektir.
 
