@@ -201,6 +201,17 @@
     }
     .r-top-link a:hover { color: var(--orange); border-color: var(--orange); }
 
+    .r-back-link {
+      position: absolute; top: 32px; left: 40px;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 14px; color: var(--gray-500);
+      transition: color .15s, transform .15s;
+      text-decoration: none;
+    }
+    .r-back-link svg { transition: transform .15s; flex-shrink: 0; }
+    .r-back-link:hover { color: var(--black); }
+    .r-back-link:hover svg { transform: translateX(-3px); }
+
     .r-form-wrap {
       width: 100%;
       max-width: 380px;
@@ -379,14 +390,14 @@
   <div class="l-panel">
 
     <div class="l-body">
-      <div class="l-eyebrow">AI Software Platform</div>
+      <div class="l-eyebrow">AI Software Architect Platform</div>
 
       <h1 class="l-headline">
-        Build faster.<br>Ship <em>smarter</em>.
+        Design right.<br>Build <em>once</em>.
       </h1>
 
       <p class="l-sub">
-        Quantiliom AI gives engineering teams an intelligent co-pilot that understands your entire codebase — from architecture decisions to individual pull requests.
+        Quantiliom AI is your virtual software architect — it asks the right questions, recommends the right architecture, and turns your project idea into a complete system blueprint before you write a single line of code.
       </p>
 
       <!-- Floating code card -->
@@ -421,6 +432,13 @@
 
   <!-- ━━━━ RIGHT PANEL ━━━━ -->
   <div class="r-panel">
+
+    <a class="r-back-link" href="index.html" onclick="go(event,'index.html')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back to home
+    </a>
 
     <div class="r-top-link">
       No account? <a href="contact-sales.html" onclick="go(event,'contact-sales.html')">Get started &rarr;</a>
