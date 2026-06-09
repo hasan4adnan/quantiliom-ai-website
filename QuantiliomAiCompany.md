@@ -676,15 +676,35 @@ Sistem şu tür uyarılar da verebilmelidir:
 
 ### 17.7 Security Recommendations
 
-| Alan | Öneri |
-|------|-------|
-| **Auth** | JWT vs. session seçimi |
-| **Yetkilendirme** | Role-based access control (RBAC) |
-| **Veri** | Encryption at rest |
-| **Secret Yönetimi** | Vault / environment-based secrets |
-| **API** | Rate limiting |
-| **Uyumluluk** | Audit logging |
-| **Giriş** | Input validation & sanitization |
+**Service name:** Security Recommendations  
+**Service category:** Security Intelligence  
+**Status:** Active — available on Pro, Team, and Enterprise plans
+
+Security Recommendations is a dedicated Quantiliom AI service that audits the generated system architecture against a structured security framework. Unlike post-development security reviews, this service evaluates security at the architecture level — before a single line of code is written — so vulnerabilities are eliminated at the design stage, not patched after deployment.
+
+#### How it works
+After the Architecture Intelligence Engine produces the system design, Quantiliom automatically runs a security evaluation pass over every layer: authentication flows, data handling, API surface, secret storage strategy, and compliance requirements. The output is a scored report with categorised findings, each marked as **Secure**, **Recommended** (advisory), or **Action needed** (blocking risk).
+
+#### Security domains evaluated
+
+| Domain | What is evaluated |
+|--------|-------------------|
+| **Authentication & Access Control** | JWT lifecycle (access + refresh token strategy), session management, RBAC role definitions, MFA requirements for privileged access, brute-force protection |
+| **Data Encryption** | Encryption at rest (database, object storage), TLS 1.3 enforcement in transit, field-level encryption for PII (emails, phone numbers, addresses), delegation of payment data to PCI-compliant providers |
+| **API Security** | Rate limiting strategy (per-IP, per-user), input validation coverage, CORS policy, SQL/NoSQL injection prevention, API key lifecycle and rotation |
+| **Secret Management** | Absence of secrets in source code, use of secret stores (AWS Secrets Manager, HashiCorp Vault), environment-based configuration (12-factor), key rotation cadence |
+| **Compliance Path** | Audit logging architecture for all data mutations, GDPR right-to-deletion implementation, SOC2 Type II readiness assessment, PCI DSS scope minimisation, data retention policy definition |
+| **Network Security** | VPC isolation design, security group recommendations, private subnet strategy for databases and internal services |
+
+#### Output
+- **Security Score** (0–100) broken down by domain
+- **Remediation Checklist** — prioritised list of actions, tagged Secure / Recommended / Action needed
+- **Authentication Strategy Guide** — concrete recommendations for the project's auth layer
+- **Compliance Roadmap** — steps toward SOC2, GDPR, and PCI DSS compliance where applicable
+- **Risk Summary** — top 3 highest-risk findings with suggested mitigations
+
+#### Why this matters
+Most teams think about security after the architecture is locked in. Quantiliom surfaces these decisions at the exact moment when they are cheapest to fix — during design. An architecture that has RBAC modelled correctly from day one requires no refactoring; one that skips it requires a rewrite of the auth layer at the worst possible time.
 
 ### 17.8 Roadmap
 

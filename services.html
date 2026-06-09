@@ -975,10 +975,103 @@
       </div>
     </div>
 
+    <!-- ───────── 10 Security Recommendations ───────── -->
+    <div class="svc-srow svc-srow--flip">
+      <div class="svc-srow-inner">
+        <div class="svc-srow-text">
+          <div class="svc-srow-meta">
+            <span class="svc-srow-num">10</span>
+            <div class="svc-srow-sep"></div>
+            <span class="svc-srow-cat" style="background:rgba(239,111,46,.08);color:#c2410c;">Security Intelligence</span>
+          </div>
+          <h2 class="svc-srow-name">Security<br>Recommendations</h2>
+          <p class="svc-srow-desc">Security is not a phase you reach after building — it's a property of your architecture. Quantiliom audits your entire system design against a structured security framework the moment your architecture is defined. Every layer — authentication, data handling, API exposure, secret management, and compliance — is evaluated, scored, and returned with a prioritised remediation checklist before you write a single line of code.</p>
+          <span class="svc-srow-sh">Key Capabilities</span>
+          <ul class="svc-srow-feats">
+            <li><div class="fd" style="background:#ef6f2e"></div>Authentication strategy — JWT lifecycle, session management, RBAC, MFA requirements</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Data encryption — at rest, in transit, and field-level protection for PII and sensitive fields</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>API security — rate limiting, input validation, CORS policy, injection prevention</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Secret management — Vault integration, environment-based config, key rotation cadence</li>
+            <li><div class="fd" style="background:#ef6f2e"></div>Compliance path — audit logging architecture, SOC2 readiness, GDPR data handling</li>
+          </ul>
+          <span class="svc-srow-sh">What You Receive</span>
+          <div class="svc-srow-outputs">
+            <div class="svc-out-chip">Security Score Report</div>
+            <div class="svc-out-chip">Remediation Checklist</div>
+            <div class="svc-out-chip">Auth Strategy Guide</div>
+            <div class="svc-out-chip">Compliance Roadmap</div>
+            <div class="svc-out-chip">Risk Summary</div>
+          </div>
+        </div>
+
+        <div class="svc-srow-visual">
+          <div class="svc-mock">
+            <div class="svc-mock-bar">
+              <div class="svc-mock-dots">
+                <div class="svc-mock-dot" style="background:#ff5f57"></div>
+                <div class="svc-mock-dot" style="background:#febc2e"></div>
+                <div class="svc-mock-dot" style="background:#28c840"></div>
+              </div>
+              <div class="svc-mock-lbl">Security Report · E-commerce Platform</div>
+            </div>
+            <div class="svc-mock-body" style="background:#0d1117;padding:0;">
+              <!-- Tabs -->
+              <div style="display:flex;background:#161b22;border-bottom:1px solid rgba(255,255,255,.06);padding:0 14px;gap:2px;">
+                <div style="font-family:var(--mono);font-size:10px;color:#ef6f2e;padding:9px 11px;border-bottom:2px solid #ef6f2e;letter-spacing:.04em;">Auth</div>
+                <div style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);padding:9px 11px;border-bottom:2px solid transparent;letter-spacing:.04em;">Data</div>
+                <div style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);padding:9px 11px;border-bottom:2px solid transparent;letter-spacing:.04em;">API</div>
+                <div style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);padding:9px 11px;border-bottom:2px solid transparent;letter-spacing:.04em;">Secrets</div>
+                <div style="margin-left:auto;display:flex;align-items:center;font-family:var(--mono);font-size:9.5px;color:#3fb950;padding:0 12px;background:rgba(63,185,80,.1);border-left:1px solid rgba(255,255,255,.06);">Score 84/100</div>
+              </div>
+              <!-- Rows -->
+              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);">
+                  <div style="width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0;"></div>
+                  <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65);flex:1;">JWT with 15-min access tokens</span>
+                  <span style="font-family:var(--mono);font-size:9px;color:#3fb950;background:rgba(63,185,80,.12);padding:2px 7px;border-radius:3px;">Secure</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);">
+                  <div style="width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0;"></div>
+                  <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65);flex:1;">Refresh token rotation enabled</span>
+                  <span style="font-family:var(--mono);font-size:9px;color:#3fb950;background:rgba(63,185,80,.12);padding:2px 7px;border-radius:3px;">Secure</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);">
+                  <div style="width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0;"></div>
+                  <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65);flex:1;">RBAC — customer / merchant / admin</span>
+                  <span style="font-family:var(--mono);font-size:9px;color:#3fb950;background:rgba(63,185,80,.12);padding:2px 7px;border-radius:3px;">Secure</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);">
+                  <div style="width:7px;height:7px;border-radius:50%;background:#ef6f2e;flex-shrink:0;"></div>
+                  <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65);flex:1;">MFA enforced for admin panel access</span>
+                  <span style="font-family:var(--mono);font-size:9px;color:#ef6f2e;background:rgba(239,111,46,.12);padding:2px 7px;border-radius:3px;">Recommended</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:5px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.04);">
+                  <div style="width:7px;height:7px;border-radius:50%;background:#ef6f2e;flex-shrink:0;"></div>
+                  <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.65);flex:1;">Brute-force protection on /auth/login</span>
+                  <span style="font-family:var(--mono);font-size:9px;color:#ef6f2e;background:rgba(239,111,46,.12);padding:2px 7px;border-radius:3px;">Recommended</span>
+                </div>
+              </div>
+              <!-- Score bar -->
+              <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                  <span style="font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,.3);letter-spacing:.06em;text-transform:uppercase;">Security Score</span>
+                  <span style="font-family:var(--mono);font-size:12px;color:#3fb950;">84 / 100</span>
+                </div>
+                <div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;">
+                  <div style="width:84%;height:100%;background:linear-gradient(90deg,#3fb950,#10b981);border-radius:3px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- ───────── How it connects ───────── -->
     <div class="svc-connect">
       <div class="svc-hdr-eyebrow" style="margin-bottom:12px;">How it all comes together</div>
-      <div class="svc-connect-title">One input. Nine coordinated outputs.</div>
+      <div class="svc-connect-title">One input. Ten coordinated outputs.</div>
       <p class="svc-connect-sub">All services share the same project context — every output is consistent with every other.</p>
       <div class="svc-connect-flow">
         <div class="svc-connect-step">
