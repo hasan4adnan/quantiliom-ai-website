@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — Quantiliom AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS ───────────────────────────────────────── */
+    :root {
+      --black:      #020202;
+      --white:      #ffffff;
+      --orange:     #ef6f2e;
+      --border:     #020202;
+      --muted:      #6b7280;
+      --muted-lt:   #9ca3af;
+      --surface:    #fafafa;
+
+      --sans:  'Inter', ui-sans-serif, system-ui, sans-serif;
+      --mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --max-w:  1440px;
+      --r-sm:   5px;
+      --r-card: 8px;
+      --spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── RESET ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--black);
+      font-size: 17px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── PAGE TRANSITIONS ─────────────────────────────── */
+    @keyframes page-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes page-exit  { from { opacity: 1; transform: translateY(0); }   to { opacity: 0; transform: translateY(-14px); } }
+    body { animation: page-enter 0.44s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    body.exiting { animation: page-exit 0.26s cubic-bezier(0.55, 0, 0.45, 1) both; }
+
+    /* ── SCROLL REVEAL ────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .55s var(--spring), transform .55s var(--spring);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .08s; }
+    .reveal-d2 { transition-delay: .16s; }
+    .reveal-d3 { transition-delay: .24s; }
+    .reveal-d4 { transition-delay: .32s; }
+
+    /* ── LAYOUT ───────────────────────────────────────── */
+    .wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 72px;
+    }
+    .section-border { border-top: 1px solid var(--border); }
+
+    /* ── BUTTONS ──────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--sans); font-size: 15px;
+      border-radius: var(--r-sm); padding: 8px 18px;
+      border: 1px solid transparent; line-height: 1.4;
+      transition: background .15s, color .15s, border-color .15s,
+                  transform .15s var(--spring), box-shadow .15s;
+      white-space: nowrap; cursor: pointer;
+    }
+    .btn-outline { background: transparent; color: var(--black); border-color: var(--border); }
+    .btn-outline:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(2,2,2,.08); }
+    .btn-dark   { background: var(--black); color: #fff; border-color: var(--black); }
+    .btn-dark:hover { background: var(--orange); border-color: var(--orange); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,2,2,.22); }
+    .btn-white  { background: #fff; color: var(--black); border-color: #fff; }
+    .btn-white:hover { background: #f5f5f5; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(2,2,2,.12); }
+    .btn-ghost-dim { background: transparent; color: rgba(255,255,255,.55); border-color: rgba(255,255,255,.2); }
+    .btn-ghost-dim:hover { color: #fff; border-color: rgba(255,255,255,.5); transform: translateY(-2px); }
+    .btn-lg { font-size: 16px; padding: 11px 26px; }
+    .btn:active { transform: scale(0.97) !important; box-shadow: none !important; }
+
+    /* ── LABEL ────────────────────────────────────────── */
+    .label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--orange); letter-spacing: .08em;
+      text-transform: uppercase; display: block;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════ */
+    .hero {
+      padding: 100px 0 72px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero .label { margin-bottom: 22px; }
+    .hero-hl {
+      font-size: 68px; font-weight: 400;
+      letter-spacing: -3.2px; line-height: 1;
+      margin-bottom: 22px;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--muted);
+      max-width: 460px; margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    /* ── Billing toggle ───────────────────────────────── */
+    .billing-wrap {
+      display: flex; align-items: center;
+      justify-content: center; gap: 14px;
+    }
+    .billing-toggle {
+      display: inline-flex;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 4px;
+    }
+    .billing-opt {
+      font-family: var(--mono); font-size: 12px;
+      letter-spacing: .04em; padding: 7px 20px;
+      border-radius: 30px; cursor: pointer;
+      color: var(--muted);
+      transition: background .2s var(--spring), color .2s;
+      user-select: none;
+    }
+    .billing-opt.active { background: var(--black); color: #fff; }
+    .save-badge {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .04em;
+      background: rgba(239,111,46,.12); color: var(--orange);
+      border-radius: 20px; padding: 4px 11px;
+      opacity: 0; transform: translateX(-6px);
+      transition: opacity .3s var(--spring), transform .3s var(--spring);
+      pointer-events: none;
+    }
+    .save-badge.visible { opacity: 1; transform: translateX(0); }
+
+    /* ═══════════════════════════════════════════════════
+       PRICING CARDS
+    ═══════════════════════════════════════════════════ */
+    .cards-section { padding: 0 0 80px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    .plan-card {
+      background: var(--white);
+      padding: 40px 36px;
+      transition: transform .28s var(--spring), box-shadow .28s;
+    }
+    .plan-card + .plan-card { border-left: 1px solid var(--border); }
+    .plan-card.pro { background: var(--black); }
+    .plan-card:not(.pro):hover { transform: translateY(-8px); box-shadow: 0 20px 56px rgba(2,2,2,.1); }
+    .plan-card.pro:hover { transform: translateY(-8px); box-shadow: 0 20px 56px rgba(2,2,2,.5); }
+
+    .plan-tier {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 14px; display: block;
+    }
+    .plan-card.pro .plan-tier { color: var(--orange); }
+
+    .plan-name { font-size: 26px; color: var(--black); letter-spacing: -.6px; margin-bottom: 14px; }
+    .plan-card.pro .plan-name { color: #fff; }
+
+    .plan-price-row {
+      display: flex; align-items: baseline; gap: 5px;
+      margin-bottom: 14px;
+    }
+    .plan-price-val {
+      font-size: 52px; font-weight: 400;
+      letter-spacing: -2.4px; color: var(--black); line-height: 1;
+      transition: opacity .2s, transform .2s var(--spring);
+    }
+    .plan-card.pro .plan-price-val { color: #fff; }
+    .plan-price-per { font-size: 14px; color: var(--muted); }
+    .plan-card.pro .plan-price-per { color: rgba(255,255,255,.45); }
+    .plan-price-orig {
+      font-family: var(--mono); font-size: 14px;
+      text-decoration: line-through; color: var(--muted-lt);
+      align-self: flex-end; padding-bottom: 5px;
+      opacity: 0; max-width: 0; overflow: hidden;
+      transition: opacity .3s, max-width .3s;
+    }
+    .plan-card.pro .plan-price-orig { color: rgba(255,255,255,.3); }
+    .plan-price-orig.show { opacity: 1; max-width: 60px; }
+
+    .plan-tagline {
+      font-size: 14px; color: var(--muted); line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    .plan-card.pro .plan-tagline { color: rgba(255,255,255,.55); }
+
+    .plan-sep { height: 1px; background: rgba(2,2,2,.12); margin-bottom: 24px; }
+    .plan-card.pro .plan-sep { background: rgba(255,255,255,.12); }
+
+    .plan-feats {
+      list-style: none;
+      display: flex; flex-direction: column;
+      gap: 12px; margin-bottom: 32px;
+    }
+    .plan-feat {
+      display: flex; align-items: flex-start;
+      gap: 10px; font-size: 14px;
+      color: var(--muted); line-height: 1.5;
+    }
+    .plan-card.pro .plan-feat { color: rgba(255,255,255,.7); }
+    .feat-icon {
+      font-family: var(--mono); font-size: 12px;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .feat-icon.y { color: var(--orange); }
+    .feat-icon.n { color: var(--muted-lt); }
+    .plan-card.pro .feat-icon.n { color: rgba(255,255,255,.22); }
+
+    .plan-btn {
+      width: 100%; justify-content: center;
+      padding: 11px 0; font-size: 14px;
+      border-radius: var(--r-sm);
+    }
+    .plan-annual-note {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--orange); text-align: center;
+      margin-top: 10px; min-height: 18px;
+      letter-spacing: .03em;
+    }
+    .plan-card.pro .plan-annual-note { color: rgba(239,111,46,.85); }
+
+    .enterprise-note {
+      text-align: center;
+      font-family: var(--mono); font-size: 12px;
+      color: var(--muted); margin-top: 20px;
+    }
+    .enterprise-note a {
+      color: var(--black); text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .15s;
+    }
+    .enterprise-note a:hover { color: var(--orange); }
+
+    /* ═══════════════════════════════════════════════════
+       ENTERPRISE BANNER
+    ═══════════════════════════════════════════════════ */
+    .enterprise-section { padding: 80px 0; border-top: 1px solid var(--border); }
+    .enterprise-card {
+      background: var(--black);
+      border-radius: var(--r-card);
+      padding: 72px 80px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 80px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .enterprise-dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 22px 22px;
+      pointer-events: none;
+    }
+    .enterprise-glow {
+      position: absolute; top: -60px; right: 120px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(239,111,46,.12), transparent 70%);
+      pointer-events: none;
+    }
+    .enterprise-content { position: relative; z-index: 1; }
+    .enterprise-label {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 18px; display: block;
+    }
+    .enterprise-hl {
+      font-size: 42px; font-weight: 400;
+      letter-spacing: -1.8px; color: #fff; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .enterprise-sub {
+      font-size: 15px; color: rgba(255,255,255,.55);
+      line-height: 1.7; max-width: 560px;
+    }
+    .enterprise-perks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 48px;
+      margin-top: 32px;
+    }
+    .enterprise-perk {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 14px; color: rgba(255,255,255,.72);
+    }
+    .perk-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--orange); flex-shrink: 0;
+    }
+    .enterprise-actions {
+      display: flex; flex-direction: column;
+      gap: 10px; align-items: flex-end;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       COMPARISON TABLE
+    ═══════════════════════════════════════════════════ */
+    .compare-section { padding: 112px 0; border-top: 1px solid var(--border); }
+    .compare-intro { margin-bottom: 56px; }
+    .compare-intro .label { margin-bottom: 14px; }
+    .compare-hl {
+      font-size: 48px; font-weight: 400;
+      letter-spacing: -2px; line-height: 1.1;
+    }
+
+    .compare-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      overflow: hidden;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .compare-table th,
+    .compare-table td {
+      border: 1px solid rgba(2,2,2,.1);
+      text-align: left;
+    }
+    .compare-table thead tr th:first-child {
+      border-top-left-radius: 0;
+    }
+
+    /* Column widths */
+    .col-feat    { width: 28%; }
+    .col-starter { width: 18%; }
+    .col-pro     { width: 18%; }
+    .col-team    { width: 18%; }
+    .col-ent     { width: 18%; }
+
+    /* Header row */
+    .ct-hdr {
+      padding: 28px 24px 24px;
+      background: var(--white);
+      vertical-align: top;
+    }
+    .ct-hdr.pro { background: var(--black); }
+    .ct-hdr-tier {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 8px; display: block;
+    }
+    .ct-hdr.pro .ct-hdr-tier { color: var(--orange); }
+    .ct-hdr-name { font-size: 18px; color: var(--black); letter-spacing: -.4px; }
+    .ct-hdr.pro .ct-hdr-name { color: #fff; }
+    .ct-hdr-price {
+      font-family: var(--mono); font-size: 13px;
+      color: var(--muted); margin-top: 5px; display: block;
+    }
+    .ct-hdr.pro .ct-hdr-price { color: rgba(255,255,255,.4); }
+    .ct-hdr-label { padding: 28px 20px 24px; background: var(--white); vertical-align: bottom; }
+    .ct-hdr-label span {
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--muted-lt);
+    }
+
+    /* Group rows */
+    .ct-group td {
+      padding: 11px 20px;
+      background: #f5f5f5;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); border-color: rgba(2,2,2,.1);
+    }
+
+    /* Feature rows */
+    .ct-feat { padding: 15px 20px; font-size: 14px; color: var(--black); }
+    .ct-val  { padding: 15px 24px; font-size: 14px; color: var(--muted); vertical-align: middle; }
+    .ct-val.pro-bg { background: rgba(239,111,46,.025); }
+
+    /* ── Availability indicators ── */
+    .ct-yes, .ct-no {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 0; vertical-align: middle; flex-shrink: 0;
+    }
+    .ct-yes {
+      background: var(--orange);
+    }
+    .ct-yes::after {
+      content: '';
+      display: block;
+      width: 9px; height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-1.5px);
+    }
+    .ct-no {
+      border: 1.5px solid #dedede;
+    }
+    .ct-no::after {
+      content: '';
+      display: block;
+      width: 8px; height: 1.5px;
+      background: #d0d0d0; border-radius: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       FAQ
+    ═══════════════════════════════════════════════════ */
+    .faq-section { padding: 112px 0; border-top: 1px solid var(--border); }
+    .faq-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 96px; align-items: start;
+    }
+    .faq-aside { position: sticky; top: 128px; }
+    .faq-hl {
+      font-size: 36px; font-weight: 400;
+      letter-spacing: -1.2px; line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .faq-sub {
+      font-size: 15px; color: var(--muted);
+      line-height: 1.7; margin-bottom: 30px;
+    }
+    .faq-sub a { color: var(--black); text-decoration: underline; text-underline-offset: 3px; }
+    .faq-sub a:hover { color: var(--orange); }
+
+    .faq-list { display: flex; flex-direction: column; }
+    .faq-item { border-top: 1px solid rgba(2,2,2,.12); }
+    .faq-item:last-child { border-bottom: 1px solid rgba(2,2,2,.12); }
+
+    .faq-q {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 24px;
+      padding: 22px 0; cursor: pointer;
+      font-size: 16px; color: var(--black);
+      transition: color .15s;
+    }
+    .faq-q:hover { color: var(--black); }
+    .faq-q-text { flex: 1; line-height: 1.4; }
+
+    .faq-icon {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border: 1px solid rgba(2,2,2,.18); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .25s var(--spring),
+                  border-color .25s, transform .3s var(--spring);
+    }
+    .faq-icon line { transition: transform .3s var(--spring); transform-origin: center; }
+    .faq-item.open .faq-icon {
+      background: var(--black); border-color: var(--black);
+    }
+    .faq-item.open .faq-icon line { stroke: #fff; }
+    .faq-item.open .faq-icon .faq-v-line {
+      transform: scaleY(0);
+    }
+
+    .faq-body {
+      display: grid; grid-template-rows: 0fr;
+      transition: grid-template-rows .38s var(--spring);
+    }
+    .faq-item.open .faq-body { grid-template-rows: 1fr; }
+    .faq-body-inner { overflow: hidden; }
+    .faq-answer {
+      padding-bottom: 22px;
+      font-size: 15px; color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════════════════════════ */
+    .cta-outer { padding: 0 72px 80px; }
+    .cta {
+      background: var(--black); border-radius: var(--r-card);
+      padding: 88px 96px; position: relative; overflow: hidden;
+      transition: box-shadow .3s;
+    }
+    .cta:hover { box-shadow: inset 0 0 80px rgba(239,111,46,.05); }
+    .cta-dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 22px 22px; pointer-events: none;
+    }
+    .cta-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 64px; align-items: center;
+    }
+    .cta-hl {
+      font-size: 50px; font-weight: 400;
+      letter-spacing: -2px; color: #fff; line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .cta-sub { font-size: 17px; color: rgba(255,255,255,.5); }
+    .cta-btns { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════ */
+    .footer { border-top: 1px solid var(--border); padding: 80px 0 56px; }
+    .footer-inner {
+      display: grid; grid-template-columns: 260px 1fr;
+      gap: 96px;
+    }
+    .footer-logo-img { height: 172px; width: auto; display: block; }
+    .footer-tagline { font-size: 15px; color: var(--muted); line-height: 1.65; }
+    .footer-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .footer-col-lbl {
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted-lt); margin-bottom: 14px; display: block;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: 15px; color: var(--muted);
+      position: relative; display: inline-block;
+      transition: color .2s, transform .2s var(--spring);
+    }
+    .footer-links a:hover { color: var(--black); transform: translateX(4px); }
+    .footer-bottom {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid rgba(2,2,2,.1);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted-lt); }
+    .footer-bot-links { display: flex; gap: 24px; list-style: none; }
+    .footer-bot-links a { font-family: var(--mono); font-size: 11px; color: var(--muted-lt); transition: color .15s; }
+    .footer-bot-links a:hover { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<script src="nav.js"></script>
+
+<!-- ════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap">
+    <span class="label reveal">Pricing</span>
+    <h1 class="hero-hl reveal reveal-d1">Simple, transparent<br>pricing.</h1>
+    <p class="hero-sub reveal reveal-d2">Start free. Scale as you grow. Every plan includes the core architecture engine — no hidden fees, no surprises.</p>
+
+    <div class="billing-wrap reveal reveal-d3">
+      <div class="billing-toggle" id="billingToggle">
+        <div class="billing-opt active" data-period="monthly">Monthly</div>
+        <div class="billing-opt" data-period="annual">Annual</div>
+      </div>
+      <span class="save-badge" id="saveBadge">Save 20%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PRICING CARDS
+════════════════════════════════════════════════ -->
+<section class="cards-section">
+  <div class="wrap" style="padding-top:64px;">
+
+    <div class="pricing-grid">
+
+      <!-- Starter -->
+      <div class="plan-card reveal">
+        <span class="plan-tier">Free forever</span>
+        <div class="plan-name">Starter</div>
+        <div class="plan-price-row">
+          <span class="plan-price-val" id="price-starter">$0</span>
+          <span class="plan-price-per">/ month</span>
+        </div>
+        <p class="plan-tagline">Explore the platform and get real architecture value on your first project. No credit card required.</p>
+        <div class="plan-sep"></div>
+        <ul class="plan-feats">
+          <li class="plan-feat"><span class="feat-icon y">✓</span> 1 project workspace</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Full architecture overview</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Interactive system diagram</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Tech stack recommendation</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> 5 chatbot revisions per project</li>
+          <li class="plan-feat"><span class="feat-icon n">✗</span> PDF documentation export</li>
+          <li class="plan-feat"><span class="feat-icon n">✗</span> Cost optimization reports</li>
+          <li class="plan-feat"><span class="feat-icon n">✗</span> Architecture alternatives</li>
+        </ul>
+        <button class="btn btn-outline plan-btn" onclick="QuantiliomNav.navigateTo('login.html')">Get started free</button>
+        <p class="plan-annual-note" id="note-starter">&nbsp;</p>
+      </div>
+
+      <!-- Pro -->
+      <div class="plan-card pro reveal reveal-d1">
+        <span class="plan-tier">Most popular</span>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price-row">
+          <span class="plan-price-val" id="price-pro">$29</span>
+          <span class="plan-price-per">/ month</span>
+          <span class="plan-price-orig" id="orig-pro">$29</span>
+        </div>
+        <p class="plan-tagline">Full access to the architecture workspace for solo founders and developers who need the complete picture.</p>
+        <div class="plan-sep"></div>
+        <ul class="plan-feats">
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Unlimited projects</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Full architecture generation</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> 2–3 architecture alternatives</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Unlimited chatbot revisions</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> PDF documentation export</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Cost optimization reports</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Security recommendations</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Full tech stack comparisons</li>
+        </ul>
+        <button class="btn btn-white plan-btn" onclick="QuantiliomNav.navigateTo('login.html')">Start 14-day free trial</button>
+        <p class="plan-annual-note" id="note-pro">&nbsp;</p>
+      </div>
+
+      <!-- Team -->
+      <div class="plan-card reveal reveal-d2">
+        <span class="plan-tier">For teams</span>
+        <div class="plan-name">Team</div>
+        <div class="plan-price-row">
+          <span class="plan-price-val" id="price-team">$79</span>
+          <span class="plan-price-per">/ month</span>
+          <span class="plan-price-orig" id="orig-team">$79</span>
+        </div>
+        <p class="plan-tagline">Collaborate on architecture decisions across your entire team in shared, versioned workspaces.</p>
+        <div class="plan-sep"></div>
+        <ul class="plan-feats">
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Everything in Pro</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Up to 5 team members</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Shared project workspaces</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Collaborative revision history</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Team comments &amp; annotations</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Organization workspace</li>
+          <li class="plan-feat"><span class="feat-icon y">✓</span> Priority support</li>
+          <li class="plan-feat"><span class="feat-icon n">✗</span> Enterprise controls (coming soon)</li>
+        </ul>
+        <button class="btn btn-dark plan-btn" onclick="QuantiliomNav.navigateTo('login.html')">Get Team access</button>
+        <p class="plan-annual-note" id="note-team">&nbsp;</p>
+      </div>
+
+    </div>
+
+    <p class="enterprise-note reveal">
+      Need more than 5 seats?
+      <a href="contact-sales.html" onclick="QuantiliomNav.navigateTo('contact-sales.html');return false;">Talk to us about Enterprise →</a>
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     ENTERPRISE BANNER
+════════════════════════════════════════════════ -->
+<section class="enterprise-section">
+  <div class="wrap">
+    <div class="enterprise-card reveal">
+      <div class="enterprise-dots"></div>
+      <div class="enterprise-glow"></div>
+
+      <div class="enterprise-content">
+        <span class="enterprise-label">Enterprise</span>
+        <h2 class="enterprise-hl">Built for engineering<br>organizations at scale.</h2>
+        <p class="enterprise-sub">Custom pricing, unlimited seats, and enterprise-grade security — designed for teams that need SSO, dedicated infrastructure, compliance controls, and a success manager embedded in their workflow.</p>
+        <div class="enterprise-perks">
+          <div class="enterprise-perk"><span class="perk-dot"></span>Unlimited team members</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>SSO / SAML authentication</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>Dedicated success manager</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>Custom integrations &amp; API</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>On-premise deployment</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>Audit logs &amp; compliance</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>99.9% SLA uptime guarantee</div>
+          <div class="enterprise-perk"><span class="perk-dot"></span>Priority &amp; phone support</div>
+        </div>
+      </div>
+
+      <div class="enterprise-actions">
+        <button class="btn btn-white btn-lg" onclick="QuantiliomNav.navigateTo('contact-sales.html')">Contact Sales</button>
+        <button class="btn btn-ghost-dim btn-lg">View enterprise docs</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FEATURE COMPARISON TABLE
+════════════════════════════════════════════════ -->
+<section class="compare-section">
+  <div class="wrap">
+    <div class="compare-intro reveal">
+      <span class="label" style="margin-bottom:14px;">Compare plans</span>
+      <h2 class="compare-hl">Everything side by side.</h2>
+    </div>
+
+    <div class="compare-wrap reveal">
+      <table class="compare-table">
+        <colgroup>
+          <col class="col-feat">
+          <col class="col-starter">
+          <col class="col-pro">
+          <col class="col-team">
+          <col class="col-ent">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="ct-hdr-label" style="border:1px solid rgba(2,2,2,.1);">
+              <span>Feature</span>
+            </th>
+            <th class="ct-hdr">
+              <span class="ct-hdr-tier">Free forever</span>
+              <div class="ct-hdr-name">Starter</div>
+              <span class="ct-hdr-price">$0 / mo</span>
+            </th>
+            <th class="ct-hdr pro">
+              <span class="ct-hdr-tier">Most popular</span>
+              <div class="ct-hdr-name">Pro</div>
+              <span class="ct-hdr-price">$29 / mo</span>
+            </th>
+            <th class="ct-hdr">
+              <span class="ct-hdr-tier">For teams</span>
+              <div class="ct-hdr-name">Team</div>
+              <span class="ct-hdr-price">$79 / mo</span>
+            </th>
+            <th class="ct-hdr">
+              <span class="ct-hdr-tier">Custom pricing</span>
+              <div class="ct-hdr-name">Enterprise</div>
+              <span class="ct-hdr-price">Contact us</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Core -->
+          <tr class="ct-group">
+            <td colspan="5">Core Features</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Projects</td>
+            <td class="ct-val">1 project</td>
+            <td class="ct-val pro-bg">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Architecture generation</td>
+            <td class="ct-val">1 per project</td>
+            <td class="ct-val pro-bg">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Chatbot revisions</td>
+            <td class="ct-val">5 per project</td>
+            <td class="ct-val pro-bg">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+            <td class="ct-val">Unlimited</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Architecture alternatives</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span> 2–3 per project</td>
+            <td class="ct-val"><span class="ct-yes">✓</span> 2–3 per project</td>
+            <td class="ct-val"><span class="ct-yes">✓</span> Custom</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">System diagram</td>
+            <td class="ct-val">Interactive</td>
+            <td class="ct-val pro-bg">Interactive + export</td>
+            <td class="ct-val">Interactive + export</td>
+            <td class="ct-val">Interactive + export</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">PDF documentation export</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Cost optimization reports</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Security recommendations</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Tech stack comparisons</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">IaC generator (Terraform / CDK)</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+
+          <!-- Collaboration -->
+          <tr class="ct-group">
+            <td colspan="5">Collaboration</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Team members</td>
+            <td class="ct-val">1 (solo)</td>
+            <td class="ct-val pro-bg">1 (solo)</td>
+            <td class="ct-val">Up to 5</td>
+            <td class="ct-val">Unlimited</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Shared project workspaces</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Collaborative revision history</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Team comments &amp; annotations</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Organization workspace</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+
+          <!-- Support -->
+          <tr class="ct-group">
+            <td colspan="5">Support</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Community support</td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Email support</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Priority support</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Dedicated success manager</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Phone support</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+
+          <!-- Enterprise Controls -->
+          <tr class="ct-group">
+            <td colspan="5">Enterprise Controls</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">SSO / SAML authentication</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Audit logs &amp; compliance</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Custom integrations &amp; API</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">On-premise deployment</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td class="ct-feat">99.9% SLA uptime guarantee</td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val pro-bg"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-no">—</span></td>
+            <td class="ct-val"><span class="ct-yes">✓</span></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FAQ
+════════════════════════════════════════════════ -->
+<section class="faq-section">
+  <div class="wrap">
+    <div class="faq-layout">
+
+      <div class="faq-aside reveal">
+        <h2 class="faq-hl">Frequently<br>asked questions.</h2>
+        <p class="faq-sub">Can't find what you're looking for?<br><a href="contact-sales.html" onclick="QuantiliomNav.navigateTo('contact-sales.html');return false;">Reach out to our team.</a></p>
+        <button class="btn btn-dark" onclick="QuantiliomNav.navigateTo('contact-sales.html')">Contact support</button>
+      </div>
+
+      <div class="faq-list reveal reveal-d1">
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">Can I switch plans anytime?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">Yes — upgrade or downgrade at any time. Upgrades take effect immediately and are prorated to the day. Downgrades apply at the end of your current billing cycle, so you keep full access until then.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">Is there a free trial for Pro?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">Yes. Every Pro signup includes a 14-day free trial with no credit card required. You get full Pro access during the trial. If you choose not to continue, you'll automatically move to the Starter (free) plan with your data intact.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">What happens when my trial ends?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">You'll automatically move to the Starter plan at no charge. All your project data and architecture outputs are preserved — you just lose access to Pro-only features like PDF export and cost reports. Upgrading again restores everything instantly.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">How does annual billing work?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">Annual plans are billed as a single upfront payment — Pro at $276/year (saving $72), Team at $756/year (saving $192). You can switch from monthly to annual at any time; remaining monthly balance is applied proportionally to your annual invoice.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">Can I add more than 5 team members?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">The Team plan supports up to 5 members. For larger teams, our Enterprise plan offers unlimited seats with custom pricing. Contact us and we'll get you a quote tailored to your team's size and needs — typically set up within one business day.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">Do you offer student or nonprofit discounts?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">Yes — we offer 50% off Pro and Team plans for students with a valid .edu email address, and significant discounts for registered nonprofits. Reach out to our team with your credentials and we'll get you set up within 24 hours.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            <span class="faq-q-text">What payment methods do you accept?</span>
+            <span class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="6" y1="1" x2="6" y2="11" class="faq-v-line"/>
+                <line x1="1" y1="6" x2="11" y2="6"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-body">
+            <div class="faq-body-inner">
+              <div class="faq-answer">We accept all major credit and debit cards (Visa, Mastercard, Amex, Discover), PayPal, and bank wire transfer for annual Enterprise contracts. All payments are processed securely via Stripe with full PCI compliance.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════════════════ -->
+<div class="cta-outer">
+  <div class="cta reveal">
+    <div class="cta-dots"></div>
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-hl">Start designing your<br>architecture today.</h2>
+        <p class="cta-sub">No credit card required. Your first architecture session is completely free.</p>
+      </div>
+      <div class="cta-btns">
+        <button class="btn btn-white btn-lg" onclick="QuantiliomNav.navigateTo('login.html')">Get started free</button>
+        <button class="btn btn-ghost-dim btn-lg" onclick="QuantiliomNav.navigateTo('contact-sales.html')">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div style="margin-bottom:12px;">
+          <img src="QuantiliomMainLogo.png" alt="Quantiliom AI" class="footer-logo-img">
+        </div>
+        <p class="footer-tagline">The AI Software Architect Platform.<br>Design systems right — before you build.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <span class="footer-col-lbl">Product</span>
+          <ul class="footer-links">
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="footer-col-lbl">Use Cases</span>
+          <ul class="footer-links">
+            <li><a href="#">SaaS Platforms</a></li>
+            <li><a href="#">Marketplaces</a></li>
+            <li><a href="#">AI Chatbots</a></li>
+            <li><a href="#">E-commerce</a></li>
+            <li><a href="#">Real-time Apps</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="footer-col-lbl">Resources</span>
+          <ul class="footer-links">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Architecture Guides</a></li>
+            <li><a href="#">Pattern Library</a></li>
+            <li><a href="#">API Reference</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="footer-col-lbl">Company</span>
+          <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="contact-sales.html">Contact</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Quantiliom AI. All rights reserved.</span>
+      <ul class="footer-bot-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Scroll reveal ───────────────────────────────── */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
+}());
+
+/* ── Billing toggle ──────────────────────────────── */
+(function () {
+  var toggle   = document.getElementById('billingToggle');
+  var badge    = document.getElementById('saveBadge');
+  var opts     = toggle.querySelectorAll('.billing-opt');
+  var period   = 'monthly';
+
+  var DATA = {
+    monthly: { pro: '$29', team: '$79' },
+    annual:  { pro: '$23', team: '$63' }
+  };
+  var NOTES = {
+    pro:  'Billed $276 / year — save $72',
+    team: 'Billed $756 / year — save $192'
+  };
+
+  function setPeriod(p) {
+    period = p;
+    opts.forEach(function (o) {
+      o.classList.toggle('active', o.dataset.period === p);
+    });
+    badge.classList.toggle('visible', p === 'annual');
+
+    var pricePro  = document.getElementById('price-pro');
+    var priceTeam = document.getElementById('price-team');
+    var origPro   = document.getElementById('orig-pro');
+    var origTeam  = document.getElementById('orig-team');
+    var notePro   = document.getElementById('note-pro');
+    var noteTeam  = document.getElementById('note-team');
+
+    pricePro.textContent  = DATA[p].pro;
+    priceTeam.textContent = DATA[p].team;
+
+    if (p === 'annual') {
+      origPro.classList.add('show');
+      origTeam.classList.add('show');
+      notePro.textContent  = NOTES.pro;
+      noteTeam.textContent = NOTES.team;
+    } else {
+      origPro.classList.remove('show');
+      origTeam.classList.remove('show');
+      notePro.textContent  = ' ';
+      noteTeam.textContent = ' ';
+    }
+  }
+
+  opts.forEach(function (opt) {
+    opt.addEventListener('click', function () { setPeriod(opt.dataset.period); });
+  });
+}());
+
+/* ── FAQ accordion ───────────────────────────────── */
+(function () {
+  document.querySelectorAll('.faq-q').forEach(function (q) {
+    q.addEventListener('click', function () {
+      var item   = q.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function (i) {
+        i.classList.remove('open');
+      });
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+}());
+</script>
+</body>
+</html>

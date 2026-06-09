@@ -11,7 +11,7 @@
     { label: 'Product',   href: '#' },
     { label: 'Use Cases', href: '#' },
     { label: 'Services',  href: 'services.html' },
-    { label: 'Pricing',   href: '#' },
+    { label: 'Pricing',   href: 'pricing.html' },
     { label: 'Docs',      href: '#' },
     { label: 'Blog',      href: '#' },
   ];
