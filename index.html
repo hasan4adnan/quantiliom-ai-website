@@ -522,23 +522,103 @@
     /* ────────────────────────────────────────────────
        FEATURES
     ──────────────────────────────────────────────── */
-    .features-intro { max-width: 680px; margin-bottom: 64px; }
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .feat-cell { background: var(--silver); padding: 40px 32px; }
-    .feat-cell:hover { background: var(--light-gray); }
-    .feat-icon {
-      width: 46px; height: 46px;
-      border: 1px solid var(--cool-gray); border-radius: var(--r-sm);
-      background: var(--light-gray);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; color: var(--graphite);
+    /* ── Features (editorial list) ── */
+    .features-section { padding: 88px 0; }
+    .features-split {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 72px; align-items: start;
     }
-    .feat-new {
-      font-family: var(--mono); font-size: 11px;
-      color: var(--orange); margin-bottom: 8px;
+    .features-intro2 .label { margin-bottom: 14px; }
+    .features-intro2 .heading-lg {
+      font-size: 40px; line-height: 1.1; letter-spacing: -1.4px;
     }
-    .feat-title { font-size: 16px; color: var(--black); margin-bottom: 10px; line-height: 1.3; }
-    .feat-desc  { font-size: 14px; color: var(--graphite); line-height: 1.65; }
+    .features-intro2-lead {
+      font-size: 14.5px; color: var(--graphite); line-height: 1.65;
+      margin-top: 18px; max-width: 340px;
+    }
+    .features-intro2-meta {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      margin-top: 28px;
+      font-family: var(--mono); font-size: 11.5px;
+      color: var(--ash); letter-spacing: .04em;
+    }
+    .features-intro2-meta strong {
+      color: var(--black); font-weight: 600; margin-right: 5px;
+    }
+    .features-intro2-meta .sep {
+      width: 1px; height: 11px; background: var(--cool-gray);
+    }
+    .features-intro2-meta .live {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--orange);
+    }
+    .features-intro2-meta .live::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange); display: inline-block;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    .cap-list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+    }
+    .cap-item {
+      display: grid; grid-template-columns: 48px 1fr 24px;
+      align-items: start; gap: 20px;
+      padding: 20px 4px;
+      border-bottom: 1px solid var(--cool-gray);
+      transition: padding-left .25s var(--spring);
+      cursor: default;
+    }
+    .cap-item:first-child { border-top: 1px solid var(--cool-gray); }
+    .cap-num {
+      font-family: var(--mono); font-size: 12px;
+      color: var(--ash); letter-spacing: .08em;
+      padding-top: 5px;
+      transition: color .2s;
+    }
+    .cap-body {
+      display: flex; flex-direction: column; gap: 5px;
+      min-width: 0;
+    }
+    .cap-name-row {
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cap-name {
+      font-size: 19px; color: var(--black);
+      letter-spacing: -.3px; font-weight: 400;
+      line-height: 1.25;
+      transition: color .2s;
+    }
+    .cap-new {
+      font-family: var(--mono); font-size: 9.5px;
+      color: var(--orange); letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 2px 7px; border-radius: 3px;
+      background: rgba(239,111,46,.08);
+      border: 1px solid rgba(239,111,46,.25);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .cap-new::before {
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--orange); display: inline-block;
+    }
+    .cap-sub {
+      font-family: var(--mono); font-size: 11.5px;
+      color: var(--ash); letter-spacing: .02em;
+      line-height: 1.5;
+    }
+    .cap-arr {
+      font-family: var(--mono); font-size: 15px;
+      color: transparent; justify-self: end;
+      padding-top: 4px;
+      transition: color .25s, transform .25s var(--spring);
+      display: inline-block;
+    }
+    .cap-item:hover { padding-left: 12px; }
+    .cap-item:hover .cap-num { color: var(--orange); }
+    .cap-item:hover .cap-arr { color: var(--orange); transform: translateX(4px); }
 
     /* ────────────────────────────────────────────────
        ARCHITECTURE INTELLIGENCE SECTION
@@ -1397,18 +1477,7 @@
     .step-num { transition: color .25s; }
     .step-cell:hover .step-num { color: var(--orange); }
 
-    /* ── Feature cells ── */
-    .feat-cell {
-      transition: background .15s, transform .22s var(--spring), box-shadow .22s;
-    }
-    .feat-cell:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,2,2,.06); background: #fff; }
-    .feat-icon { transition: border-color .25s, color .25s, background .25s; }
-    .feat-cell:hover .feat-icon {
-      border-color: var(--orange); color: var(--orange);
-      background: rgba(239,111,46,.05);
-    }
-    .feat-title { transition: color .2s; }
-    .feat-cell:hover .feat-title { color: var(--black); }
+    /* ── Feature list items inherit base panel styling ── */
 
     /* ── AII card hover (handled inline) ── */
 
@@ -3006,89 +3075,85 @@
 <!-- ════════════════════════════════════════════════
      FEATURES
 ════════════════════════════════════════════════ -->
-<section class="section">
+<section class="section features-section">
   <div class="wrap">
-    <div class="features-intro">
-      <span class="label" style="margin-bottom:14px;">Capabilities</span>
-      <h2 class="heading-lg">Everything a senior architect<br>would tell you.</h2>
-      <p class="body-md" style="margin-top:16px;">Built on a structured decision engine — not a chatbot. Every recommendation is grounded in proven patterns, explicit constraints, and trade-off reasoning.</p>
-    </div>
-
-    <div class="panel-grid features-grid" style="grid-template-columns: repeat(3,1fr);">
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-            <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.4"/>
-          </svg>
+    <div class="features-split">
+      <div class="features-intro2">
+        <span class="label">Capabilities</span>
+        <h2 class="heading-lg">Everything a senior<br>architect would tell you.</h2>
+        <p class="features-intro2-lead">A structured decision engine — not a chatbot.</p>
+        <div class="features-intro2-meta">
+          <span><strong>06</strong> modules</span>
+          <span class="sep"></span>
+          <span><strong>02</strong> new</span>
+          <span class="sep"></span>
+          <span class="live">Live</span>
         </div>
-        <div class="feat-new">NEW</div>
-        <div class="feat-title">Architecture Intelligence Engine</div>
-        <div class="feat-desc">Pattern-aware reasoning that generates 2–3 architecture alternatives with full trade-off analysis. Not just suggestions — structured decisions with clear explanations for each choice.</div>
       </div>
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <circle cx="5" cy="9" r="2" stroke="currentColor" stroke-width="1.4"/>
-            <circle cx="13" cy="4" r="2" stroke="currentColor" stroke-width="1.4"/>
-            <circle cx="13" cy="14" r="2" stroke="currentColor" stroke-width="1.4"/>
-            <line x1="7" y1="8" x2="11" y2="5.5" stroke="currentColor" stroke-width="1.4"/>
-            <line x1="7" y1="10" x2="11" y2="12.5" stroke="currentColor" stroke-width="1.4"/>
-          </svg>
-        </div>
-        <div class="feat-title">Dynamic Question Engine</div>
-        <div class="feat-desc">Surfaces the 10–15 most critical questions for your specific project type. A marketplace gets different questions than an AI chatbot. No generic forms.</div>
-      </div>
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <rect x="2" y="4" width="14" height="10" rx="1" stroke="currentColor" stroke-width="1.4"/>
-            <line x1="2" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.4"/>
-            <line x1="7" y1="4" x2="7" y2="14" stroke="currentColor" stroke-width="1"/>
-          </svg>
-        </div>
-        <div class="feat-title">Tech Stack Recommendations</div>
-        <div class="feat-desc">Concrete, justified choices for frontend, backend, database, caching, messaging queues, and infrastructure — always with alternatives explained and compared.</div>
-      </div>
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M9 2v4M9 12v4M2 9h4M12 9h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-            <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="1.4"/>
-          </svg>
-        </div>
-        <div class="feat-title">Cost Estimation Layer</div>
-        <div class="feat-desc">Monthly infrastructure costs broken down by compute, database, storage, bandwidth, LLM usage, and third-party services. Flags expensive choices before you commit to them.</div>
-      </div>
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <rect x="3" y="3" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.4"/>
-            <path d="M6 9h6M6 12h4M6 6h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="feat-title">Architecture Diagrams</div>
-        <div class="feat-desc">Visual high-level system diagrams showing component relationships, data flows, and system boundaries. Exportable as PDF for team sharing and stakeholder presentations.</div>
-      </div>
-
-      <div class="panel-cell feat-cell">
-        <div class="feat-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M3 9c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-            <path d="M9 6v3l2 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3 13.5l-1.5 2 2-.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="feat-new">NEW</div>
-        <div class="feat-title">Conversational Revision Workspace</div>
-        <div class="feat-desc">Your architecture is not a static PDF. Revise it in plain language — "make it cheaper", "switch to GCP", "add real-time chat" — and watch it propagate instantly across the full output.</div>
-      </div>
-
+      <ol class="cap-list">
+        <li class="cap-item">
+          <span class="cap-num">01</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Architecture Intelligence Engine</span>
+              <span class="cap-new">New</span>
+            </div>
+            <span class="cap-sub">Generates 2–3 alternatives with trade-off analysis.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+        <li class="cap-item">
+          <span class="cap-num">02</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Dynamic Question Engine</span>
+            </div>
+            <span class="cap-sub">10–15 questions tailored to your project type.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+        <li class="cap-item">
+          <span class="cap-num">03</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Tech Stack Recommendations</span>
+            </div>
+            <span class="cap-sub">Concrete picks for frontend, backend, and infra.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+        <li class="cap-item">
+          <span class="cap-num">04</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Cost Estimation Layer</span>
+            </div>
+            <span class="cap-sub">Monthly TCO across the full stack — flags overspend.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+        <li class="cap-item">
+          <span class="cap-num">05</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Architecture Diagrams</span>
+            </div>
+            <span class="cap-sub">Visual system maps with data flows — PDF export.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+        <li class="cap-item">
+          <span class="cap-num">06</span>
+          <div class="cap-body">
+            <div class="cap-name-row">
+              <span class="cap-name">Conversational Revision Workspace</span>
+              <span class="cap-new">New</span>
+            </div>
+            <span class="cap-sub">Plain-language edits propagate across the output.</span>
+          </div>
+          <span class="cap-arr">→</span>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
