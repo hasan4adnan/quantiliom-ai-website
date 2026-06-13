@@ -1,0 +1,15 @@
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Local Firebase web config (use src/firebase-config.example.js as a template)
+src/firebase-config.js
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log

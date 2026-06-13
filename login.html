@@ -451,10 +451,14 @@
         New here? <a href="contact-sales.html" onclick="go(event,'contact-sales.html')">Talk to sales</a> to get your team set up.
       </p>
 
-      <!-- Toast -->
+      <!-- Toasts -->
       <div class="toast toast-error" id="toastError">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span id="toastErrorMsg">Invalid email or password.</span>
+      </div>
+      <div class="toast toast-success" id="toastSuccess">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="toastSuccessMsg">Login successful.</span>
       </div>
 
       <!-- Social logins -->
@@ -609,67 +613,29 @@
       }
     });
 
-    /* ── Sign-in handler ── */
-    function handleSignIn() {
-      var email    = document.getElementById('li-email').value.trim();
-      var password = document.getElementById('li-password').value;
-      var toast    = document.getElementById('toastError');
-      var toastMsg = document.getElementById('toastErrorMsg');
-
-      toast.classList.remove('visible');
-
-      if (!email) {
-        toastMsg.textContent = 'Please enter your email address.';
-        toast.classList.add('visible');
-        document.getElementById('li-email').focus();
-        return;
-      }
-      if (!password) {
-        toastMsg.textContent = 'Please enter your password.';
-        toast.classList.add('visible');
-        document.getElementById('li-password').focus();
-        return;
-      }
-
-      /* Simulate async sign-in */
-      var btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Signing in…';
-
-      setTimeout(function () {
-        /* Demo: treat any input as a failed attempt */
-        btn.disabled = false;
-        btn.innerHTML = 'Sign in <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-        toastMsg.textContent = 'Invalid email or password. Please try again.';
-        toast.classList.add('visible');
-      }, 1200);
-    }
+    /* handleSignIn() and socialLogin() are defined by src/auth.js (loaded as a
+       module below) and attached to window so the inline onclick handlers in
+       the markup resolve to the real Firebase-backed implementations. */
 
     /* ── Enter key on form ── */
     ['li-email', 'li-password'].forEach(function (id) {
       document.getElementById(id).addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') handleSignIn();
+        if (e.key === 'Enter' && typeof window.handleSignIn === 'function') {
+          window.handleSignIn();
+        }
       });
     });
 
-    /* ── Social login placeholder ── */
-    function socialLogin(provider) {
-      var btn = event.currentTarget;
-      var orig = btn.innerHTML;
-      btn.style.opacity = '0.6';
-      btn.style.pointerEvents = 'none';
-      setTimeout(function () {
-        btn.style.opacity = '';
-        btn.style.pointerEvents = '';
-      }, 1400);
-    }
-
-    /* ── Dismiss toast on field focus ── */
+    /* ── Dismiss toasts on field focus ── */
     ['li-email', 'li-password'].forEach(function (id) {
       document.getElementById(id).addEventListener('focus', function () {
         document.getElementById('toastError').classList.remove('visible');
+        document.getElementById('toastSuccess').classList.remove('visible');
       });
     });
   </script>
+
+  <!-- Firebase Authentication wiring -->
+  <script type="module" src="src/auth.js"></script>
 </body>
 </html>
