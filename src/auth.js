@@ -6,6 +6,8 @@ import {
   signOut,
 } from "./firebase.js";
 
+// BACKEND_URL must match the backend's PORT in /quantiliom-ai-backend/.env.
+// macOS reserves :5000 for AirPlay Receiver, so the dev backend runs on :5050.
 const BACKEND_URL = "http://localhost:5050";
 const SIGN_OUT_DELAY_MS = 2000;
 
@@ -75,30 +77,51 @@ function findSocialBtn(providerLabel) {
   return null;
 }
 
-async function verifyTokenWithBackend(idToken) {
+async function readJsonSafe(res) {
+  try {
+    return await res.json();
+  } catch (_) {
+    return {};
+  }
+}
+
+async function postVerify(idToken) {
   const res = await fetch(`${BACKEND_URL}/api/auth/verify`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ idToken }),
   });
-  let data = {};
-  try {
-    data = await res.json();
-  } catch (_) {
-    // non-JSON body
-  }
-  if (!res.ok || !data.success) {
+  const data = await readJsonSafe(res);
+  if (!res.ok || !data.success || !data.user) {
     const reason = data.error || `Backend returned HTTP ${res.status}`;
     throw new Error(reason);
   }
-  return data;
+  return data.user;
 }
 
-async function completeLoginFlow(userCredential) {
-  const user = userCredential.user;
-  const idToken = await user.getIdToken();
-  await verifyTokenWithBackend(idToken);
-  showSuccess("Login successful. User exists and token verified.");
+async function fetchMe(idToken) {
+  const res = await fetch(`${BACKEND_URL}/api/users/me`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+  const data = await readJsonSafe(res);
+  if (!res.ok || !data.success || !data.user) {
+    const reason = data.error || `Backend returned HTTP ${res.status}`;
+    throw new Error(reason);
+  }
+  return data.user;
+}
+
+function safeUserSummary(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    plan: user.plan,
+    onboardingStatus: user.onboardingStatus,
+  };
+}
+
+function scheduleAutoSignOut() {
   setTimeout(async () => {
     try {
       await signOut(auth);
@@ -107,6 +130,32 @@ async function completeLoginFlow(userCredential) {
     }
     hideToasts();
   }, SIGN_OUT_DELAY_MS);
+}
+
+async function completeLoginFlow(userCredential) {
+  const idToken = await userCredential.user.getIdToken();
+
+  const verifiedUser = await postVerify(idToken);
+  console.log("[auth] /api/auth/verify →", safeUserSummary(verifiedUser));
+
+  let meUser;
+  try {
+    meUser = await fetchMe(idToken);
+  } catch (err) {
+    console.error("[auth] /api/users/me failed:", err);
+    showError("Login succeeded, but user profile check failed.");
+    scheduleAutoSignOut();
+    return;
+  }
+  console.log("[auth] /api/users/me   →", safeUserSummary(meUser));
+
+  if (meUser.id !== verifiedUser.id || meUser.firebaseUid !== verifiedUser.firebaseUid) {
+    console.warn("[auth] /api/users/me returned a different user than /api/auth/verify");
+  }
+
+  const plan = verifiedUser.plan || "free";
+  showSuccess(`Login successful. User persisted as ${plan} plan.`);
+  scheduleAutoSignOut();
 }
 
 function friendlyAuthError(err) {
