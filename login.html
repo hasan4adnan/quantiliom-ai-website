@@ -361,6 +361,19 @@
     .legal a { color: var(--gray-500); border-bottom: 1px solid var(--gray-200); padding-bottom: 1px; transition: color .15s; }
     .legal a:hover { color: var(--black); }
 
+    /* ── MODE TOGGLE (signin ⇄ signup) ── */
+    .mode-toggle-row {
+      margin-top: 16px;
+      font-size: 14px; color: var(--gray-500); text-align: center;
+    }
+    .mode-toggle-row a {
+      color: var(--black); font-weight: 500;
+      border-bottom: 1px solid var(--gray-300);
+      padding-bottom: 1px; margin-left: 4px;
+      transition: color .15s, border-color .15s;
+    }
+    .mode-toggle-row a:hover { color: var(--orange); border-color: var(--orange); }
+
     /* ── TOAST (error / success feedback) ── */
     .toast {
       display: none; align-items: center; gap: 10px;
@@ -560,8 +573,16 @@
         </div>
       </div>
 
+      <!-- Confirm password (signup mode only) -->
+      <div class="field" id="confirmPasswordField" style="display:none">
+        <label class="field-label" for="li-password-confirm">Confirm password</label>
+        <div class="field-input-wrap">
+          <input class="field-input" id="li-password-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+
       <!-- Remember + Forgot -->
-      <div class="field-meta">
+      <div class="field-meta" id="fieldMetaRow">
         <label class="check-row">
           <input type="checkbox" id="li-remember">
           <span class="check-label">Remember me</span>
@@ -579,7 +600,13 @@
 
       <!-- Legal -->
       <p class="legal">
-        By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        <span id="legalPrompt">By signing in</span> you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      <!-- Mode toggle: signin ⇄ signup -->
+      <p class="mode-toggle-row">
+        <span id="modeTogglePrompt">Don't have an account?</span>
+        <a href="#" id="modeToggleLink">Create one &rarr;</a>
       </p>
 
     </div>
@@ -618,7 +645,7 @@
        the markup resolve to the real Firebase-backed implementations. */
 
     /* ── Enter key on form ── */
-    ['li-email', 'li-password'].forEach(function (id) {
+    ['li-email', 'li-password', 'li-password-confirm'].forEach(function (id) {
       document.getElementById(id).addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && typeof window.handleSignIn === 'function') {
           window.handleSignIn();
@@ -627,7 +654,7 @@
     });
 
     /* ── Dismiss toasts on field focus ── */
-    ['li-email', 'li-password'].forEach(function (id) {
+    ['li-email', 'li-password', 'li-password-confirm'].forEach(function (id) {
       document.getElementById(id).addEventListener('focus', function () {
         document.getElementById('toastError').classList.remove('visible');
         document.getElementById('toastSuccess').classList.remove('visible');

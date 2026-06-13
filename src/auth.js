@@ -1,6 +1,7 @@
 import {
   auth,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
@@ -10,6 +11,10 @@ import {
 // macOS reserves :5000 for AirPlay Receiver, so the dev backend runs on :5050.
 const BACKEND_URL = "http://localhost:5050";
 const SIGN_OUT_DELAY_MS = 2000;
+const PASSWORD_MIN_LENGTH = 6;
+
+const SUBMIT_ARROW_SVG =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
 
 const els = {
   errorToast: document.getElementById("toastError"),
@@ -19,9 +24,39 @@ const els = {
   submitBtn: document.getElementById("submitBtn"),
   emailInput: document.getElementById("li-email"),
   passwordInput: document.getElementById("li-password"),
+  confirmPasswordInput: document.getElementById("li-password-confirm"),
+  confirmPasswordField: document.getElementById("confirmPasswordField"),
+  fieldMetaRow: document.getElementById("fieldMetaRow"),
+  heading: document.querySelector(".r-heading"),
+  legalPrompt: document.getElementById("legalPrompt"),
+  modeTogglePrompt: document.getElementById("modeTogglePrompt"),
+  modeToggleLink: document.getElementById("modeToggleLink"),
 };
 
-const submitBtnOriginalHtml = els.submitBtn.innerHTML;
+const MODE_CONFIG = {
+  signin: {
+    heading: "Welcome back.",
+    submitLabel: "Sign in",
+    loadingLabel: "Signing in…",
+    confirmShown: false,
+    fieldMetaShown: true,
+    legalPrompt: "By signing in",
+    togglePrompt: "Don't have an account?",
+    toggleLabel: "Create one →",
+  },
+  signup: {
+    heading: "Create your account.",
+    submitLabel: "Create account",
+    loadingLabel: "Creating account…",
+    confirmShown: true,
+    fieldMetaShown: false,
+    legalPrompt: "By creating an account",
+    togglePrompt: "Already have an account?",
+    toggleLabel: "Sign in →",
+  },
+};
+
+let currentMode = "signin";
 
 function hideToasts() {
   els.errorToast.classList.remove("visible");
@@ -40,13 +75,18 @@ function showSuccess(message) {
   els.successToast.classList.add("visible");
 }
 
+function applySubmitButton(label) {
+  els.submitBtn.innerHTML = `${label} ${SUBMIT_ARROW_SVG}`;
+}
+
 function setSubmitLoading(loading) {
+  const cfg = MODE_CONFIG[currentMode];
   if (loading) {
     els.submitBtn.disabled = true;
-    els.submitBtn.textContent = "Signing in…";
+    els.submitBtn.textContent = cfg.loadingLabel;
   } else {
     els.submitBtn.disabled = false;
-    els.submitBtn.innerHTML = submitBtnOriginalHtml;
+    applySubmitButton(cfg.submitLabel);
   }
 }
 
@@ -75,6 +115,25 @@ function findSocialBtn(providerLabel) {
     }
   }
   return null;
+}
+
+function setMode(mode) {
+  if (mode !== "signin" && mode !== "signup") return;
+  currentMode = mode;
+  const cfg = MODE_CONFIG[mode];
+
+  els.heading.textContent = cfg.heading;
+  applySubmitButton(cfg.submitLabel);
+  els.confirmPasswordField.style.display = cfg.confirmShown ? "" : "none";
+  els.fieldMetaRow.style.display = cfg.fieldMetaShown ? "" : "none";
+  els.legalPrompt.textContent = cfg.legalPrompt;
+  els.modeTogglePrompt.textContent = cfg.togglePrompt;
+  els.modeToggleLink.textContent = cfg.toggleLabel;
+
+  if (mode === "signin") {
+    els.confirmPasswordInput.value = "";
+  }
+  hideToasts();
 }
 
 async function readJsonSafe(res) {
@@ -132,7 +191,14 @@ function scheduleAutoSignOut() {
   }, SIGN_OUT_DELAY_MS);
 }
 
-async function completeLoginFlow(userCredential) {
+function successMessageFor(kind, verifiedUser) {
+  if (kind === "signup") return "Account created and verified.";
+  if (kind === "signin") return "Login successful. User verified.";
+  const plan = (verifiedUser && verifiedUser.plan) || "free";
+  return `Login successful. User persisted as ${plan} plan.`;
+}
+
+async function completeLoginFlow(userCredential, kind) {
   const idToken = await userCredential.user.getIdToken();
 
   const verifiedUser = await postVerify(idToken);
@@ -153,18 +219,20 @@ async function completeLoginFlow(userCredential) {
     console.warn("[auth] /api/users/me returned a different user than /api/auth/verify");
   }
 
-  const plan = verifiedUser.plan || "free";
-  showSuccess(`Login successful. User persisted as ${plan} plan.`);
+  showSuccess(successMessageFor(kind, verifiedUser));
   scheduleAutoSignOut();
 }
 
 function friendlyAuthError(err) {
   const code = (err && err.code) || "";
   const map = {
+    "auth/email-already-in-use": "This email is already registered. Please sign in instead.",
+    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/weak-password": `Password is too weak. Use at least ${PASSWORD_MIN_LENGTH} characters.`,
+    "auth/missing-password": "Please enter your password.",
     "auth/invalid-credential": "Invalid email or password.",
     "auth/wrong-password": "Invalid email or password.",
-    "auth/user-not-found": "No account found for that email.",
-    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/user-not-found": "No account found with this email.",
     "auth/too-many-requests": "Too many attempts. Please try again later.",
     "auth/network-request-failed": "Network error. Check your connection.",
     "auth/popup-blocked": "Popup blocked by the browser. Please allow popups and retry.",
@@ -172,8 +240,7 @@ function friendlyAuthError(err) {
   return map[code] || (err && err.message) || "Sign-in failed. Please try again.";
 }
 
-async function handleSignIn() {
-  hideToasts();
+async function handleEmailSignIn() {
   const email = els.emailInput.value.trim();
   const password = els.passwordInput.value;
 
@@ -191,13 +258,59 @@ async function handleSignIn() {
   setSubmitLoading(true);
   try {
     const cred = await signInWithEmailAndPassword(auth, email, password);
-    await completeLoginFlow(cred);
+    await completeLoginFlow(cred, "signin");
   } catch (err) {
     console.error("email/password sign-in failed:", err);
     showError(friendlyAuthError(err));
   } finally {
     setSubmitLoading(false);
   }
+}
+
+async function handleEmailSignUp() {
+  const email = els.emailInput.value.trim();
+  const password = els.passwordInput.value;
+  const confirmPassword = els.confirmPasswordInput.value;
+
+  if (!email) {
+    showError("Please enter your email address.");
+    els.emailInput.focus();
+    return;
+  }
+  if (!password) {
+    showError("Please enter a password.");
+    els.passwordInput.focus();
+    return;
+  }
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    showError(`Password must be at least ${PASSWORD_MIN_LENGTH} characters.`);
+    els.passwordInput.focus();
+    return;
+  }
+  if (password !== confirmPassword) {
+    showError("Passwords do not match.");
+    els.confirmPasswordInput.focus();
+    return;
+  }
+
+  setSubmitLoading(true);
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await completeLoginFlow(cred, "signup");
+  } catch (err) {
+    console.error("email/password sign-up failed:", err);
+    showError(friendlyAuthError(err));
+  } finally {
+    setSubmitLoading(false);
+  }
+}
+
+async function handleSignIn() {
+  hideToasts();
+  if (currentMode === "signup") {
+    return handleEmailSignUp();
+  }
+  return handleEmailSignIn();
 }
 
 async function socialLogin(provider) {
@@ -208,7 +321,7 @@ async function socialLogin(provider) {
     setSocialBtnLoading(btn, true);
     try {
       const cred = await signInWithPopup(auth, new GoogleAuthProvider());
-      await completeLoginFlow(cred);
+      await completeLoginFlow(cred, "google");
     } catch (err) {
       const code = err && err.code;
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
@@ -230,6 +343,14 @@ async function socialLogin(provider) {
 
   showError("This provider is not configured yet.");
 }
+
+els.modeToggleLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  setMode(currentMode === "signin" ? "signup" : "signin");
+  els.emailInput.focus();
+});
+
+setMode("signin");
 
 window.handleSignIn = handleSignIn;
 window.socialLogin = socialLogin;
