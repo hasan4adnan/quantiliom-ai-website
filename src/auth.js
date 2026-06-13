@@ -6,11 +6,10 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "./firebase.js";
+import { BACKEND_URL } from "./config.js";
 
-// BACKEND_URL must match the backend's PORT in /quantiliom-ai-backend/.env.
-// macOS reserves :5000 for AirPlay Receiver, so the dev backend runs on :5050.
-const BACKEND_URL = "http://localhost:5050";
 const SIGN_OUT_DELAY_MS = 2000;
+const REDIRECT_TO_REGISTRATION_DELAY_MS = 700;
 const PASSWORD_MIN_LENGTH = 6;
 
 const SUBMIT_ARROW_SVG =
@@ -180,14 +179,14 @@ function safeUserSummary(user) {
   };
 }
 
-function scheduleAutoSignOut() {
+function scheduleSignOutAndReload() {
   setTimeout(async () => {
     try {
       await signOut(auth);
     } catch (err) {
       console.warn("signOut failed:", err);
     }
-    hideToasts();
+    window.location.replace("login.html");
   }, SIGN_OUT_DELAY_MS);
 }
 
@@ -210,7 +209,7 @@ async function completeLoginFlow(userCredential, kind) {
   } catch (err) {
     console.error("[auth] /api/users/me failed:", err);
     showError("Login succeeded, but user profile check failed.");
-    scheduleAutoSignOut();
+    scheduleSignOutAndReload();
     return;
   }
   console.log("[auth] /api/users/me   →", safeUserSummary(meUser));
@@ -219,8 +218,18 @@ async function completeLoginFlow(userCredential, kind) {
     console.warn("[auth] /api/users/me returned a different user than /api/auth/verify");
   }
 
-  showSuccess(successMessageFor(kind, verifiedUser));
-  scheduleAutoSignOut();
+  if (verifiedUser.onboardingStatus !== "completed") {
+    // First-time user — keep the Firebase session and continue to the wizard.
+    showSuccess(successMessageFor(kind, verifiedUser));
+    setTimeout(() => {
+      window.location.href = "registration.html";
+    }, REDIRECT_TO_REGISTRATION_DELAY_MS);
+    return;
+  }
+
+  // Already onboarded — dashboard isn't built yet. Sign out and reload login.
+  showSuccess("Login successful. Dashboard is not available yet.");
+  scheduleSignOutAndReload();
 }
 
 function friendlyAuthError(err) {

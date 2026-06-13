@@ -13,7 +13,8 @@ but show "not configured yet" until later milestones.
 ```
 .
 ├── index.html
-├── login.html               # Sign in / Create account (this milestone)
+├── login.html               # Sign in / Create account
+├── registration.html        # First-time onboarding wizard
 ├── pricing.html
 ├── services.html
 ├── contact-sales.html
@@ -23,7 +24,9 @@ but show "not configured yet" until later milestones.
 │   ├── firebase.js                  # Firebase App + Auth init (CDN ESM)
 │   ├── firebase-config.example.js   # Template — copy and fill in
 │   ├── firebase-config.js           # Local config (gitignored)
-│   └── auth.js                      # Login page wiring
+│   ├── config.js                    # Shared BACKEND_URL constant
+│   ├── auth.js                      # login.html wiring
+│   └── registration.js              # registration.html wizard
 ├── .env.example                     # VITE_FIREBASE_* keys (documentation)
 ├── .gitignore
 └── README.md
@@ -173,11 +176,47 @@ PGPASSWORD=quantiliom psql -h localhost -U quantiliom -d quantiliom_ai \
   -c 'SELECT id, "firebaseUid", email, provider, plan, "lastLoginAt" FROM "User";'
 ```
 
+## Post-login routing
+
+After a successful Firebase sign-in (Google or Email/Password), `src/auth.js`
+calls `POST /api/auth/verify`, then `GET /api/users/me`, then branches on
+the persisted user's `onboardingStatus`:
+
+| Branch | Toast | Next step |
+| --- | --- | --- |
+| `onboardingStatus !== "completed"` | Per-kind brief flash | `window.location.href = "registration.html"` — the Firebase session is kept so the wizard can call `/api/users/me` and `/api/onboarding/complete`. |
+| `onboardingStatus === "completed"` | "Login successful. Dashboard is not available yet." | After 2 s the user is signed out and `login.html` is reloaded. The dashboard lives in a separate repo and is not built yet. |
+
+## Registration wizard (`registration.html`)
+
+A 6-slide onboarding flow that runs on first sign-in. `src/registration.js`:
+
+1. Uses `onAuthStateChanged` to confirm a Firebase user is present. If not,
+   redirects to `login.html`.
+2. Calls `GET /api/users/me`. If `onboardingStatus === "completed"`, the user
+   doesn't belong here — redirects to `login.html`.
+3. Renders the slides:
+   1. `role`
+   2. `technicalLevel`
+   3. `primaryUseCase`
+   4. `projectStage`
+   5. `teamSize`
+   6. `detailLevel`, `preferredLanguage`, `planPreference` (combined slide)
+4. Validates that every required field is selected before enabling the
+   submit button.
+5. On submit posts the answers to
+   `POST /api/onboarding/complete` with `Authorization: Bearer <idToken>`.
+6. On success shows **"Registration completed. Dashboard will be available
+   soon."**, signs out, and reloads `login.html`. Logging in again with the
+   same account from then on follows the completed-user branch above.
+
+The wizard reuses the existing visual language (Inter / JetBrains Mono,
+black / orange tokens, dot-grid background) — see `registration.html`.
+
 ## What this milestone does NOT include
 
-- Dashboard or post-login redirect (dashboard will be a separate repo).
-- Onboarding flow (`onboardingStatus` exists in the DB but isn't driven yet).
-- Apple / Microsoft / GitHub / GitLab / Slack / SSO sign-in — the buttons
-  show "not configured yet."
-- Billing or plan upgrades.
+- Dashboard pages — dashboard lives in a separate repo and is not built yet.
+- Apple / Microsoft / GitHub / GitLab / Slack / SSO sign-in — the buttons on
+  `login.html` show "not configured yet."
+- Billing or plan upgrades. `planPreference` is recorded as intent only.
 - Password reset flow (the "Forgot password?" link is decorative).
