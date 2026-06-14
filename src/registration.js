@@ -1,5 +1,5 @@
 import { auth, onAuthStateChanged, signOut } from "./firebase.js";
-import { BACKEND_URL } from "./config.js";
+import { BACKEND_URL, DASHBOARD_URL } from "./config.js";
 
 const POST_SUBMIT_DELAY_MS = 1800;
 const REDIRECT_AFTER_ERROR_MS = 1500;
@@ -271,6 +271,30 @@ async function postOnboarding(idToken, payload) {
     throw new Error(reason);
   }
   return data.user || null;
+}
+
+// Best-effort cross-origin auth handoff — mirror of the one in auth.js.
+// Returns the custom token string, or null on any failure.
+async function fetchHandoffToken(idToken) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/handoff`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${idToken}` },
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (_) {}
+    if (!res.ok || !data.success || !data.customToken) return null;
+    return data.customToken;
+  } catch (_) {
+    return null;
+  }
+}
+
+function dashboardUrlWithHandoff(token) {
+  if (!token) return DASHBOARD_URL;
+  return `${DASHBOARD_URL}/#h=${encodeURIComponent(token)}`;
 }
 
 function setAnswer(field, value) {
@@ -550,14 +574,12 @@ async function submitOnboarding() {
       console.log("[registration] /api/onboarding/complete →", safeUserSummary(updatedUser));
     }
 
-    showSuccess("Registration completed. Dashboard will be available soon.");
-    setTimeout(async () => {
-      try {
-        await signOut(auth);
-      } catch (err) {
-        console.warn("signOut failed:", err);
-      }
-      window.location.replace("login.html");
+    showSuccess("Registration completed. Opening your dashboard…");
+    // Best-effort: get a custom token so the dashboard can sign in on
+    // its own origin. If this fails we still navigate.
+    const handoffToken = await fetchHandoffToken(idToken);
+    setTimeout(() => {
+      window.location.href = dashboardUrlWithHandoff(handoffToken);
     }, POST_SUBMIT_DELAY_MS);
   } catch (err) {
     console.error("[registration] submit failed:", err);

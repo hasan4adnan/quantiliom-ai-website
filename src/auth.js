@@ -6,10 +6,11 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "./firebase.js";
-import { BACKEND_URL } from "./config.js";
+import { BACKEND_URL, DASHBOARD_URL } from "./config.js";
 
 const SIGN_OUT_DELAY_MS = 2000;
 const REDIRECT_TO_REGISTRATION_DELAY_MS = 700;
+const REDIRECT_TO_DASHBOARD_DELAY_MS = 900;
 const PASSWORD_MIN_LENGTH = 6;
 
 const SUBMIT_ARROW_SVG =
@@ -170,6 +171,32 @@ async function fetchMe(idToken) {
   return data.user;
 }
 
+// Best-effort cross-origin auth handoff. Asks the backend to mint a
+// short-lived Firebase custom token so the dashboard (different origin)
+// can establish its own Firebase session via signInWithCustomToken.
+// Returns null on any failure — caller redirects without the token in
+// that case and the dashboard will surface its own "sign in" state.
+async function fetchHandoffToken(idToken) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/handoff`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${idToken}` },
+    });
+    const data = await readJsonSafe(res);
+    if (!res.ok || !data.success || !data.customToken) return null;
+    return data.customToken;
+  } catch (_) {
+    return null;
+  }
+}
+
+function dashboardUrlWithHandoff(token) {
+  if (!token) return DASHBOARD_URL;
+  // URL FRAGMENT (#) — not sent to servers, not logged, not in Referer.
+  // The dashboard strips it immediately after exchange.
+  return `${DASHBOARD_URL}/#h=${encodeURIComponent(token)}`;
+}
+
 function safeUserSummary(user) {
   return {
     id: user.id,
@@ -227,9 +254,17 @@ async function completeLoginFlow(userCredential, kind) {
     return;
   }
 
-  // Already onboarded — dashboard isn't built yet. Sign out and reload login.
-  showSuccess("Login successful. Dashboard is not available yet.");
-  scheduleSignOutAndReload();
+  // Already onboarded — hand off to the dashboard. The dashboard lives
+  // on a different origin (DASHBOARD_URL) so Firebase Auth state is not
+  // shared. We fetch a short-lived custom token from the backend and
+  // pass it via URL fragment (#h=…) so the dashboard can sign in on its
+  // own origin via signInWithCustomToken. If the handoff fetch fails the
+  // browser still navigates — the dashboard's gate will handle it.
+  showSuccess("Login successful. Opening your dashboard…");
+  const handoffToken = await fetchHandoffToken(idToken);
+  setTimeout(() => {
+    window.location.href = dashboardUrlWithHandoff(handoffToken);
+  }, REDIRECT_TO_DASHBOARD_DELAY_MS);
 }
 
 function friendlyAuthError(err) {

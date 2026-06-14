@@ -16,8 +16,21 @@
     { label: 'Blog',      href: '#' },
   ];
 
-  /* ── Action button routes ── */
-  var ACTION_HREFS = ['login.html', 'contact-sales.html', null];
+  /* ── Action button routes ──
+   *
+   * Sign-in / sign-up / onboarding live in the dashboard repo
+   * (quantiliom-ai-dashboard, port 5173). Log In sends users to the
+   * dashboard's login mode; Get Started sends them to its sign-up mode.
+   * Contact Sales stays on the website. The dashboard URL is also
+   * mirrored in login.html / registration.html (as redirect targets) so
+   * any legacy CTA that still points at .html keeps working.
+   */
+  var DASHBOARD_URL = 'http://localhost:5173';
+  var ACTION_HREFS = [
+    DASHBOARD_URL + '/#login',
+    'contact-sales.html',
+    DASHBOARD_URL + '/#signup',
+  ];
 
   /* ── Injected CSS ── */
   var CSS = [
@@ -147,7 +160,9 @@
       var btn = document.createElement('button');
       var baseClass = 'qnav-btn ' + ['qnav-btn-ghost', 'qnav-btn-outline', 'qnav-btn-dark'][i];
       var href = ACTION_HREFS[i];
-      /* Highlight "Contact Sales" when on that page */
+      /* Highlight "Contact Sales" when on that page (cross-origin URLs
+       * never match the local filename, so the dashboard buttons never
+       * get the active-outline state — which is the desired behavior). */
       if (href && filename === href) {
         btn.className = baseClass + ' qnav-btn-active-outline';
       } else {
@@ -155,7 +170,15 @@
       }
       btn.textContent = label;
       if (href) {
-        btn.addEventListener('click', function () { navigateTo(href); });
+        btn.addEventListener('click', function () {
+          /* Cross-origin URLs bypass the page-exit animation since we
+           * are leaving the website's lifecycle entirely. */
+          if (/^https?:\/\//.test(href)) {
+            window.location.href = href;
+          } else {
+            navigateTo(href);
+          }
+        });
       }
       actions.appendChild(btn);
     });
